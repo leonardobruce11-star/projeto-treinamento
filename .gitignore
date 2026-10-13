@@ -1,0 +1,33 @@
+# Python e ambientes
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+# Segredos e configuração local
+.env
+.env.*
+!.env.example
+instance/
+*.pem
+*.key
+# Dados e logs locais
+*.log
+*.db
+*.sqlite
+*.sqlite3
+*.dump
+*.backup
+backups/
+uploads/
+# Editor e sistema
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+~$*
