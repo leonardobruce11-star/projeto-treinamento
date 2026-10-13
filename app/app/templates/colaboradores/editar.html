@@ -1,0 +1,382 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Editar colaborador
+{% endblock %}
+
+{% block content %}
+
+<section class="management-page collaborator-edit-page">
+
+    <header class="management-header">
+
+        <div class="management-header-copy">
+
+            <span class="page-eyebrow">
+                Gestão de pessoas
+            </span>
+
+            <h1>
+                Editar colaborador
+            </h1>
+
+            <p>
+                Atualize os dados cadastrais e organizacionais
+                deste colaborador.
+            </p>
+
+        </div>
+
+         <div class="management-header-actions">
+
+             <a
+             href="{{ url_for(
+             'colaboradores.editar',
+             colaborador_id=colaborador.id
+            ) }}"
+           class="btn-one-primary"
+         >
+          Editar colaborador
+     </a>
+
+
+      <a
+          href="{{ url_for('colaboradores.listar') }}"
+          class="btn-one-secondary"
+      >
+         ← Voltar para colaboradores
+      </a>
+
+     </div>
+
+    </header>
+
+
+    <section class="collaborator-edit-layout">
+
+  <!-- ======================================================
+     CONTROLE DE STATUS
+     ====================================================== -->
+
+<section class="collaborator-status-card">
+
+    <div>
+
+        <span class="section-eyebrow">
+            Status do cadastro
+        </span>
+
+        {% if colaborador.ativo %}
+
+            <strong>
+                Colaborador ativo
+            </strong>
+
+            <p>
+                O colaborador pode ser utilizado em grupos,
+                campanhas e novos treinamentos.
+            </p>
+
+        {% else %}
+
+            <strong>
+                Colaborador inativo
+            </strong>
+
+            <p>
+                O histórico permanece preservado, mas o cadastro
+                não deve ser utilizado em novas participações.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+
+    <div class="collaborator-status-action">
+
+        <form
+            method="POST"
+            action="{{ url_for(
+                'colaboradores.alterar_status',
+                colaborador_id=colaborador.id
+            ) }}"
+        >
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
+
+
+            {% if colaborador.ativo %}
+
+                <input
+                    type="hidden"
+                    name="acao"
+                    value="desativar"
+                >
+
+                <button
+                    type="submit"
+                    class="btn-one-secondary"
+                >
+                    Desativar colaborador
+                </button>
+
+
+            {% else %}
+
+                <input
+                    type="hidden"
+                    name="acao"
+                    value="ativar"
+                >
+
+                <button
+                    type="submit"
+                    class="btn-one-primary"
+                >
+                    Ativar colaborador
+                </button>
+
+            {% endif %}
+
+        </form>
+
+    </div>
+
+</section>
+
+
+        <!-- ==================================================
+             CONTEXTO
+             ================================================== -->
+
+        <aside class="collaborator-edit-context">
+
+            <div class="collaborator-edit-avatar">
+
+                {% if colaborador.nome %}
+                    {{ colaborador.nome[:1]|upper }}
+                {% else %}
+                    C
+                {% endif %}
+
+            </div>
+
+
+            <span class="section-eyebrow">
+                Colaborador
+            </span>
+
+            <h2>
+                {{ colaborador.nome }}
+            </h2>
+
+            <p>
+                {{ colaborador.email }}
+            </p>
+
+
+            <div class="collaborator-edit-status">
+
+                {% if colaborador.ativo %}
+
+                    <span class="status-badge status-success">
+                        Ativo
+                    </span>
+
+                {% else %}
+
+                    <span class="status-badge status-danger">
+                        Inativo
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+        </aside>
+
+
+        <!-- ==================================================
+             FORMULÁRIO
+             ================================================== -->
+
+        <section class="collaborator-edit-card">
+
+            <div class="section-heading management-section-heading">
+
+                <div>
+
+                    <span class="section-eyebrow">
+                        Cadastro
+                    </span>
+
+                    <h2>
+                        Informações do colaborador
+                    </h2>
+
+                    <p>
+                        Os campos com indicação obrigatória
+                        devem ser preenchidos.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <form
+                method="POST"
+                class="collaborator-edit-form"
+            >
+
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token() }}"
+                >
+
+
+                <div class="collaborator-form-grid">
+
+                    <!-- ======================================
+                         NOME
+                         ====================================== -->
+
+                    <div class="collaborator-form-field collaborator-form-field-full">
+
+                        <label for="nome">
+                            Nome completo *
+                        </label>
+
+                        <input
+                            id="nome"
+                            name="nome"
+                            type="text"
+                            value="{{ colaborador.nome }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- ======================================
+                         E-MAIL
+                         ====================================== -->
+
+                    <div class="collaborator-form-field">
+
+                        <label for="email">
+                            E-mail *
+                        </label>
+
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            value="{{ colaborador.email }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- ======================================
+                         CARGO
+                         ====================================== -->
+
+                    <div class="collaborator-form-field">
+
+                        <label for="cargo">
+                            Cargo
+                        </label>
+
+                        <input
+                            id="cargo"
+                            name="cargo"
+                            type="text"
+                            value="{{ colaborador.cargo or '' }}"
+                        >
+
+                    </div>
+
+
+                    <!-- ======================================
+                         DEPARTAMENTO
+                         ====================================== -->
+
+                    <div class="collaborator-form-field collaborator-form-field-full">
+
+                        <label for="departamento_id">
+                            Departamento *
+                        </label>
+
+                        <select
+                            id="departamento_id"
+                            name="departamento_id"
+                            required
+                        >
+
+                            <option value="">
+                                Selecione um departamento
+                            </option>
+
+                            {% for departamento in departamentos %}
+
+                                <option
+                                    value="{{ departamento.id }}"
+                                    {% if colaborador.departamento_id == departamento.id %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ departamento.nome }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==========================================
+                     AÇÕES
+                     ========================================== -->
+
+                <div class="collaborator-edit-actions">
+
+                    <a
+                        href="{{ url_for(
+                            'colaboradores.detalhe',
+                            colaborador_id=colaborador.id
+                        ) }}"
+                        class="btn-one-secondary"
+                    >
+                        Cancelar
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="btn-one-primary"
+                    >
+                        Salvar alterações
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </section>
+
+</section>
+
+{% endblock %}

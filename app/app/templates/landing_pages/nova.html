@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Nova Landing Page
+{% endblock %}
+
+{% block content %}
+
+<section class="form-page">
+
+    <header class="form-page-header">
+
+        <div>
+
+            <span class="page-eyebrow">
+                Simulações
+            </span>
+
+            <h1>
+                Nova Landing Page
+            </h1>
+
+            <p>
+                Crie uma página educativa para apresentar
+                orientações aos participantes após a simulação.
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for('landing_pages.listar') }}"
+            class="btn-one-secondary"
+        >
+            Voltar
+        </a>
+
+    </header>
+
+
+    <div class="form-card landing-form-card">
+
+        <div class="form-card-header">
+
+            <span class="section-eyebrow">
+                Conteúdo educativo
+            </span>
+
+            <h2>
+                Informações da página
+            </h2>
+
+            <p>
+                Defina a identificação, mensagem e conteúdo
+                exibidos ao participante.
+            </p>
+
+        </div>
+
+
+        <form
+            method="POST"
+            class="one-form"
+        >
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
+
+
+            <div class="form-field">
+
+                <label for="nome">
+                    Nome *
+                </label>
+
+                <input
+                    id="nome"
+                    type="text"
+                    name="nome"
+                    placeholder="Ex.: Orientação após simulação"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-field">
+
+                <label for="titulo">
+                    Título *
+                </label>
+
+                <input
+                    id="titulo"
+                    type="text"
+                    name="titulo"
+                    placeholder="Ex.: Atenção a sinais de mensagem suspeita"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-field">
+
+                <label for="mensagem">
+                    Mensagem educativa *
+                </label>
+
+                <textarea
+                    id="mensagem"
+                    name="mensagem"
+                    rows="5"
+                    placeholder="Explique ao participante o aprendizado principal desta simulação."
+                    required
+                ></textarea>
+
+                <small class="form-help">
+                    Utilize uma orientação clara, objetiva e educativa.
+                </small>
+
+            </div>
+
+
+            <div class="form-field">
+
+                <label for="conteudo_html">
+                    Conteúdo HTML *
+                </label>
+
+                <textarea
+                    id="conteudo_html"
+                    name="conteudo_html"
+                    rows="20"
+                    class="code-textarea"
+                    required
+                ></textarea>
+
+                <small class="form-help">
+                    Conteúdo exibido no ambiente interno de treinamento.
+                </small>
+
+            </div>
+
+
+            <div class="training-notice">
+
+                <span class="training-notice-icon">
+                    i
+                </span>
+
+                <div>
+
+                    <strong>
+                        Página educativa
+                    </strong>
+
+                    <p>
+                        Esta Landing Page deve apresentar orientação
+                        e conscientização ao participante, sem coleta
+                        de credenciais ou senhas.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('landing_pages.listar') }}"
+                    class="btn-one-secondary"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn-one-primary"
+                >
+                    Criar Landing Page
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,444 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Campanhas
+{% endblock %}
+
+{% block content %}
+
+<section class="management-page">
+
+    <!-- ======================================================
+         CABEÇALHO
+         ====================================================== -->
+
+    <header class="management-header">
+
+        <div class="management-header-copy">
+
+            <span class="page-eyebrow">
+                Simulações
+            </span>
+
+            <h1>
+                Campanhas
+            </h1>
+
+            <p>
+                Acompanhe as campanhas internas,
+                seus estágios administrativos e os recursos associados.
+            </p>
+
+        </div>
+
+
+        <div class="management-header-actions">
+
+            <a
+                href="{{ url_for('campanhas.nova') }}"
+                class="btn-one-primary"
+            >
+                <span class="btn-one-icon">+</span>
+
+                <span>
+                    Nova campanha
+                </span>
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- ======================================================
+         RESUMO
+         ====================================================== -->
+
+    {% set rascunhos = namespace(valor=0) %}
+    {% set aguardando = namespace(valor=0) %}
+    {% set pilotos = namespace(valor=0) %}
+
+    {% if campanhas %}
+
+        {% for campanha in campanhas %}
+
+            {% if campanha.status in ["rascunho", "reprovada"] %}
+                {% set rascunhos.valor = rascunhos.valor + 1 %}
+            {% endif %}
+
+            {% if campanha.status == "aguardando_aprovacao" %}
+                {% set aguardando.valor = aguardando.valor + 1 %}
+            {% endif %}
+
+            {% if campanha.status in [
+                "piloto_pronto",
+                "piloto_validado",
+                "piloto_aprovado",
+                "ajustes_necessarios"
+            ] %}
+                {% set pilotos.valor = pilotos.valor + 1 %}
+            {% endif %}
+
+        {% endfor %}
+
+    {% endif %}
+
+
+    <section class="management-summary campaign-summary">
+
+        <article class="summary-card">
+
+            <span class="summary-label">
+                Campanhas
+            </span>
+
+            <strong class="summary-value">
+                {{ campanhas|length if campanhas else 0 }}
+            </strong>
+
+            <span class="summary-caption">
+                Total cadastradas
+            </span>
+
+        </article>
+
+
+        <article class="summary-card summary-card-soft">
+
+            <span class="summary-label">
+                Em revisão
+            </span>
+
+            <strong class="summary-value">
+                {{ rascunhos.valor }}
+            </strong>
+
+            <span class="summary-caption">
+                Rascunho ou reprovadas
+            </span>
+
+        </article>
+
+
+        <article class="summary-card summary-card-soft">
+
+            <span class="summary-label">
+                Aguardando decisão
+            </span>
+
+            <strong class="summary-value">
+                {{ aguardando.valor }}
+            </strong>
+
+            <span class="summary-caption">
+                Pendentes de aprovação
+            </span>
+
+        </article>
+
+
+        <article class="summary-card summary-card-soft">
+
+            <span class="summary-label">
+                Em etapa de piloto
+            </span>
+
+            <strong class="summary-value">
+                {{ pilotos.valor }}
+            </strong>
+
+            <span class="summary-caption">
+                Campanhas em validação
+            </span>
+
+        </article>
+
+    </section>
+
+
+    <!-- ======================================================
+         LISTAGEM
+         ====================================================== -->
+
+    <section class="management-section">
+
+        <div class="section-heading management-section-heading">
+
+            <div>
+
+                <span class="section-eyebrow">
+                    Ciclo administrativo
+                </span>
+
+                <h2>
+                    Campanhas cadastradas
+                </h2>
+
+                <p>
+                    Consulte a situação atual e os principais
+                    vínculos de cada campanha.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if campanhas %}
+
+        <div class="table-card">
+
+            <div class="table-wrapper">
+
+                <table class="one-table campaign-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Campanha</th>
+                            <th>Status</th>
+                            <th>Grupo</th>
+                            <th>Cenário</th>
+                            <th>Criada em</th>
+                            <th>Ações</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for campanha in campanhas %}
+
+                        <tr>
+
+                            <td>
+
+                                <div class="campaign-list-cell">
+
+                                    <div class="campaign-list-symbol">
+                                        C
+                                    </div>
+
+                                    <div>
+
+                                        <strong>
+                                            {{ campanha.nome }}
+                                        </strong>
+
+                                        {% if campanha.descricao %}
+
+                                            <span>
+                                                {{ campanha.descricao }}
+                                            </span>
+
+                                        {% else %}
+
+                                            <span>
+                                                Campanha interna
+                                            </span>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                {% if campanha.status == "rascunho" %}
+
+                                    <span class="campaign-list-status status-draft">
+                                        Rascunho
+                                    </span>
+
+                                {% elif campanha.status == "aguardando_aprovacao" %}
+
+                                    <span class="campaign-list-status status-pending">
+                                        Aguardando aprovação
+                                    </span>
+
+                                {% elif campanha.status == "reprovada" %}
+
+                                    <span class="campaign-list-status status-rejected">
+                                        Reprovada
+                                    </span>
+
+                                {% elif campanha.status == "aprovada" %}
+
+                                    <span class="campaign-list-status status-approved">
+                                        Aprovada
+                                    </span>
+
+                                {% elif campanha.status == "preparada" %}
+
+                                    <span class="campaign-list-status status-prepared">
+                                        Preparada
+                                    </span>
+
+                                {% elif campanha.status == "piloto_pronto" %}
+
+                                    <span class="campaign-list-status status-pilot">
+                                        Piloto pronto
+                                    </span>
+
+                                {% elif campanha.status == "piloto_validado" %}
+
+                                    <span class="campaign-list-status status-pilot">
+                                        Piloto validado
+                                    </span>
+
+                                {% elif campanha.status == "piloto_aprovado" %}
+
+                                    <span class="campaign-list-status status-approved">
+                                        Piloto aprovado
+                                    </span>
+
+                                {% elif campanha.status == "ajustes_necessarios" %}
+
+                                    <span class="campaign-list-status status-adjust">
+                                        Ajustes necessários
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="campaign-list-status">
+                                        {{ campanha.status.replace("_", " ")|title }}
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if campanha.grupo %}
+
+                                    <span class="department-pill">
+                                        {{ campanha.grupo.nome }}
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="muted-text">
+                                        -
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if campanha.cenario %}
+
+                                    <span class="campaign-scenario">
+                                        {{ campanha.cenario.nome }}
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="muted-text">
+                                        -
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="campaign-created-date">
+                                    {{ campanha.criado_em }}
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="table-actions">
+
+                                    <a
+                                        href="{{ url_for(
+                                            'campanhas.detalhe',
+                                            campanha_id=campanha.id
+                                        ) }}"
+                                        class="btn-table-action btn-table-primary"
+                                    >
+                                        Visualizar
+                                    </a>
+
+
+                                    {% if campanha.status in [
+                                        'rascunho',
+                                        'reprovada'
+                                    ] %}
+
+                                        <a
+                                            href="{{ url_for(
+                                                'campanhas.editar',
+                                                campanha_id=campanha.id
+                                            ) }}"
+                                            class="btn-table-action"
+                                        >
+                                            Editar
+                                        </a>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        {% else %}
+
+        <div class="empty-state management-empty">
+
+            <div class="empty-state-icon">
+                +
+            </div>
+
+            <strong>
+                Nenhuma campanha cadastrada
+            </strong>
+
+            <p>
+                Crie a primeira campanha para começar
+                a estruturar o fluxo de conscientização.
+            </p>
+
+            <a
+                href="{{ url_for('campanhas.nova') }}"
+                class="btn-one-primary"
+            >
+                Criar campanha
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+</section>
+
+{% endblock %}

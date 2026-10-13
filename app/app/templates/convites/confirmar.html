@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}ONE | Confirmar convites{% endblock %}
+{% block content %}<section class="page"><h1>Confirmação humana de {{ 'reenvio' if envelope.tipo == 'reenvio' else 'primeiro envio' }}</h1>
+<p>Backend fake: simulação sem envio de e-mail.</p>
+<p>Selecionadas: {{ envelope.itens|length }}. Elegíveis: {{ envelope.itens|length - envelope.excluidos|length }}. Excluídas: {{ envelope.excluidos|length }}.</p>
+<p>Remetente institucional: {{ envelope.remetente.name }} &lt;{{ envelope.remetente.address }}&gt;</p>
+<p>Assunto: ONE — Convite de treinamento</p>
+{% if envelope.tipo == 'reenvio' %}<p role="alert">Reenvio explícito: um resultado indeterminado pode ter sido aceito anteriormente. Confirmar pode gerar uma mensagem duplicada para o destinatário.</p>{% endif %}
+{% for item in envelope.itens %}<article><h2>Participação {{ item.id }} — {{ item.nome }}</h2><p>Destinatário: {{ item.email or 'E-mail inválido' }}. Treinamento: {{ item.titulo }}.</p>
+{% if item.id|string in envelope.excluidos %}<p role="alert">Excluída: {{ motivos[envelope.excluidos[item.id|string]] }}.</p>{% else %}
+<pre>Olá, {{ item.nome }}.
+O treinamento “{{ item.titulo }}” está disponível na plataforma de treinamentos da ONE.
+Acesse pelo seu link individual: [link individual oculto]
+Não compartilhe este endereço.
+Esta mensagem não solicita senha ou envio de credenciais.
+
+ONE — Plataforma de treinamentos</pre>{% endif %}</article>{% endfor %}
+<p>O servidor revalidará todas as participações ao confirmar. Mudanças serão excluídas e explicadas no resultado.</p>
+<form method="post" action="{{ url_for('convites.confirmar_post') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="confirmacao" value="{{ confirmacao }}"><button type="submit" {% if envelope.itens|length == envelope.excluidos|length %}disabled{% endif %}>Confirmar {{ 'reenvio' if envelope.tipo == 'reenvio' else 'envio' }} fake e criar solicitações pendentes</button></form>
+</section>{% endblock %}

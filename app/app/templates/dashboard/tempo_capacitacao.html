@@ -1,0 +1,73 @@
+<section class="dashboard-section" aria-labelledby="capacitacao-titulo">
+    <div class="section-heading">
+        <div>
+            <span class="section-eyebrow">Capacitação</span>
+            <h2 id="capacitacao-titulo">Capacitação e tempo de treinamento</h2>
+            <p>Tempo ativo registrado nos treinamentos, incluindo o histórico de cadastros inativos.</p>
+        </div>
+        <a href="{{ url_for('colaboradores.painel') }}" class="btn-one-secondary">
+            Painel geral de colaboradores
+        </a>
+    </div>
+
+    <div class="environment-grid">
+        <article class="environment-card">
+            <span class="environment-label">Horas totais de capacitação</span>
+            <strong>{{ metricas_capacitacao.total_segundos | tempo_ativo }}</strong>
+            <p>Tempo ativo acumulado em todas as participações.</p>
+        </article>
+        <article class="environment-card">
+            <span class="environment-label">Tempo médio por participação ativa</span>
+            <strong>{{ metricas_capacitacao.media_segundos | tempo_ativo }}</strong>
+            <p>Considera somente participações com tempo maior que zero.</p>
+        </article>
+        <article class="environment-card">
+            <span class="environment-label">Participações com atividade registrada</span>
+            <strong>{{ metricas_capacitacao.participacoes_com_tempo }}</strong>
+            <p>Participações com tempo ativo positivo.</p>
+        </article>
+        <article class="environment-card">
+            <span class="environment-label">Colaboradores com atividade de treinamento</span>
+            <strong>{{ metricas_capacitacao.colaboradores_com_atividade }}</strong>
+            <p>Cada colaborador é contado uma vez, mesmo com várias participações.</p>
+        </article>
+    </div>
+</section>
+
+{% for titulo, coluna, linhas, mensagem in [
+    ('Tempo total por treinamento', 'Treinamento', metricas_capacitacao.por_treinamento, 'Nenhum treinamento cadastrado'),
+    ('Tempo total por categoria', 'Categoria', metricas_capacitacao.por_categoria, 'Nenhuma categoria ou treinamento cadastrado')
+] %}
+<section class="dashboard-section">
+    <div class="section-heading">
+        <div>
+            <span class="section-eyebrow">Capacitação</span>
+            <h2>{{ titulo }}</h2>
+        </div>
+    </div>
+    {% if linhas %}
+    <div class="table-card">
+        <div class="table-wrapper">
+            <table class="one-table">
+                <thead>
+                    <tr><th scope="col">{{ coluna }}</th><th scope="col">Tempo ativo total</th></tr>
+                </thead>
+                <tbody>
+                    {% for linha in linhas %}
+                    <tr>
+                        <td><strong class="person-name">{{ linha.nome }}</strong></td>
+                        <td>{{ linha.segundos | tempo_ativo }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <strong>{{ mensagem }}</strong>
+        <p>Sem tempo ativo registrado: 0 min.</p>
+    </div>
+    {% endif %}
+</section>
+{% endfor %}

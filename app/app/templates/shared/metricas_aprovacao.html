@@ -1,0 +1,7 @@
+<section class="management-summary" aria-label="Aprovação de participações">
+    {% for chave, titulo in [('aprovadas','Participações aprovadas'), ('reprovadas','Participações reprovadas'), ('historicas','Concluídos históricos/não classificados')] %}
+    <article class="summary-card"><span class="summary-label">{{ titulo }}</span><strong class="summary-value">{{ metricas[chave] }}</strong></article>
+    {% endfor %}
+    <article class="summary-card"><span class="summary-label">Taxa de aprovação</span><strong class="summary-value">{{ ('%.1f' | format(metricas.taxa_aprovacao)) ~ '%' if metricas.taxa_aprovacao is not none else '—' }}</strong><span class="summary-caption">Aprovados / (aprovados + reprovados), incluindo conclusão sem quiz; históricos excluídos. Sem classificados: —.</span></article>
+</section>
+<p>Atribuídos: {{ metricas.atribuidas }} · Iniciados: {{ metricas.iniciadas }} · Concluídos: {{ metricas.concluidas }} · Em andamento: {{ metricas.em_andamento }} · Pendentes: {{ metricas.pendentes }} · Taxa de conclusão: {{ ('%.1f' | format(metricas.taxa_conclusao)) ~ '%' if metricas.taxa_conclusao is not none else '—' }}</p>

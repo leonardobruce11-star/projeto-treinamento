@@ -1,0 +1,389 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Auditoria da campanha
+{% endblock %}
+
+{% block content %}
+
+<section class="campaign-audit-page">
+
+    <!-- ======================================================
+         CABEÇALHO
+         ====================================================== -->
+
+    <header class="campaign-audit-header">
+
+        <div>
+
+            <span class="page-eyebrow">
+                Governança e rastreabilidade
+            </span>
+
+            <h1>
+                Histórico de auditoria
+            </h1>
+
+            <p>
+                Consulte os eventos administrativos registrados
+                durante o ciclo de vida da campanha.
+            </p>
+
+        </div>
+
+        <div class="campaign-audit-header-actions">
+
+            <a
+                href="{{ url_for(
+                    'campanhas.relatorio',
+                    campanha_id=campanha.id
+                ) }}"
+                class="btn-one-secondary"
+            >
+                Relatório consolidado
+            </a>
+
+            <a
+                href="{{ url_for(
+                    'campanhas.detalhe',
+                    campanha_id=campanha.id
+                ) }}"
+                class="btn-one-secondary"
+            >
+                Voltar para campanha
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- ======================================================
+         RESUMO DA CAMPANHA
+         ====================================================== -->
+
+    <section class="campaign-audit-overview">
+
+        <div class="campaign-audit-overview-main">
+
+            <span class="section-eyebrow">
+                Campanha monitorada
+            </span>
+
+            <h2>
+                {{ campanha.nome }}
+            </h2>
+
+            <p>
+                Registro administrativo das ações realizadas
+                nesta campanha.
+            </p>
+
+        </div>
+
+
+        <div class="campaign-audit-status">
+
+            <span class="campaign-status-label">
+                Status atual
+            </span>
+
+            <span class="campaign-status-badge">
+                {{ campanha.status.replace("_", " ")|title }}
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         RESUMO DE AUDITORIA
+         ====================================================== -->
+
+    <section class="campaign-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-eyebrow">
+                    Rastreabilidade
+                </span>
+
+                <h2>
+                    Resumo da auditoria
+                </h2>
+
+                <p>
+                    Quantidade de eventos administrativos
+                    registrados no histórico da campanha.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="audit-summary-grid">
+
+            <article class="audit-summary-card audit-summary-primary">
+
+                <span class="audit-summary-label">
+                    Eventos registrados
+                </span>
+
+                <strong>
+                    {{ registros|length }}
+                </strong>
+
+                <span class="audit-summary-caption">
+
+                    {% if registros|length == 1 %}
+                        Evento disponível no histórico
+                    {% else %}
+                        Eventos disponíveis no histórico
+                    {% endif %}
+
+                </span>
+
+            </article>
+
+
+            <article class="audit-summary-card">
+
+                <span class="audit-summary-label">
+                    Campanha
+                </span>
+
+                <strong class="audit-summary-text">
+                    {{ campanha.nome }}
+                </strong>
+
+                <span class="audit-summary-caption">
+                    Objeto acompanhado
+                </span>
+
+            </article>
+
+
+            <article class="audit-summary-card">
+
+                <span class="audit-summary-label">
+                    Situação
+                </span>
+
+                <strong class="audit-summary-text">
+                    {{ campanha.status.replace("_", " ")|title }}
+                </strong>
+
+                <span class="audit-summary-caption">
+                    Estado atual da campanha
+                </span>
+
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         LINHA DO TEMPO
+         ====================================================== -->
+
+    <section class="campaign-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-eyebrow">
+                    Histórico administrativo
+                </span>
+
+                <h2>
+                    Linha do tempo
+                </h2>
+
+                <p>
+                    Eventos registrados em ordem no histórico
+                    de rastreabilidade da campanha.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if registros %}
+
+        <div class="audit-timeline">
+
+            {% for registro in registros %}
+
+            <article class="audit-timeline-item">
+
+                <div class="audit-timeline-axis">
+
+                    <span class="audit-timeline-marker"></span>
+
+                </div>
+
+
+                <div class="audit-event-card">
+
+                    <div class="audit-event-header">
+
+                        <div>
+
+                            <span class="audit-event-index">
+                                Evento {{ loop.index }}
+                            </span>
+
+                            <h3>
+                                {{ registro.acao.replace("_", " ")|title }}
+                            </h3>
+
+                        </div>
+
+                        <span class="audit-event-date">
+                            {{ registro.criado_em }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="audit-event-meta">
+
+                        <div class="audit-meta-item">
+
+                            <span>
+                                Responsável
+                            </span>
+
+                            <strong>
+
+                                {% if registro.usuario %}
+
+                                    {{ registro.usuario.nome }}
+
+                                {% elif registro.usuario_id %}
+
+                                    Usuário #{{ registro.usuario_id }}
+
+                                {% else %}
+
+                                    Sistema
+
+                                {% endif %}
+
+                            </strong>
+
+                        </div>
+
+
+                        <div class="audit-meta-item">
+
+                            <span>
+                                Objeto
+                            </span>
+
+                            <strong>
+
+                                {{ registro.objeto or "-" }}
+
+                                {% if registro.objeto_id %}
+
+                                    #{{ registro.objeto_id }}
+
+                                {% endif %}
+
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    {% if registro.detalhes %}
+
+                    <div class="audit-event-details">
+
+                        <span>
+                            Detalhes do registro
+                        </span>
+
+                        <p>
+                            {{ registro.detalhes }}
+                        </p>
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+
+        {% else %}
+
+        <div class="empty-state management-empty">
+
+            <div class="empty-state-icon">
+                i
+            </div>
+
+            <strong>
+                Nenhum registro encontrado
+            </strong>
+
+            <p>
+                Ainda não existem eventos de auditoria
+                associados a esta campanha.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- ======================================================
+         NAVEGAÇÃO FINAL
+         ====================================================== -->
+
+    <div class="campaign-audit-footer">
+
+        <a
+            href="{{ url_for(
+                'campanhas.relatorio',
+                campanha_id=campanha.id
+            ) }}"
+            class="btn-one-primary"
+        >
+            Relatório consolidado
+        </a>
+
+
+        <a
+            href="{{ url_for(
+                'campanhas.detalhe',
+                campanha_id=campanha.id
+            ) }}"
+            class="btn-one-secondary"
+        >
+            Voltar para campanha
+        </a>
+
+    </div>
+
+</section>
+
+{% endblock %}

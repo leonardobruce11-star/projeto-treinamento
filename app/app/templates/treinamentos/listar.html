@@ -1,0 +1,312 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Treinamentos
+{% endblock %}
+
+{% block content %}
+
+<section class="training-page">
+
+    <!-- ======================================================
+         CABEÇALHO
+         ====================================================== -->
+
+    <header class="training-header">
+
+        <div>
+
+            <span class="page-eyebrow">
+                Capacitação
+            </span>
+
+            <h1>
+                Treinamentos
+            </h1>
+
+            <p>
+                Gerencie os conteúdos educacionais utilizados
+                nas ações internas de conscientização.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('treinamentos.novo') }}"
+            class="btn-one-primary"
+        >
+            <span class="btn-one-icon">+</span>
+
+            Novo treinamento
+        </a>
+
+    </header>
+
+
+    <!-- ======================================================
+         RESUMO
+         ====================================================== -->
+
+    {% set ativos = namespace(valor=0) %}
+    {% set total_modulos = namespace(valor=0) %}
+
+    {% if treinamentos %}
+
+        {% for treinamento in treinamentos %}
+
+            {% if treinamento.ativo %}
+                {% set ativos.valor = ativos.valor + 1 %}
+            {% endif %}
+
+            {% set total_modulos.valor =
+                total_modulos.valor
+                +
+                (treinamento.modulos|length)
+            %}
+
+        {% endfor %}
+
+    {% endif %}
+
+
+    <section class="training-summary">
+
+        <article class="training-summary-card training-summary-primary">
+
+            <span>
+                Treinamentos
+            </span>
+
+            <strong>
+                {{ treinamentos|length if treinamentos else 0 }}
+            </strong>
+
+            <small>
+                Conteúdos cadastrados
+            </small>
+
+        </article>
+
+
+        <article class="training-summary-card">
+
+            <span>
+                Ativos
+            </span>
+
+            <strong>
+                {{ ativos.valor }}
+            </strong>
+
+            <small>
+                Disponíveis para uso
+            </small>
+
+        </article>
+
+
+        <article class="training-summary-card">
+
+            <span>
+                Módulos
+            </span>
+
+            <strong>
+                {{ total_modulos.valor }}
+            </strong>
+
+            <small>
+                Conteúdos estruturados
+            </small>
+
+        </article>
+
+    </section>
+
+
+    <!-- ======================================================
+         LISTAGEM
+         ====================================================== -->
+
+    <section class="training-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-eyebrow">
+                    Biblioteca de capacitação
+                </span>
+
+                <h2>
+                    Conteúdos disponíveis
+                </h2>
+
+                <p>
+                    Consulte os treinamentos cadastrados
+                    e sua estrutura de módulos.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if treinamentos %}
+
+        <div class="training-catalog">
+
+            {% for treinamento in treinamentos %}
+
+            <article class="training-card">
+
+                <div class="training-card-top">
+
+                    <div class="training-card-icon">
+                        T
+                    </div>
+
+                    <div class="training-card-status">
+
+                        {% if treinamento.ativo %}
+
+                            <span class="training-status training-status-active">
+                                Ativo
+                            </span>
+
+                        {% else %}
+
+                            <span class="training-status training-status-inactive">
+                                Inativo
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <div class="training-card-content">
+
+                    <h3>
+                        {{ treinamento.titulo }}
+                    </h3>
+
+
+                     {% if treinamento.categoria %}
+
+    		<span class="section-eyebrow">
+        		{{ treinamento.categoria.nome }}
+    		</span>
+
+			{% else %}
+
+    		<span class="section-eyebrow">
+        		Sem categoria
+    		</span>
+
+			{% endif %}
+
+                    {% if treinamento.descricao %}
+
+                        <p>
+                            {{ treinamento.descricao }}
+                        </p>
+
+                    {% else %}
+
+                        <p class="training-muted">
+                            Sem descrição cadastrada.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="training-card-meta">
+
+                    <div>
+
+                        <span>
+                            Módulos
+                        </span>
+
+                        <strong>
+                            {{ treinamento.modulos|length }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="training-card-actions">
+
+                    <a
+                        href="{{ url_for(
+                            'treinamentos.editar',
+                            treinamento_id=treinamento.id
+                        ) }}"
+                        class="btn-one-secondary"
+                    >
+                        Editar
+                    </a>
+
+
+                    <a
+                        href="{{ url_for(
+                            'treinamentos.visualizar',
+                            treinamento_id=treinamento.id
+                        ) }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="btn-one-primary"
+                    >
+                        Visualizar
+                    </a>
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+
+        {% else %}
+
+        <div class="empty-state management-empty">
+
+            <div class="empty-state-icon">
+                +
+            </div>
+
+            <strong>
+                Nenhum treinamento cadastrado
+            </strong>
+
+            <p>
+                Crie o primeiro treinamento para começar
+                a estruturar os conteúdos de capacitação.
+            </p>
+
+            <a
+                href="{{ url_for('treinamentos.novo') }}"
+                class="btn-one-primary"
+            >
+                Criar treinamento
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+</section>
+
+{% endblock %}

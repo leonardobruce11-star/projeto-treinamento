@@ -1,0 +1,506 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Editar campanha
+{% endblock %}
+
+{% block content %}
+
+<section class="form-page campaign-edit-page">
+
+    <!-- ======================================================
+         CABEÇALHO
+         ====================================================== -->
+
+    <header class="form-page-header">
+
+        <div>
+
+            <span class="page-eyebrow">
+                Gestão de campanhas
+            </span>
+
+            <h1>
+                Editar campanha
+            </h1>
+
+            <p>
+                Atualize os dados gerais e os recursos vinculados
+                à campanha.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for(
+                'campanhas.detalhe',
+                campanha_id=campanha.id
+            ) }}"
+            class="btn-one-secondary"
+        >
+            Voltar para campanha
+        </a>
+
+    </header>
+
+
+    <!-- ======================================================
+         STATUS
+         ====================================================== -->
+
+    <div class="campaign-edit-status">
+
+        <div>
+
+            <span>
+                Campanha
+            </span>
+
+            <strong>
+                {{ campanha.nome }}
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                Status atual
+            </span>
+
+            <strong class="campaign-main-status">
+                {{ campanha.status.replace("_", " ")|title }}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- ======================================================
+         FORMULÁRIO
+         ====================================================== -->
+
+    <div class="form-card campaign-edit-card">
+
+        <div class="form-card-header">
+
+            <span class="section-eyebrow">
+                Configuração
+            </span>
+
+            <h2>
+                Informações da campanha
+            </h2>
+
+            <p>
+                Revise os dados antes de salvar as alterações.
+            </p>
+
+        </div>
+
+
+        <form
+            method="POST"
+            class="one-form"
+        >
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
+
+
+            <!-- ==================================================
+                 DADOS GERAIS
+                 ================================================== -->
+
+            <section class="campaign-form-section">
+
+                <div class="campaign-form-section-header">
+
+                    <span class="campaign-form-step">
+                        01
+                    </span>
+
+                    <div>
+
+                        <h3>
+                            Dados gerais
+                        </h3>
+
+                        <p>
+                            Identificação administrativa da campanha.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                {% set tipo_selecionado = campanha.tipo_efetivo %}
+            <div class="form-field">
+                <label for="tipo">Tipo de campanha *</label>
+                <select id="tipo" name="tipo" required>
+                    {% for valor, rotulo in tipos_campanha.items() %}
+                    <option value="{{ valor }}" {% if tipo_selecionado == valor %}selected{% endif %}>{{ rotulo }}</option>
+                    {% endfor %}
+                </select>
+                <small class="form-help">
+                    Todos os tipos utilizam grupo e treinamento. Simulações de phishing
+                    também utilizam cenário, template de e-mail e landing page.
+                </small>
+            </div>
+
+                <div class="form-field">
+
+                    <label for="nome">
+                        Nome *
+                    </label>
+
+                    <input
+                        id="nome"
+                        type="text"
+                        name="nome"
+                        value="{{ campanha.nome }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-field">
+
+                    <label for="descricao">
+                        Descrição
+                    </label>
+
+                    <textarea
+                        id="descricao"
+                        name="descricao"
+                        rows="4"
+                        placeholder="Descreva o objetivo interno desta campanha."
+                    >{{ campanha.descricao or '' }}</textarea>
+
+                    <small class="form-help">
+                        Campo opcional.
+                    </small>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==================================================
+                 PÚBLICO
+                 ================================================== -->
+
+            <section class="campaign-form-section">
+
+                <div class="campaign-form-section-header">
+
+                    <span class="campaign-form-step">
+                        02
+                    </span>
+
+                    <div>
+
+                        <h3>
+                            Público
+                        </h3>
+
+                        <p>
+                            Defina o grupo de participantes
+                            associado à campanha.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-field">
+
+                    <label for="grupo_id">
+                        Grupo *
+                    </label>
+
+                    <select
+                        id="grupo_id"
+                        name="grupo_id"
+                        required
+                    >
+
+                        <option value="">
+                            Selecione um grupo
+                        </option>
+
+                        {% for grupo in grupos %}
+
+                            <option
+                                value="{{ grupo.id }}"
+                                {% if campanha.grupo_id == grupo.id %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ grupo.nome }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==================================================
+                 CENÁRIO E CONTEÚDO
+                 ================================================== -->
+
+            <section class="campaign-form-section">
+
+                <div class="campaign-form-section-header">
+
+                    <span class="campaign-form-step">
+                        03
+                    </span>
+
+                    <div>
+
+                        <h3>
+                            Conteúdo e treinamento
+                        </h3>
+
+                        <p>
+                            Configure os recursos utilizados
+                            na experiência de conscientização.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="campaign-form-grid">
+
+                    <fieldset id="recursos-phishing" style="border: 0; padding: 0; margin: 0; min-width: 0;" {% if not campanha.eh_simulacao_phishing %}hidden disabled{% endif %}>
+                        <legend>Recursos da simulação de phishing</legend>
+                    <div class="form-field">
+
+                        <label for="cenario_id">
+                            Cenário *
+                        </label>
+
+                        <select
+                            id="cenario_id"
+                            name="cenario_id"
+                            required
+                        >
+
+                            <option value="">
+                                Selecione um cenário
+                            </option>
+
+                            {% for cenario in cenarios %}
+
+                                <option
+                                    value="{{ cenario.id }}"
+                                    {% if campanha.cenario_id == cenario.id %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ cenario.nome }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-field">
+
+                        <label for="template_email_id">
+                            Template de e-mail *
+                        </label>
+
+                        <select
+                            id="template_email_id"
+                            name="template_email_id"
+                            required
+                        >
+
+                            <option value="">
+                                Selecione um template
+                            </option>
+
+                            {% for template in templates %}
+
+                                <option
+                                    value="{{ template.id }}"
+                                    {% if campanha.template_email_id == template.id %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ template.nome }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-field">
+
+                        <label for="landing_page_id">
+                            Landing Page *
+                        </label>
+
+                        <select
+                            id="landing_page_id"
+                            name="landing_page_id"
+                            required
+                        >
+
+                            <option value="">
+                                Selecione uma Landing Page
+                            </option>
+
+                            {% for pagina in landing_pages %}
+
+                                <option
+                                    value="{{ pagina.id }}"
+                                    {% if campanha.landing_page_id == pagina.id %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ pagina.nome }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    </fieldset>
+
+                    <div class="form-field">
+
+                        <label for="treinamento_id">
+                            Treinamento *
+                        </label>
+
+                        <select
+                            id="treinamento_id"
+                            name="treinamento_id"
+                            required
+                        >
+
+                            <option value="">
+                                Selecione um treinamento
+                            </option>
+
+                            {% for treinamento in treinamentos %}
+
+                                <option
+                                    value="{{ treinamento.id }}"
+                                    {% if campanha.treinamento_id == treinamento.id %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ treinamento.titulo }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==================================================
+                 AVISO
+                 ================================================== -->
+
+            <div class="campaign-edit-note">
+
+                <span class="training-notice-icon">
+                    i
+                </span>
+
+                <div>
+
+                    <strong>
+                        Revisão administrativa
+                    </strong>
+
+                    <p>
+                        Alterar estes vínculos modifica a configuração
+                        da campanha. Revise os dados antes de salvar.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==================================================
+                 AÇÕES
+                 ================================================== -->
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for(
+                        'campanhas.detalhe',
+                        campanha_id=campanha.id
+                    ) }}"
+                    class="btn-one-secondary"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn-one-primary"
+                >
+                    Salvar campanha
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+<script>
+    const tipoCampanha = document.getElementById('tipo');
+    const recursosPhishing = document.getElementById('recursos-phishing');
+    function atualizarRecursosCampanha() {
+        const phishing = tipoCampanha.value === 'simulacao_phishing';
+        recursosPhishing.hidden = !phishing;
+        recursosPhishing.disabled = !phishing;
+        recursosPhishing.querySelectorAll('select').forEach(select => {
+            select.required = phishing;
+        });
+    }
+    tipoCampanha.addEventListener('change', atualizarRecursosCampanha);
+    atualizarRecursosCampanha();
+</script>
+{% endblock %}

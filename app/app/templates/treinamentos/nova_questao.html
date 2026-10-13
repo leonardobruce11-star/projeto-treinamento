@@ -1,0 +1,388 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Nova questão
+{% endblock %}
+
+{% block content %}
+
+<section class="training-question-page">
+
+    <!-- ======================================================
+         CABEÇALHO
+         ====================================================== -->
+
+    <header class="training-question-header">
+
+        <div>
+
+            <span class="page-eyebrow">
+                Avaliação
+            </span>
+
+            <h1>
+                Nova questão
+            </h1>
+
+            <p>
+                Crie uma nova questão para avaliar
+                o aprendizado do treinamento.
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for(
+                'treinamentos.editar',
+                treinamento_id=treinamento.id
+            ) }}"
+            class="btn-one-secondary"
+        >
+            Voltar
+        </a>
+
+    </header>
+
+
+    <!-- ======================================================
+         CONTEXTO DO TREINAMENTO
+         ====================================================== -->
+
+    <section class="training-question-context">
+
+        <div class="training-question-context-icon">
+            ?
+        </div>
+
+        <div>
+
+            <span class="section-eyebrow">
+                Treinamento
+            </span>
+
+            <h2>
+                {{ treinamento.titulo }}
+            </h2>
+
+            <p>
+                Esta questão fará parte do quiz
+                associado a este treinamento.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         FORMULÁRIO
+         ====================================================== -->
+
+    <section class="form-card training-question-card">
+
+        <div class="form-card-header">
+
+            <span class="section-eyebrow">
+                Estrutura da questão
+            </span>
+
+            <h2>
+                Informações da avaliação
+            </h2>
+
+            <p>
+                Defina o enunciado, as quatro alternativas
+                e indique qual resposta é correta.
+            </p>
+
+        </div>
+
+
+        <form
+            method="POST"
+            class="one-form"
+        >
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
+
+
+            <!-- ==================================================
+                 ORDEM
+                 ================================================== -->
+
+            <div class="form-field training-question-order">
+
+                <label for="ordem">
+                    Ordem
+                </label>
+
+                <input
+                    id="ordem"
+                    type="number"
+                    name="ordem"
+                    value="{{ treinamento.questoes|length + 1 }}"
+                    min="1"
+                    required
+                >
+
+                <small class="form-help">
+                    Define a posição desta questão no quiz.
+                </small>
+
+            </div>
+
+
+            <!-- ==================================================
+                 ENUNCIADO
+                 ================================================== -->
+
+            <div class="form-field training-question-statement">
+
+                <label for="enunciado">
+                    Enunciado *
+                </label>
+
+                <textarea
+                    id="enunciado"
+                    name="enunciado"
+                    rows="4"
+                    placeholder="Digite a pergunta que será apresentada ao participante."
+                    required
+                ></textarea>
+
+                <small class="form-help">
+                    Utilize uma pergunta clara e objetiva.
+                </small>
+
+            </div>
+
+
+            <!-- ==================================================
+                 ALTERNATIVAS
+                 ================================================== -->
+
+            <section class="training-alternatives-section">
+
+                <div class="training-alternatives-heading">
+
+                    <span class="section-eyebrow">
+                        Respostas
+                    </span>
+
+                    <h3>
+                        Alternativas
+                    </h3>
+
+                    <p>
+                        Cadastre quatro opções de resposta
+                        para esta questão.
+                    </p>
+
+                </div>
+
+
+                <div class="training-alternatives-grid">
+
+                    <div class="training-alternative-field">
+
+                        <span class="training-alternative-number">
+                            1
+                        </span>
+
+                        <div class="form-field">
+
+                            <label for="alternativa_1">
+                                Alternativa 1
+                            </label>
+
+                            <input
+                                id="alternativa_1"
+                                type="text"
+                                name="alternativa_1"
+                                placeholder="Digite a primeira alternativa"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="training-alternative-field">
+
+                        <span class="training-alternative-number">
+                            2
+                        </span>
+
+                        <div class="form-field">
+
+                            <label for="alternativa_2">
+                                Alternativa 2
+                            </label>
+
+                            <input
+                                id="alternativa_2"
+                                type="text"
+                                name="alternativa_2"
+                                placeholder="Digite a segunda alternativa"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="training-alternative-field">
+
+                        <span class="training-alternative-number">
+                            3
+                        </span>
+
+                        <div class="form-field">
+
+                            <label for="alternativa_3">
+                                Alternativa 3
+                            </label>
+
+                            <input
+                                id="alternativa_3"
+                                type="text"
+                                name="alternativa_3"
+                                placeholder="Digite a terceira alternativa"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="training-alternative-field">
+
+                        <span class="training-alternative-number">
+                            4
+                        </span>
+
+                        <div class="form-field">
+
+                            <label for="alternativa_4">
+                                Alternativa 4
+                            </label>
+
+                            <input
+                                id="alternativa_4"
+                                type="text"
+                                name="alternativa_4"
+                                placeholder="Digite a quarta alternativa"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==================================================
+                 RESPOSTA CORRETA
+                 ================================================== -->
+
+            <div class="training-correct-answer">
+
+                <div>
+
+                    <span class="section-eyebrow">
+                        Validação
+                    </span>
+
+                    <h3>
+                        Resposta correta
+                    </h3>
+
+                    <p>
+                        Selecione qual das quatro alternativas
+                        será considerada correta.
+                    </p>
+
+                </div>
+
+
+                <div class="form-field training-correct-select">
+
+                    <label for="correta">
+                        Resposta correta *
+                    </label>
+
+                    <select
+                        id="correta"
+                        name="correta"
+                        required
+                    >
+
+                        <option value="">
+                            Selecione
+                        </option>
+
+                        <option value="1">
+                            Alternativa 1
+                        </option>
+
+                        <option value="2">
+                            Alternativa 2
+                        </option>
+
+                        <option value="3">
+                            Alternativa 3
+                        </option>
+
+                        <option value="4">
+                            Alternativa 4
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==================================================
+                 AÇÕES
+                 ================================================== -->
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for(
+                        'treinamentos.editar',
+                        treinamento_id=treinamento.id
+                    ) }}"
+                    class="btn-one-secondary"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn-one-primary"
+                >
+                    Criar questão
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}ONE | Integração Gophish{% endblock %}
+{% block content %}
+<section>
+    <h1>Integração Gophish</h1>
+    <p>Estado da configuração: {{ estado.status }}. Backend: {{ estado.backend }}.</p>
+    <p>Envio desabilitado. Esta página não consulta o serviço externo.</p>
+    <p>A aprovação de campanhas ocorre na ONE. Sincronizações avulsas estão indisponíveis;
+       a preparação após aprovação será definida na etapa 18.7C.</p>
+</section>
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Novo departamento
+{% endblock %}
+
+{% block content %}
+
+<section class="form-page">
+
+    <header class="form-page-header">
+
+        <div>
+
+            <span class="page-eyebrow">
+                Gestão organizacional
+            </span>
+
+            <h1>
+                Novo departamento
+            </h1>
+
+            <p>
+                Cadastre uma nova área para organizar
+                os colaboradores dentro da plataforma.
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for('departamentos.listar') }}"
+            class="btn-one-secondary"
+        >
+            Voltar
+        </a>
+
+    </header>
+
+
+    <div class="form-card">
+
+        <div class="form-card-header">
+
+            <span class="section-eyebrow">
+                Cadastro
+            </span>
+
+            <h2>
+                Informações do departamento
+            </h2>
+
+            <p>
+                Informe o nome da área que será criada no sistema.
+            </p>
+
+        </div>
+
+
+        <form
+            method="POST"
+            class="one-form"
+        >
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
+
+
+            <div class="form-field">
+
+                <label for="nome">
+                    Nome do departamento
+                </label>
+
+                <input
+                    id="nome"
+                    type="text"
+                    name="nome"
+                    placeholder="Ex.: Recursos Humanos"
+                    required
+                >
+
+                <small class="form-help">
+                    Utilize uma nomenclatura clara e reconhecida internamente.
+                </small>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('departamentos.listar') }}"
+                    class="btn-one-secondary"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn-one-primary"
+                >
+                    Criar departamento
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

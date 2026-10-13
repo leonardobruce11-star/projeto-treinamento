@@ -1,0 +1,890 @@
+<!doctype html>
+
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>
+        {% block titulo %}Avaliação | {{ treinamento.titulo }} | ONE{% endblock %}
+    </title>
+
+    <style>
+
+        :root {
+            --one-navy: #335479;
+            --one-blue: #1b6195;
+            --one-sky: #83bde8;
+            --one-white: #ffffff;
+
+            --one-ink: #173047;
+            --one-ink-soft: #536779;
+
+            --one-bg: #f4f7fa;
+            --one-border: #e5ebf0;
+            --one-border-strong: #d5dee6;
+        }
+
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+            margin: 0;
+
+            min-height: 100vh;
+
+            font-family:
+                Arial,
+                sans-serif;
+
+            color:
+                var(--one-ink);
+
+            background:
+                var(--one-bg);
+        }
+
+
+        /* =====================================================
+           TOPO
+           ===================================================== */
+
+        .portal-topbar {
+            min-height: 72px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+
+            padding:
+                0
+                32px;
+
+            background:
+                var(--one-navy);
+
+            color:
+                #ffffff;
+        }
+
+
+        .portal-brand {
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+        }
+
+
+        .portal-brand-mark {
+            width: 38px;
+            height: 38px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 10px;
+
+            background:
+                rgba(255,255,255,.12);
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+
+        .portal-brand-copy strong {
+            display: block;
+
+            font-size: 12px;
+        }
+
+
+        .portal-brand-copy span {
+            display: block;
+
+            margin-top: 3px;
+
+            font-size: 9px;
+
+            color:
+                rgba(255,255,255,.68);
+        }
+
+
+        .portal-stage {
+            padding:
+                7px
+                11px;
+
+            border:
+                1px solid
+                rgba(255,255,255,.15);
+
+            border-radius: 999px;
+
+            background:
+                rgba(255,255,255,.06);
+
+            font-size: 9px;
+
+            color:
+                rgba(255,255,255,.85);
+        }
+
+
+        /* =====================================================
+           CONTAINER
+           ===================================================== */
+
+        .portal-shell {
+            width:
+                min(
+                    980px,
+                    calc(100% - 36px)
+                );
+
+            margin:
+                34px
+                auto
+                60px;
+        }
+
+
+        /* =====================================================
+           INTRODUÇÃO
+           ===================================================== */
+
+        .quiz-header {
+            padding:
+                32px
+                34px;
+
+            border:
+                1px solid
+                var(--one-border);
+
+            border-radius: 18px;
+
+            background:
+                #ffffff;
+        }
+
+
+        .quiz-eyebrow {
+            display: block;
+
+            margin-bottom: 8px;
+
+            font-size: 8px;
+
+            font-weight: 700;
+
+            letter-spacing: .11em;
+
+            text-transform: uppercase;
+
+            color:
+                var(--one-blue);
+        }
+
+
+        .quiz-header h1 {
+            margin:
+                0
+                0
+                10px;
+
+            font-size:
+                clamp(
+                    26px,
+                    4vw,
+                    38px
+                );
+
+            line-height: 1.15;
+        }
+
+
+        .quiz-training-name {
+            margin:
+                0
+                0
+                12px;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            color:
+                var(--one-ink-soft);
+        }
+
+
+        .quiz-description {
+            margin: 0;
+
+            max-width: 700px;
+
+            font-size: 10px;
+
+            line-height: 1.65;
+
+            color:
+                var(--one-ink-soft);
+        }
+
+
+        /* =====================================================
+           RESUMO
+           ===================================================== */
+
+        .quiz-summary {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 16px;
+
+            margin-top: 16px;
+
+            padding:
+                16px
+                19px;
+
+            border:
+                1px solid
+                var(--one-border);
+
+            border-radius: 13px;
+
+            background:
+                #ffffff;
+        }
+
+
+        .quiz-summary span {
+            font-size: 9px;
+
+            color:
+                var(--one-ink-soft);
+        }
+
+
+        .quiz-summary strong {
+            font-size: 10px;
+
+            color:
+                var(--one-blue);
+        }
+
+
+        /* =====================================================
+           FORMULÁRIO
+           ===================================================== */
+
+        .quiz-form {
+            margin-top: 22px;
+        }
+
+
+        .questions-list {
+            display: grid;
+
+            gap: 18px;
+        }
+
+
+        .question-card {
+            overflow: hidden;
+
+            border:
+                1px solid
+                var(--one-border);
+
+            border-radius: 16px;
+
+            background:
+                #ffffff;
+
+            box-shadow:
+                0 5px 18px
+                rgba(23,48,71,.03);
+        }
+
+
+        .question-header {
+            display: grid;
+
+            grid-template-columns:
+                42px
+                minmax(0, 1fr);
+
+            gap: 14px;
+
+            align-items: start;
+
+            padding:
+                20px
+                22px;
+
+            border-bottom:
+                1px solid
+                var(--one-border);
+
+            background:
+                #fbfcfd;
+        }
+
+
+        .question-number {
+            width: 38px;
+            height: 38px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 10px;
+
+            background:
+                rgba(131,189,232,.14);
+
+            color:
+                var(--one-blue);
+
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+
+        .question-header h2 {
+            margin: 0;
+
+            font-size: 14px;
+
+            line-height: 1.45;
+        }
+
+
+        /* =====================================================
+           ALTERNATIVAS
+           ===================================================== */
+
+        .alternatives {
+            display: grid;
+
+            gap: 10px;
+
+            padding:
+                20px
+                22px;
+        }
+
+
+        .alternative-option {
+            position: relative;
+
+            display: block;
+
+            cursor: pointer;
+        }
+
+
+        .alternative-option input {
+            position: absolute;
+
+            opacity: 0;
+
+            pointer-events: none;
+        }
+
+
+        .alternative-content {
+            display: grid;
+
+            grid-template-columns:
+                28px
+                minmax(0, 1fr);
+
+            gap: 12px;
+
+            align-items: center;
+
+            min-height: 52px;
+
+            padding:
+                11px
+                14px;
+
+            border:
+                1px solid
+                var(--one-border);
+
+            border-radius: 11px;
+
+            background:
+                #ffffff;
+
+            transition:
+                border .15s ease,
+                background .15s ease;
+        }
+
+
+        .alternative-marker {
+            width: 22px;
+            height: 22px;
+
+            display: grid;
+            place-items: center;
+
+            border:
+                1px solid
+                var(--one-border-strong);
+
+            border-radius: 50%;
+
+            font-size: 9px;
+
+            color:
+                var(--one-ink-soft);
+
+            background:
+                #ffffff;
+        }
+
+
+        .alternative-text {
+            font-size: 10px;
+
+            line-height: 1.5;
+
+            color:
+                var(--one-ink);
+        }
+
+
+        .alternative-option:hover .alternative-content {
+            border-color:
+                var(--one-sky);
+
+            background:
+                #fbfdff;
+        }
+
+
+        .alternative-option input:checked + .alternative-content {
+            border-color:
+                var(--one-blue);
+
+            background:
+                rgba(131,189,232,.08);
+        }
+
+
+        .alternative-option input:checked
+        + .alternative-content
+        .alternative-marker {
+            border-color:
+                var(--one-blue);
+
+            background:
+                var(--one-blue);
+
+            color:
+                #ffffff;
+        }
+
+
+        /* =====================================================
+           FINALIZAÇÃO
+           ===================================================== */
+
+        .quiz-submit-card {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 20px;
+
+            margin-top: 22px;
+
+            padding:
+                20px
+                22px;
+
+            border:
+                1px solid
+                var(--one-border);
+
+            border-radius: 15px;
+
+            background:
+                #ffffff;
+        }
+
+
+        .quiz-submit-copy strong {
+            display: block;
+
+            margin-bottom: 4px;
+
+            font-size: 11px;
+        }
+
+
+        .quiz-submit-copy span {
+            display: block;
+
+            font-size: 9px;
+
+            line-height: 1.5;
+
+            color:
+                var(--one-ink-soft);
+        }
+
+
+        .quiz-submit-button {
+            min-width: 180px;
+            min-height: 44px;
+
+            padding:
+                10px
+                18px;
+
+            border: 0;
+
+            border-radius: 10px;
+
+            background:
+                var(--one-blue);
+
+            color:
+                #ffffff;
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition:
+                background .15s ease,
+                transform .15s ease;
+        }
+
+
+        .quiz-submit-button:hover {
+            background:
+                var(--one-navy);
+
+            transform:
+                translateY(-1px);
+        }
+
+
+        /* =====================================================
+           RODAPÉ
+           ===================================================== */
+
+        .portal-footer {
+            margin-top: 30px;
+
+            padding-top: 18px;
+
+            border-top:
+                1px solid
+                var(--one-border);
+
+            text-align: center;
+
+            font-size: 8px;
+
+            color:
+                #8a99a5;
+        }
+
+
+        /* =====================================================
+           RESPONSIVIDADE
+           ===================================================== */
+
+        @media (max-width: 650px) {
+
+            .portal-topbar {
+                align-items: flex-start;
+
+                flex-direction: column;
+
+                padding:
+                    16px
+                    18px;
+            }
+
+
+            .portal-shell {
+                width:
+                    calc(100% - 22px);
+
+                margin-top: 18px;
+            }
+
+
+            .quiz-header {
+                padding:
+                    25px
+                    22px;
+            }
+
+
+            .question-header {
+                grid-template-columns: 1fr;
+            }
+
+
+            .quiz-submit-card {
+                align-items: stretch;
+
+                flex-direction: column;
+            }
+
+
+            .quiz-submit-button {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <!-- ======================================================
+         TOPO
+         ====================================================== -->
+
+    <header class="portal-topbar">
+
+        <div class="portal-brand">
+
+            <div class="portal-brand-mark">
+                ONE
+            </div>
+
+            <div class="portal-brand-copy">
+
+                <strong>
+                    ONE Consultoria
+                </strong>
+
+                <span>
+                    Portal de Conscientização
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="portal-stage">
+            Avaliação final
+        </div>
+
+    </header>
+
+
+    <main class="portal-shell">
+        {% block conteudo %}
+
+        <!-- ==================================================
+             CABEÇALHO
+             ================================================== -->
+
+        <section class="quiz-header">
+
+            <span class="quiz-eyebrow">
+                Avaliação de aprendizagem
+            </span>
+
+            <h1>
+                Quiz de conscientização
+            </h1>
+
+            <p class="quiz-training-name">
+                {{ treinamento.titulo }}
+            </p>
+
+            <p class="quiz-description">
+                Responda todas as questões abaixo com base
+                no conteúdo apresentado durante o treinamento.
+                Após finalizar, seu resultado será registrado.
+            </p>
+
+        </section>
+
+
+        <!-- ==================================================
+             RESUMO
+             ================================================== -->
+
+        <section class="quiz-summary">
+
+            <span>
+                Questões da avaliação
+            </span>
+
+            <strong>
+                {{ questoes|length }}
+                questão{% if questoes|length != 1 %}ões{% endif %}
+            </strong>
+
+        </section>
+
+
+        {% block formulario %}
+        <!-- ==================================================
+             FORMULÁRIO
+             ================================================== -->
+
+        {% if erro_validacao %}
+        <p class="quiz-summary" role="alert">{{ erro_validacao }}</p>
+        {% endif %}
+
+        <p>Avaliação pendente. Ao retomar, você continua a mesma avaliação. O primeiro envio confirmado será preservado.</p>
+        <form
+            action="{{ url_for('portal_treinamento.quiz', token=acesso_token) }}"
+            class="quiz-form"
+            method="POST"
+        >
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
+
+
+            <input type="hidden" name="submissao_id" value="{{ submissao_id }}">
+            <section class="questions-list">
+
+                {% for questao in questoes %}
+
+                    <article class="question-card">
+
+                        <header class="question-header">
+
+                            <div class="question-number">
+                                {{ loop.index }}
+                            </div>
+
+                            <h2>
+                                {{ questao.enunciado }}
+                            </h2>
+
+                        </header>
+
+
+                        <div class="alternatives">
+
+                            {% for alternativa in questao.alternativas %}
+
+                                <label class="alternative-option">
+
+                                    <input
+                                        type="radio"
+                                        name="questao_{{ questao.id }}"
+                                        value="{{ alternativa.id }}"
+                                        required
+                                    >
+
+                                    <span class="alternative-content">
+
+                                        <span class="alternative-marker">
+                                            {{ loop.index }}
+                                        </span>
+
+                                        <span class="alternative-text">
+                                            {{ alternativa.texto }}
+                                        </span>
+
+                                    </span>
+
+                                </label>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </section>
+
+
+            <!-- ==============================================
+                 FINALIZAR
+                 ============================================== -->
+
+            <section class="quiz-submit-card">
+
+                <div class="quiz-submit-copy">
+
+                    <strong>
+                        Finalizar avaliação
+                    </strong>
+
+                    <span>
+                        Confira suas respostas antes de continuar.
+                        Após o envio, o resultado será registrado.
+                    </span>
+
+                </div>
+
+
+                <button
+                    class="quiz-submit-button"
+                    type="submit"
+                >
+                    Finalizar Quiz
+                </button>
+
+            </section>
+
+        </form>
+
+        {% include 'portal_treinamento/historico_quiz.html' %}
+
+        {% endblock %}
+        {% endblock %}
+        <footer class="portal-footer">
+
+            ONE Consultoria · Programa interno de conscientização
+            em segurança da informação
+
+        </footer>
+
+    </main>
+
+</body>
+
+</html>

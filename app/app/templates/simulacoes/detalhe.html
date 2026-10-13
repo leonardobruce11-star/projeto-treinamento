@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Simulação: {{ campanha.nome }}</h1>
+<p>Preparação exclusiva de grupo, template e landing page. Estado local: {{ campanha.status }}.</p>
+{% if campanha.status == 'aprovada' %}
+<form method="post" action="{{ url_for('simulacoes.confirmar', campanha_id=campanha.id) }}">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="acao" value="reabrir">
+<button type="submit">Reabrir para nova aprovação local</button></form>
+{% endif %}
+{% for r in revisoes %}
+<section><h2>Revisão aprovada {{ r.numero }}</h2><p>SHA-256: <code>{{ r.digest }}</code></p><p>Público aprovado: {{ r.alvos }}.</p>
+{% if loop.first and campanha.status == 'aprovada' %}
+<form method="post" action="{{ url_for('simulacoes.confirmar', campanha_id=campanha.id) }}">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="acao" value="criar_execucao"><input type="hidden" name="revisao" value="{{ r.id }}">
+<label>Fase <select name="fase"><option value="piloto">Piloto (até 3 IDs selecionados)</option><option value="ampliada">Ampliada (todo público; desmarque IDs)</option></select></label>
+<fieldset><legend>IDs locais autorizados para piloto</legend>{% for id in r.publico %}<label><input type="checkbox" name="selecionados" value="{{ id }}">{{ id }}</label> {% endfor %}</fieldset>
+<button type="submit">Representar execução local</button></form>
+{% endif %}
+{% for e in r.execucoes %}
+<h3>{{ e.fase }} — sequência {{ e.sequencia }}</h3><p>{{ e.alvos }} alvos; {{ e.estado }}; instância {{ e.instancia }}.</p>
+<table><thead><tr><th>Recurso</th><th>Estado</th><th>ID externo</th><th>Código</th><th>Reconciliação</th></tr></thead><tbody>{% for x in e.recursos %}<tr><td>{{ x.tipo }}</td><td>{{ x.estado }}</td><td>{{ x.externo_id or '—' }}</td><td>{{ x.codigo_erro or '—' }}</td><td>{{ x.reconciliado_em or '—' }}</td></tr>{% endfor %}</tbody></table>
+{% if e.operacao %}<p>Última operação: {{ e.operacao.uuid }}; {{ e.operacao.estado }}; {{ e.operacao.codigo_erro or 'ok' }}.</p>{% endif %}
+
+<h4>Eventos técnicos — separados do progresso educacional</h4>
+<p>Enviada: reporte do mecanismo, sem confirmação de entrega. Abertura e acesso ao link podem ser automáticos; não comprovam intenção humana.</p>
+<p>Contagens: {{ e.contagens }}. Última importação de evento novo: {{ e.ultimo_evento or '—' }}.</p>
+{% if e.vinculo %}<p>Reconciliação: {{ e.vinculo.estado }}; ID externo {{ e.vinculo.externo_id or '—' }}; {{ e.vinculo.reconciliado_em or '—' }}; descartados na última janela {{ e.vinculo.descartados }}; código {{ e.vinculo.codigo_erro or 'ok' }}.</p>{% endif %}
+{% if e.lease %}<p>Lease: {{ e.lease.estado }}; geração {{ e.lease.geracao }}; expiração {{ e.lease.expira or '—' }}.</p>{% endif %}
+{% for action in ['vincular','importar'] %}<form method="post" action="{{ url_for('simulacoes.confirmar',campanha_id=campanha.id) }}">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="acao" value="{{ action }}"><input type="hidden" name="execucao" value="{{ e.id }}">
+{% if action=='vincular' %}<label>ID externo para consulta/reconciliação <input type="number" min="1" required name="externo_id" value="{{ e.vinculo.externo_id if e.vinculo and e.vinculo.externo_id else '' }}"></label>{% endif %}
+<button>{{ 'Consultar vínculo de campanha' if action=='vincular' else 'Importar eventos permitidos' }}</button></form>{% endfor %}
+{% if e.operacao and e.operacao.estado in ['processando','resultado_indeterminado','falha'] %}
+{% for action in ['recuperar','cancelar'] %}<form method="post" action="{{ url_for('simulacoes.confirmar',campanha_id=campanha.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="acao" value="{{ action }}"><input type="hidden" name="execucao" value="{{ e.id }}"><input type="hidden" name="operacao" value="{{ e.operacao.uuid }}"><label><input type="checkbox" name="legado_encerrado" value="sim">Confirmei encerramento do executor legado, se aplicável.</label><button>{{ 'Retomar somente leitura' if action=='recuperar' else 'Encerrar execução local e revogar pontes' }}</button></form>{% endfor %}{% endif %}
+{% for a in e.tecnicos %}<section><h5>Alvo local {{ a.id }}</h5><p>Resultado externo: {{ a.resultado or 'não associado' }}. Participação educacional: {{ a.educacional }} (ID {{ a.participacao_id or '—' }}).</p>
+<ul>{% for f in a.eventos %}<li>{{ f.tipo }} — {{ f.origem }}</li>{% else %}<li>Sem eventos técnicos.</li>{% endfor %}</ul>
+{% if a.ponte %}<p>Ponte: {{ a.ponte.estado }}; expira {{ a.ponte.expira }}.</p>{% if a.ponte.url %}<p><a href="{{ a.ponte.url }}" rel="noreferrer">Página educativa dedicada (acesso controlado)</a></p>{% endif %}{% endif %}
+{% for action in ['criar_ponte','revogar_ponte','criar_participacao','associar'] %}
+<form method="post" action="{{ url_for('simulacoes.confirmar',campanha_id=campanha.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="acao" value="{{ action }}"><input type="hidden" name="execucao" value="{{ e.id }}"><input type="hidden" name="alvo" value="{{ a.id }}">{% if action=='associar' %}<label>Participação existente <input required type="number" min="1" name="participacao"></label>{% endif %}<button>{{ {'criar_ponte':'Criar ponte educativa','revogar_ponte':'Revogar ponte','criar_participacao':'Criar participação local','associar':'Vincular participação existente'}[action] }}</button></form>{% endfor %}</section>{% endfor %}
+{% for acao in ['preparar', 'reconciliar'] %}
+{% if acao != 'preparar' or (campanha.status == 'aprovada' and e.estado in ['nao_preparada','falha']) %}
+<form method="post" action="{{ url_for('simulacoes.confirmar', campanha_id=campanha.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="acao" value="{{ acao }}"><input type="hidden" name="execucao" value="{{ e.id }}"><button type="submit">{{ 'Preparar simulação' if acao == 'preparar' else 'Reconciliar recursos (consulta)' }}</button></form>
+{% endif %}{% endfor %}{% endfor %}</section>{% else %}<p>Nenhuma revisão aprovada. Solicite aprovação local primeiro.</p>{% endfor %}
+{% endblock %}

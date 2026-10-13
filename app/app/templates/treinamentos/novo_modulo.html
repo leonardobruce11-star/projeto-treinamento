@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Novo módulo
+{% endblock %}
+
+{% block content %}
+
+<section class="training-module-create-page">
+
+    <!-- ======================================================
+         CABEÇALHO
+         ====================================================== -->
+
+    <header class="training-module-header">
+
+        <div>
+
+            <span class="page-eyebrow">
+                Estrutura de aprendizagem
+            </span>
+
+            <h1>
+                Novo módulo
+            </h1>
+
+            <p>
+                Adicione uma nova etapa de conteúdo
+                ao treinamento selecionado.
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for(
+                'treinamentos.editar',
+                treinamento_id=treinamento.id
+            ) }}"
+            class="btn-one-secondary"
+        >
+            Voltar
+        </a>
+
+    </header>
+
+
+    <!-- ======================================================
+         CONTEXTO
+         ====================================================== -->
+
+    <section class="training-module-context">
+
+        <div class="training-module-context-icon">
+            T
+        </div>
+
+        <div>
+
+            <span class="section-eyebrow">
+                Treinamento
+            </span>
+
+            <h2>
+                {{ treinamento.titulo }}
+            </h2>
+
+            <p>
+                O novo módulo será associado
+                a este treinamento.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         FORMULÁRIO
+         ====================================================== -->
+
+    <section class="form-card training-module-create-card">
+
+        <div class="form-card-header">
+
+            <span class="section-eyebrow">
+                Conteúdo
+            </span>
+
+            <h2>
+                Informações do módulo
+            </h2>
+
+            <p>
+                Defina a posição do módulo,
+                seu título e o conteúdo apresentado.
+            </p>
+
+        </div>
+
+
+        <form
+            method="POST"
+            class="one-form"
+        >
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
+
+
+            <div class="training-module-form-grid">
+
+                <div class="form-field training-module-order-field">
+
+                    <label for="ordem">
+                        Ordem
+                    </label>
+
+                    <input
+                        id="ordem"
+                        type="number"
+                        name="ordem"
+                        value="{{ treinamento.modulos|length + 1 }}"
+                        min="1"
+                        required
+                    >
+
+                    <small class="form-help">
+                        Define a posição deste módulo
+                        na sequência do treinamento.
+                    </small>
+
+                </div>
+
+
+                <div class="form-field">
+
+                    <label for="titulo">
+                        Título *
+                    </label>
+
+                    <input
+                        id="titulo"
+                        type="text"
+                        name="titulo"
+                        placeholder="Ex.: Identificação de mensagens suspeitas"
+                        required
+                    >
+
+                    <small class="form-help">
+                        Utilize um título objetivo
+                        para identificar esta etapa.
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-field training-content-field">
+
+                <label for="conteudo">
+                    Conteúdo *
+                </label>
+
+                <textarea
+                    id="conteudo"
+                    name="conteudo"
+                    rows="15"
+                    placeholder="Insira aqui o conteúdo educacional deste módulo."
+                    required
+                ></textarea>
+
+                <small class="form-help">
+                    Estruture o conteúdo de forma clara,
+                    objetiva e adequada ao treinamento.
+                </small>
+
+            </div>
+
+
+            <!-- ==================================================
+                 AÇÕES
+                 ================================================== -->
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for(
+                        'treinamentos.editar',
+                        treinamento_id=treinamento.id
+                    ) }}"
+                    class="btn-one-secondary"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn-one-primary"
+                >
+                    Criar módulo
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+</section>
+
+{% endblock %}

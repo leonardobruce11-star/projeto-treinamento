@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block content %}<section class="page"><h1>Resultado da confirmação</h1>
+<p>Selecionadas: {{ resultado.selecionados }}. Solicitações registradas: {{ resultado.itens|selectattr('envio_id', 'defined')|list|length }}. Excluídas: {{ resultado.itens|selectattr('motivo', 'defined')|list|length }}.</p>
+<p>O processamento ocorrerá pelo worker administrativo fake. Consulte o estado atual e o histórico de cada participação.</p>
+<ul>{% for item in resultado.itens %}<li>Participação {{ item.participacao_id }}: {% if item.motivo is defined %}excluída — {{ motivos[item.motivo] }}{% else %}solicitação {{ item.envio_id }} registrada{% endif %}. <a href="{{ url_for('convites.listar', participacao_id=item.participacao_id) }}">Status e histórico</a></li>{% endfor %}</ul>
+</section>{% endblock %}

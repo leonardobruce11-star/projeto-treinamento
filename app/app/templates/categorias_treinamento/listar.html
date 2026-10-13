@@ -1,0 +1,337 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Categorias de treinamento
+{% endblock %}
+
+{% block content %}
+
+<section class="management-page">
+
+    <header class="management-header">
+
+        <div class="management-header-copy">
+
+            <span class="page-eyebrow">
+                Capacitação
+            </span>
+
+            <h1>
+                Categorias de treinamento
+            </h1>
+
+            <p>
+                Organize os treinamentos por áreas e finalidades dentro da plataforma.
+            </p>
+
+        </div>
+
+        <div class="management-header-actions">
+
+            <a
+                href="{{ url_for('categorias_treinamento.nova') }}"
+                class="btn-one-primary"
+            >
+                <span class="btn-one-icon">
+                    +
+                </span>
+
+                <span>
+                    Nova categoria
+                </span>
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <section class="management-summary">
+
+        <article class="summary-card">
+
+            <span class="summary-label">
+                Categorias
+            </span>
+
+            <strong class="summary-value">
+                {{ categorias|length if categorias else 0 }}
+            </strong>
+
+            <span class="summary-caption">
+                Total cadastrado
+            </span>
+
+        </article>
+
+
+        <article class="summary-card summary-card-soft">
+
+            <span class="summary-label">
+                Ativas
+            </span>
+
+            <strong class="summary-value">
+                {{ total_ativas }}
+            </strong>
+
+            <span class="summary-caption">
+                Disponíveis para uso
+            </span>
+
+        </article>
+
+
+        <article class="summary-card">
+
+            <span class="summary-label">
+                Inativas
+            </span>
+
+            <strong class="summary-value">
+                {{ total_inativas }}
+            </strong>
+
+            <span class="summary-caption">
+                Indisponíveis para novos vínculos
+            </span>
+
+        </article>
+
+    </section>
+
+
+    <section class="management-section">
+
+        <div class="section-heading management-section-heading">
+
+            <div>
+
+                <span class="section-eyebrow">
+                    Estrutura de capacitação
+                </span>
+
+                <h2>
+                    Categorias cadastradas
+                </h2>
+
+                <p>
+                    Consulte, edite e gerencie a disponibilidade das categorias.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if categorias %}
+
+        <div class="table-card">
+
+            <div class="table-wrapper">
+
+                <table class="one-table management-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th class="column-id">
+                                ID
+                            </th>
+
+                            <th>
+                                Categoria
+                            </th>
+
+                            <th>
+                                Treinamentos
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th class="column-actions">
+                                Ações
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for categoria in categorias %}
+
+                        <tr>
+
+                            <td>
+
+                                <span class="table-id">
+                                    #{{ categoria.id }}
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="department-cell">
+
+                                    <div class="department-symbol">
+                                        {{ categoria.nome[:1]|upper }}
+                                    </div>
+
+                                    <div>
+
+                                        <strong>
+                                            {{ categoria.nome }}
+                                        </strong>
+
+                                        <span>
+                                            {{ categoria.descricao or "Sem descrição cadastrada" }}
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="people-count">
+
+                                    <span class="people-count-number">
+                                        {{ categoria.treinamentos|length }}
+                                    </span>
+
+                                    <span class="people-count-label">
+
+                                        {% if categoria.treinamentos|length == 1 %}
+                                            treinamento
+                                        {% else %}
+                                            treinamentos
+                                        {% endif %}
+
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                {% if categoria.ativo %}
+
+                                    <span class="status-badge status-success">
+                                        Ativa
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="status-badge status-muted">
+                                        Inativa
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="table-actions">
+
+                                    <a
+                                        href="{{ url_for(
+                                            'categorias_treinamento.editar',
+                                            categoria_id=categoria.id
+                                        ) }}"
+                                        class="btn-table-action"
+                                    >
+                                        Editar
+                                    </a>
+
+
+                                    <form
+                                        method="POST"
+                                        action="{{ url_for(
+                                            'categorias_treinamento.alterar_status',
+                                            categoria_id=categoria.id
+                                        ) }}"
+                                        style="display:inline;"
+                                    >
+
+                                        <input
+                                            type="hidden"
+                                            name="csrf_token"
+                                            value="{{ csrf_token() }}"
+                                        >
+
+                                        <button
+                                            type="submit"
+                                            class="btn-table-action"
+                                        >
+                                            {% if categoria.ativo %}
+                                                Desativar
+                                            {% else %}
+                                                Ativar
+                                            {% endif %}
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        {% else %}
+
+        <div class="empty-state management-empty">
+
+            <div class="empty-state-icon">
+                +
+            </div>
+
+            <strong>
+                Nenhuma categoria cadastrada
+            </strong>
+
+            <p>
+                Crie a primeira categoria para organizar os treinamentos da plataforma.
+            </p>
+
+            <a
+                href="{{ url_for('categorias_treinamento.nova') }}"
+                class="btn-one-primary"
+            >
+                Criar categoria
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+</section>
+
+{% endblock %}

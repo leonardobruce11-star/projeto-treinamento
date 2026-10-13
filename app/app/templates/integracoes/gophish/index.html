@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Integração Gophish</h1>
+
+<h2>Status</h2>
+
+{% if conectado %}
+
+<p>
+    <strong>API:</strong>
+    Conectado
+</p>
+
+{% else %}
+
+<p>
+    <strong>API:</strong>
+    Erro de comunicação
+</p>
+
+{% endif %}
+
+
+<h2>Recursos</h2>
+
+<table>
+
+    <tr>
+        <th>Recurso</th>
+        <th>Quantidade</th>
+    </tr>
+
+    <tr>
+        <td>Campanhas</td>
+        <td>
+            {{ campanhas if campanhas is not none else "Erro" }}
+        </td>
+    </tr>
+
+    <tr>
+        <td>Grupos</td>
+        <td>
+            {{ grupos if grupos is not none else "Erro" }}
+        </td>
+    </tr>
+
+    <tr>
+        <td>Templates</td>
+        <td>
+            {{ templates if templates is not none else "Erro" }}
+        </td>
+    </tr>
+
+    <tr>
+        <td>Landing Pages</td>
+        <td>
+            {{ paginas if paginas is not none else "Erro" }}
+        </td>
+    </tr>
+
+    <tr>
+        <td>Sending Profiles</td>
+        <td>
+            {{ sending_profiles if sending_profiles is not none else "Erro" }}
+        </td>
+    </tr>
+
+</table>
+
+<h2>Laboratório</h2>
+
+<p>
+    Este botão cria um grupo fictício no Gophish.
+</p>
+
+<form
+    method="POST"
+
+ <input
+    type="hidden"
+    name="csrf_token"
+    value="{{ csrf_token() }}"
+>
+
+    action="{{ url_for('gophish.criar_grupo_teste') }}"
+>
+    <button type="submit">
+        Criar grupo Financeiro Teste
+    </button>
+</form>
+
+{% endblock %}

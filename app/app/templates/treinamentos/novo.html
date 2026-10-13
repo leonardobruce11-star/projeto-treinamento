@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Novo treinamento
+{% endblock %}
+
+{% block content %}
+
+<section class="training-create-page">
+
+    <!-- ======================================================
+         CABEÇALHO
+         ====================================================== -->
+
+    <header class="training-create-header">
+
+        <div>
+
+            <span class="page-eyebrow">
+                Capacitação
+            </span>
+
+            <h1>
+                Novo treinamento
+            </h1>
+
+            <p>
+                Crie a estrutura inicial de um novo conteúdo
+                de conscientização para a plataforma.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('treinamentos.listar') }}"
+            class="btn-one-secondary"
+        >
+            Voltar
+        </a>
+
+    </header>
+
+
+    <!-- ======================================================
+         FORMULÁRIO
+         ====================================================== -->
+
+    <div class="form-card training-create-card">
+
+        <div class="form-card-header">
+
+            <span class="section-eyebrow">
+                Identificação
+            </span>
+
+            <h2>
+                Informações do treinamento
+            </h2>
+
+            <p>
+                Defina o título e uma descrição para identificar
+                o conteúdo dentro da biblioteca de capacitação.
+            </p>
+
+        </div>
+
+
+        <form
+            method="POST"
+            class="one-form"
+        >
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
+
+
+            <div class="form-field">
+
+                <label for="titulo">
+                    Título *
+                </label>
+
+                <input
+                    id="titulo"
+                    type="text"
+                    name="titulo"
+                    placeholder="Ex.: Conscientização sobre segurança da informação"
+                    required
+                >
+
+                <small class="form-help">
+                    Utilize um título claro e fácil de identificar.
+                </small>
+
+            </div>
+
+
+            <div class="form-field">
+
+    <label for="categoria_id">
+        Categoria
+    </label>
+
+    <select
+        id="categoria_id"
+        name="categoria_id"
+    >
+
+        <option value="">
+            Sem categoria
+        </option>
+
+        {% for categoria in categorias %}
+
+            <option value="{{ categoria.id }}">
+                {{ categoria.nome }}
+            </option>
+
+        {% endfor %}
+
+    </select>
+
+    <small class="form-help">
+        Selecione a categoria que melhor representa este treinamento.
+    </small>
+
+</div>
+
+
+            <div class="form-field">
+
+                <label for="descricao">
+                    Descrição
+                </label>
+
+                <textarea
+                    id="descricao"
+                    name="descricao"
+                    rows="5"
+                    placeholder="Descreva brevemente o objetivo deste treinamento."
+                ></textarea>
+
+                <small class="form-help">
+                    A descrição ajudará na identificação
+                    do conteúdo durante a administração.
+                </small>
+
+            </div>
+
+
+            <!-- ==================================================
+                 PRÓXIMAS ETAPAS
+                 ================================================== -->
+
+            <div class="training-create-flow">
+
+                <div class="training-flow-item">
+
+                    <span class="training-flow-number">
+                        1
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Criar treinamento
+                        </strong>
+
+                        <span>
+                            Registro inicial do conteúdo.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="training-flow-line"></div>
+
+
+                <div class="training-flow-item">
+
+                    <span class="training-flow-number training-flow-muted">
+                        2
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Adicionar módulos
+                        </strong>
+
+                        <span>
+                            Organize o conteúdo em etapas.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="training-flow-line"></div>
+
+
+                <div class="training-flow-item">
+
+                    <span class="training-flow-number training-flow-muted">
+                        3
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Adicionar questões
+                        </strong>
+
+                        <span>
+                            Estruture a avaliação do treinamento.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==================================================
+                 AÇÕES
+                 ================================================== -->
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('treinamentos.listar') }}"
+                    class="btn-one-secondary"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn-one-primary"
+                >
+                    Criar treinamento
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

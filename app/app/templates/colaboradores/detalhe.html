@@ -1,0 +1,754 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | {{ colaborador.nome }}
+{% endblock %}
+
+{% block content %}
+
+<section class="management-page collaborator-detail-page">
+
+    <!-- ======================================================
+         CABEÇALHO
+         ====================================================== -->
+
+    <header class="management-header">
+
+        <div class="management-header-copy">
+
+            <span class="page-eyebrow">
+                Gestão de pessoas
+            </span>
+
+            <h1>
+                {{ colaborador.nome }}
+            </h1>
+
+            <p>
+                Consulte os dados cadastrais, grupos,
+                participações e resultados de treinamento
+                deste colaborador.
+            </p>
+
+        </div>
+
+
+        <div class="management-header-actions">
+
+            <a
+                href="{{ url_for('colaboradores.listar') }}"
+                class="btn-one-secondary"
+            >
+                ← Voltar para colaboradores
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- ======================================================
+         IDENTIFICAÇÃO
+         ====================================================== -->
+
+    <section class="collaborator-profile-card">
+
+        <div class="collaborator-profile-main">
+
+            <div class="collaborator-profile-avatar">
+
+                {% if colaborador.nome %}
+                    {{ colaborador.nome[:1]|upper }}
+                {% else %}
+                    C
+                {% endif %}
+
+            </div>
+
+
+            <div class="collaborator-profile-copy">
+
+                <span class="section-eyebrow">
+                    Colaborador
+                </span>
+
+                <h2>
+                    {{ colaborador.nome }}
+                </h2>
+
+
+                <div class="collaborator-profile-meta">
+
+                    {% if colaborador.cargo %}
+
+                        <span>
+                            {{ colaborador.cargo }}
+                        </span>
+
+                    {% else %}
+
+                        <span>
+                            Cargo não informado
+                        </span>
+
+                    {% endif %}
+
+
+                    <span class="collaborator-meta-separator">
+                        •
+                    </span>
+
+
+                    {% if colaborador.departamento %}
+
+                        <span>
+                            {{ colaborador.departamento.nome }}
+                        </span>
+
+                    {% else %}
+
+                        <span>
+                            Sem departamento
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="collaborator-profile-status">
+
+            {% if colaborador.ativo %}
+
+                <span class="status-badge status-success">
+                    Ativo
+                </span>
+
+            {% else %}
+
+                <span class="status-badge status-danger">
+                    Inativo
+                </span>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         INDICADORES
+         ====================================================== -->
+
+    <section class="management-summary collaborator-detail-summary">
+
+        <article class="summary-card">
+
+            <span class="summary-label">
+                Participações
+            </span>
+
+            <strong class="summary-value">
+                {{ total_participacoes }}
+            </strong>
+
+            <span class="summary-caption">
+                Treinamentos vinculados
+            </span>
+
+        </article>
+
+
+        <article class="summary-card summary-card-soft">
+
+    <span class="summary-label">
+        Não iniciados
+    </span>
+
+    <strong class="summary-value">
+        {{ total_nao_iniciados }}
+    </strong>
+
+    <span class="summary-caption">
+        Participações ainda não iniciadas
+    </span>
+
+</article>
+
+
+<article class="summary-card summary-card-soft">
+
+    <span class="summary-label">
+        Em andamento
+    </span>
+
+    <strong class="summary-value">
+        {{ total_em_andamento }}
+    </strong>
+
+    <span class="summary-caption">
+        Treinamentos iniciados e não concluídos
+    </span>
+
+</article>
+
+
+        <article class="summary-card summary-card-soft">
+
+            <span class="summary-label">
+                Concluídos
+            </span>
+
+            <strong class="summary-value">
+                {{ total_concluidos }}
+            </strong>
+
+            <span class="summary-caption">
+                Treinamentos finalizados
+            </span>
+
+        </article>
+
+
+        <article class="summary-card summary-card-soft">
+
+            <span class="summary-label">
+                Média dos quizzes
+            </span>
+
+            <strong class="summary-value">
+
+                {% if media_quiz is not none %}
+                    {{ media_quiz }}%
+                {% else %}
+                    —
+                {% endif %}
+
+            </strong>
+
+            <span class="summary-caption">
+                Aproveitamento registrado
+            </span>
+
+        </article>
+
+    </section>
+
+
+    <!-- ======================================================
+         DADOS CADASTRAIS
+         ====================================================== -->
+
+    <section class="management-section">
+
+        <div class="section-heading management-section-heading">
+
+            <div>
+
+                <span class="section-eyebrow">
+                    Cadastro
+                </span>
+
+                <h2>
+                    Informações do colaborador
+                </h2>
+
+                <p>
+                    Dados organizacionais atualmente
+                    registrados na plataforma.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="collaborator-info-grid">
+
+            <article class="collaborator-info-item">
+
+                <span>
+                    E-mail
+                </span>
+
+                <strong>
+                    {{ colaborador.email }}
+                </strong>
+
+            </article>
+
+
+            <article class="collaborator-info-item">
+
+                <span>
+                    Cargo
+                </span>
+
+                <strong>
+                    {{ colaborador.cargo or 'Não informado' }}
+                </strong>
+
+            </article>
+
+
+            <article class="collaborator-info-item">
+
+                <span>
+                    Departamento
+                </span>
+
+                <strong>
+
+                    {% if colaborador.departamento %}
+                        {{ colaborador.departamento.nome }}
+                    {% else %}
+                        Não informado
+                    {% endif %}
+
+                </strong>
+
+            </article>
+
+
+            <article class="collaborator-info-item">
+
+                <span>
+                    Cadastrado em
+                </span>
+
+                <strong>
+
+                    {% if colaborador.criado_em %}
+
+                        {{ colaborador.criado_em.strftime(
+                            '%d/%m/%Y'
+                        ) }}
+
+                    {% else %}
+
+                        —
+
+                    {% endif %}
+
+                </strong>
+
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         GRUPOS
+         ====================================================== -->
+
+    <section class="management-section">
+
+        <div class="section-heading management-section-heading">
+
+            <div>
+
+                <span class="section-eyebrow">
+                    Organização
+                </span>
+
+                <h2>
+                    Grupos
+                </h2>
+
+                <p>
+                    Grupos aos quais este colaborador
+                    está atualmente vinculado.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if grupos %}
+
+            <div class="collaborator-groups-grid">
+
+                {% for vinculo in grupos %}
+
+                    <article class="collaborator-group-card">
+
+                        <div class="collaborator-group-icon">
+                            G
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Grupo
+                            </span>
+
+                            <strong>
+
+                                {% if vinculo.grupo %}
+                                    {{ vinculo.grupo.nome }}
+                                {% else %}
+                                    Grupo indisponível
+                                {% endif %}
+
+                            </strong>
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+            <div class="empty-state management-empty">
+
+                <strong>
+                    Nenhum grupo associado
+                </strong>
+
+                <p>
+                    Este colaborador ainda não participa
+                    de nenhum grupo cadastrado.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- ======================================================
+         PARTICIPAÇÕES / TREINAMENTOS
+         ====================================================== -->
+
+    <section class="management-section">
+
+        <div class="section-heading management-section-heading">
+
+            <div>
+
+                <span class="section-eyebrow">
+                    Capacitação
+                </span>
+
+                <h2>
+                    Histórico de capacitação
+                </h2>
+
+                <p>
+                    Consulte o tempo ativo acumulado, as participações,
+                    o progresso e os resultados das avaliações.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="management-summary collaborator-capacitacao-summary">
+            <article class="summary-card">
+                <span class="summary-label">Tempo total acumulado</span>
+                <strong class="summary-value">{{ tempo_total_capacitacao | tempo_ativo }}</strong>
+                <span class="summary-caption">Tempo ativo registrado nos treinamentos</span>
+            </article>
+            <article class="summary-card summary-card-soft">
+                <span class="summary-label">Treinamentos iniciados</span>
+                <strong class="summary-value">{{ total_iniciados }}</strong>
+                <span class="summary-caption">Participações com início registrado</span>
+            </article>
+            <article class="summary-card">
+                <span class="summary-label">Treinamentos concluídos</span>
+                <strong class="summary-value">{{ total_concluidos }}</strong>
+                <span class="summary-caption">Participações com conclusão registrada</span>
+            </article>
+        </div>
+
+        {% if participacoes %}
+
+            <div class="table-card">
+
+                <div class="table-wrapper">
+
+                    <table class="one-table collaborator-history-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Treinamento
+                                </th>
+
+                                <th>Categoria</th>
+
+                                <th>
+                                    Campanha
+                                </th>
+
+                                <th>
+                                    Situação
+                                </th>
+
+                                <th>
+                                    Progresso
+                                </th>
+
+                                <th>
+                                    Quiz
+                                </th>
+
+                                <th>
+                                    Conclusão
+                                </th>
+
+                            <th>Aprovação</th><th>Tempo ativo</th>{% if current_user.is_authenticated and current_user.ativo and current_user.perfil == 'administrador' %}<th>Convites</th>{% endif %}<th>Avaliação</th>
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for participacao in participacoes %}
+
+                                <tr>
+
+                                    <!-- ======================
+                                         TREINAMENTO
+                                         ====================== -->
+
+                                    <td>
+
+                                        <div class="collaborator-training-cell">
+
+                                            <strong>
+
+                                                {% if participacao.treinamento %}
+
+                                                    {{ participacao.treinamento.titulo }}
+
+                                                {% else %}
+
+                                                    Treinamento indisponível
+
+                                                {% endif %}
+
+                                            </strong>
+
+                                            {% if participacao.criado_em %}
+
+                                                <span>
+                                                    Participação criada em
+                                                    {{ participacao.criado_em.strftime(
+                                                        '%d/%m/%Y'
+                                                    ) }}
+                                                </span>
+
+                                            {% endif %}
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <td>
+                                        {% if participacao.treinamento and participacao.treinamento.categoria %}
+                                            {{ participacao.treinamento.categoria.nome }}
+                                        {% else %}
+                                            <span class="muted-text">Sem categoria</span>
+                                        {% endif %}
+                                    </td>
+
+
+                                    <!-- ======================
+                                         CAMPANHA
+                                         ====================== -->
+
+                                    <td>
+
+                                        {% if participacao.campanha %}
+
+                                             {{ participacao.campanha.nome }}
+
+                                       {% else %}
+
+   					 <span class="muted-text">
+        					Sem campanha
+    					</span>
+
+						{% endif %}
+
+                                    </td>
+
+
+                                    <!-- ======================
+                                         STATUS
+                                         ====================== -->
+
+                                    <td>
+
+                                        <span class="status-badge">{{ rotulos_participacao[estados_participacoes[participacao.id]] }}</span>
+                                        {% if estados_participacoes[participacao.id] == 'historico' %}<p>Resultado histórico — não classificado pela regra atual de aprovação.</p>{% endif %}
+
+                                    </td>
+
+
+                                    <!-- ======================
+                                         PROGRESSO
+                                         ====================== -->
+
+                                    <td>
+
+                                        {% if participacao.concluido_em %}
+
+                                            <strong class="history-progress-complete">
+                                                Finalizado
+                                            </strong>
+
+
+                                        {% elif participacao.ultimo_modulo %}
+
+                                            <div class="history-progress">
+
+                                                <span>
+                                                    Último módulo
+                                                </span>
+
+                                                <strong>
+                                                    {{ participacao.ultimo_modulo.titulo }}
+                                                </strong>
+
+                                            </div>
+
+
+                                        {% elif participacao.iniciado_em %}
+
+                                            <span class="muted-text">
+                                                Iniciado
+                                            </span>
+
+
+                                        {% else %}
+
+                                            <span class="muted-text">
+                                                —
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <!-- ======================
+                                         QUIZ
+                                         ====================== -->
+
+                                    <td>
+
+                                        {% set resultado_atual = resultado_representativo(resultados_carregados(participacao)) %}
+                                {% if resultado_atual %}
+
+                                            <div class="quiz-result-cell">
+                                                <span>Tentativas: {{ tentativas_por_participacao[participacao.id].total_tentativas }} · Tentativa representativa: {{ resultado_atual.numero_tentativa }}</span>
+
+                                                <strong>
+                                                    {{ resultado_atual.percentual }}%
+                                                </strong>
+
+                                                <span>
+                                                    {{ resultado_atual.total_acertos }}
+                                                    /
+                                                    {{ resultado_atual.total_questoes }}
+                                                </span>
+
+                                            {% if resultado_atual.percentual_minimo_aplicado is not none %}
+                                                <span>Mínimo aplicado: {{ resultado_atual.percentual_minimo_aplicado }}% · {{ resultado_atual.minimo_acertos_aplicado }} acertos</span>
+                                                {% endif %}
+                                            </div>
+
+                                        {% else %}
+
+                                            <span class="muted-text">
+                                                {{ "Conclusão sem quiz · nota não aplicável" if participacao.concluido_em and participacao.aprovado_em else "Sem resultado de quiz" }}
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <!-- ======================
+                                         CONCLUSÃO
+                                         ====================== -->
+
+                                    <td>
+
+                                        {% if participacao.concluido_em %}
+
+                                            <span>
+                                                {{ participacao.concluido_em.strftime(
+                                                    '%d/%m/%Y %H:%M'
+                                                ) }}
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="muted-text">
+                                                —
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+                                <td>{{ participacao.aprovado_em.strftime('%d/%m/%Y %H:%M') if participacao.aprovado_em else '—' }}</td>
+                                <td>{{ tempos_ativos.get(participacao.id, 0) | tempo_ativo }}</td>
+                                {% if current_user.is_authenticated and current_user.ativo and current_user.perfil == 'administrador' %}<td><a href="{{ url_for('convites.listar', participacao_id=participacao.id) }}">Convite e histórico</a></td>{% endif %}
+<td>{% if participacao.id in datas_feedback %}Avaliação enviada<br>{{ datas_feedback[participacao.id].strftime('%d/%m/%Y %H:%M') }}{% else %}Sem avaliação{% endif %}</td>
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+        {% else %}
+
+            <div class="empty-state management-empty">
+
+                <strong>
+                    Nenhuma participação registrada
+                </strong>
+
+                <p>
+                    Este colaborador ainda não possui
+                    treinamentos ou campanhas associados.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</section>
+
+{% endblock %}

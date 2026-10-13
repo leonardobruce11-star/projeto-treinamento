@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}ONE | Feedback dos treinamentos{% endblock %}
+{% block content %}
+{% macro taxa(valor) %}{{ '%.1f%%'|format(valor) if valor is not none else '—' }}{% endmacro %}
+{% set dimensoes = [('avaliacao_geral', 'Geral'), ('avaliacao_conteudo', 'Conteúdo'), ('avaliacao_clareza', 'Clareza'), ('avaliacao_utilidade', 'Utilidade')] %}
+<section class="training-page">
+  <header class="training-header"><div><h1>Feedback dos treinamentos</h1>
+    <p>Visão agregada das avaliações enviadas após a conclusão.</p></div></header>
+  <form method="get">
+    <label for="treinamento">Treinamento</label>
+    <select id="treinamento" name="treinamento_id"><option value="">Todos</option>
+      {% for t in treinamentos %}<option value="{{ t.id }}" {% if treinamento_id == t.id %}selected{% endif %}>{{ t.titulo }}</option>{% endfor %}
+    </select>
+    <label for="categoria">Categoria</label>
+    <select id="categoria" name="categoria_id"><option value="">Todas</option>
+      {% for c in categorias %}<option value="{{ c.id }}" {% if categoria_id == c.id %}selected{% endif %}>{{ c.nome }}</option>{% endfor %}
+    </select>
+    <button type="submit" class="btn-one-primary">Filtrar</button>
+  </form>
+  <section class="training-summary" aria-label="Indicadores gerais">
+    <article class="training-summary-card">Treinamentos <strong>{{ indicadores.treinamentos }}</strong></article>
+    <article class="training-summary-card">Avaliações <strong>{{ indicadores.quantidade }}</strong></article>
+    <article class="training-summary-card">Participações concluídas <strong>{{ indicadores.concluidas }}</strong></article>
+    <article class="training-summary-card">Taxa de resposta <strong>{{ taxa(indicadores.taxa_resposta) }}</strong></article>
+  </section>
+  <p>Com menos de 5 avaliações por treinamento, médias, distribuições e comentários ficam indisponíveis para proteger recortes pequenos. O vínculo técnico com a participação é mantido no sistema. Comentários podem conter informações fornecidas no próprio texto.</p>
+  <div class="table-card"><div class="table-wrapper"><table class="one-table management-table">
+    <caption>Avaliações por treinamento — ordem por nome</caption>
+    <thead><tr><th scope="col">Treinamento</th><th scope="col">Avaliações</th><th scope="col">Conclusões</th><th scope="col">Taxa de resposta</th>
+      {% for campo, nome in dimensoes %}<th scope="col">Média: {{ nome }}</th>{% endfor %}<th scope="col">Detalhamento</th></tr></thead>
+    <tbody>{% for m in metricas %}<tr><td>{{ m.titulo }}</td><td>{{ m.quantidade }}</td><td>{{ m.concluidas }}</td><td>{{ taxa(m.taxa_resposta) }}</td>
+      {% for campo, nome in dimensoes %}<td>{{ '%.2f'|format(m['media_' + campo]) if m.permitido else '—' }}</td>{% endfor %}
+      <td><a href="{{ url_for('treinamentos.feedback', treinamento_id=m.treinamento_id, categoria_id=categoria_id) }}">Detalhar feedback</a></td></tr>
+    {% else %}<tr><td colspan="9">Nenhum treinamento no recorte.</td></tr>{% endfor %}</tbody>
+  </table></div></div>
+  {% if treinamento_id %}
+    {% for m in metricas %}<section class="training-section"><h2>Distribuições: {{ m.titulo }}</h2>
+      <p>{{ m.quantidade }} avaliações</p>
+      {% if m.permitido %}<div class="table-wrapper"><table class="one-table management-table"><caption>Quantidade por nota</caption>
+        <thead><tr><th scope="col">Dimensão</th>{% for nota in range(1, 6) %}<th scope="col">{{ nota }}</th>{% endfor %}</tr></thead>
+        <tbody>{% for campo, nome in dimensoes %}<tr><th scope="row">{{ nome }}</th>{% for nota in range(1, 6) %}<td>{{ m[campo + '_' + nota|string] }}</td>{% endfor %}</tr>{% endfor %}</tbody>
+      </table></div>{% else %}<p>Distribuições indisponíveis: menos de 5 avaliações.</p>{% endif %}
+    </section>{% endfor %}
+  {% endif %}
+  <section class="training-section" aria-label="Comentários"><h2>Comentários</h2>
+    <p>Exibidos somente para treinamentos com pelo menos 5 avaliações.</p>
+    {% for c in comentarios.itens %}<article><h3>{{ c.titulo }}</h3><time>{{ c.criado_em.strftime('%d/%m/%Y %H:%M') }}</time>
+      <p style="white-space: pre-wrap; overflow-wrap: anywhere">{{ c.comentario }}</p></article>
+    {% else %}<p>Nenhum comentário disponível neste recorte.</p>{% endfor %}
+    <nav aria-label="Paginação dos comentários">
+      {% if comentarios.pagina > 1 %}<a href="{{ url_for('treinamentos.feedback', treinamento_id=treinamento_id, categoria_id=categoria_id, page=comentarios.pagina-1) }}">Anterior</a>{% endif %}
+      <span>Página {{ comentarios.pagina }} de {{ comentarios.paginas }} · {{ comentarios.total }} comentários</span>
+      {% if comentarios.pagina < comentarios.paginas %}<a href="{{ url_for('treinamentos.feedback', treinamento_id=treinamento_id, categoria_id=categoria_id, page=comentarios.pagina+1) }}">Próxima</a>{% endif %}
+    </nav>
+  </section>
+</section>
+{% endblock %}

@@ -1,0 +1,393 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Cenários
+{% endblock %}
+
+{% block content %}
+
+<section class="management-page">
+
+    <!-- ======================================================
+         CABEÇALHO
+         ====================================================== -->
+
+    <header class="management-header">
+
+        <div class="management-header-copy">
+
+            <span class="page-eyebrow">
+                Simulações
+            </span>
+
+            <h1>
+                Cenários de treinamento
+            </h1>
+
+            <p>
+                Organize os cenários utilizados nas ações
+                de conscientização e acompanhe sua complexidade
+                e os templates relacionados.
+            </p>
+
+        </div>
+
+
+        <div class="management-header-actions">
+
+            <a
+                href="{{ url_for('cenarios.novo') }}"
+                class="btn-one-primary"
+            >
+
+                <span class="btn-one-icon">
+                    +
+                </span>
+
+                <span>
+                    Novo cenário
+                </span>
+
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- ======================================================
+         RESUMO
+         ====================================================== -->
+
+    {% set basicos = namespace(valor=0) %}
+    {% set intermediarios = namespace(valor=0) %}
+    {% set avancados = namespace(valor=0) %}
+
+    {% if cenarios %}
+
+        {% for cenario in cenarios %}
+
+            {% if cenario.nivel == "basico" %}
+
+                {% set basicos.valor =
+                    basicos.valor + 1
+                %}
+
+            {% elif cenario.nivel == "intermediario" %}
+
+                {% set intermediarios.valor =
+                    intermediarios.valor + 1
+                %}
+
+            {% elif cenario.nivel == "avancado" %}
+
+                {% set avancados.valor =
+                    avancados.valor + 1
+                %}
+
+            {% endif %}
+
+        {% endfor %}
+
+    {% endif %}
+
+
+    <section class="management-summary scenario-summary">
+
+        <article class="summary-card">
+
+            <span class="summary-label">
+                Cenários
+            </span>
+
+            <strong class="summary-value">
+                {{ cenarios|length if cenarios else 0 }}
+            </strong>
+
+            <span class="summary-caption">
+                Cenários cadastrados
+            </span>
+
+        </article>
+
+
+        <article class="summary-card summary-card-soft">
+
+            <span class="summary-label">
+                Básicos
+            </span>
+
+            <strong class="summary-value">
+                {{ basicos.valor }}
+            </strong>
+
+            <span class="summary-caption">
+                Cenários introdutórios
+            </span>
+
+        </article>
+
+
+        <article class="summary-card summary-card-soft">
+
+            <span class="summary-label">
+                Intermediários
+            </span>
+
+            <strong class="summary-value">
+                {{ intermediarios.valor }}
+            </strong>
+
+            <span class="summary-caption">
+                Cenários de complexidade média
+            </span>
+
+        </article>
+
+
+        <article class="summary-card summary-card-soft">
+
+            <span class="summary-label">
+                Avançados
+            </span>
+
+            <strong class="summary-value">
+                {{ avancados.valor }}
+            </strong>
+
+            <span class="summary-caption">
+                Cenários mais complexos
+            </span>
+
+        </article>
+
+    </section>
+
+
+    <!-- ======================================================
+         LISTAGEM
+         ====================================================== -->
+
+    <section class="management-section">
+
+        <div class="section-heading management-section-heading">
+
+            <div>
+
+                <span class="section-eyebrow">
+                    Biblioteca de cenários
+                </span>
+
+                <h2>
+                    Cenários cadastrados
+                </h2>
+
+                <p>
+                    Consulte o nível de dificuldade e os templates
+                    associados a cada cenário.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if cenarios %}
+
+        <div class="table-card">
+
+            <div class="table-wrapper">
+
+                <table class="one-table scenario-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Cenário
+                            </th>
+
+                            <th>
+                                Nível
+                            </th>
+
+                            <th>
+                                Templates
+                            </th>
+
+                            <th>
+                                Ações
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for cenario in cenarios %}
+
+                        <tr>
+
+                            <td>
+
+                                <div class="scenario-cell">
+
+                                    <div class="scenario-symbol">
+
+                                        {% if cenario.nome %}
+                                            {{ cenario.nome[:1]|upper }}
+                                        {% else %}
+                                            C
+                                        {% endif %}
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <strong>
+                                            {{ cenario.nome }}
+                                        </strong>
+
+                                        {% if cenario.descricao %}
+
+                                            <span>
+                                                {{ cenario.descricao }}
+                                            </span>
+
+                                        {% else %}
+
+                                            <span>
+                                                Sem descrição
+                                            </span>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                {% if cenario.nivel == "basico" %}
+
+                                    <span class="scenario-level-badge scenario-basic">
+                                        Básico
+                                    </span>
+
+                                {% elif cenario.nivel == "intermediario" %}
+
+                                    <span class="scenario-level-badge scenario-medium">
+                                        Intermediário
+                                    </span>
+
+                                {% elif cenario.nivel == "avancado" %}
+
+                                    <span class="scenario-level-badge scenario-advanced">
+                                        Avançado
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="muted-text">
+                                        {{ cenario.nivel }}
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="template-count">
+
+                                    <strong>
+                                        {{ cenario.templates_email|length }}
+                                    </strong>
+
+                                    <span>
+
+                                        {% if cenario.templates_email|length == 1 %}
+                                            template
+                                        {% else %}
+                                            templates
+                                        {% endif %}
+
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="table-actions">
+
+                                    <a
+                                        href="{{ url_for(
+                                            'cenarios.editar',
+                                            cenario_id=cenario.id
+                                        ) }}"
+                                        class="btn-table-action"
+                                    >
+                                        Editar
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        {% else %}
+
+        <div class="empty-state management-empty">
+
+            <div class="empty-state-icon">
+                +
+            </div>
+
+            <strong>
+                Nenhum cenário cadastrado
+            </strong>
+
+            <p>
+                Crie o primeiro cenário para começar
+                a estruturar os conteúdos da plataforma.
+            </p>
+
+            <a
+                href="{{ url_for('cenarios.novo') }}"
+                class="btn-one-primary"
+            >
+                Criar cenário
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+</section>
+
+{% endblock %}

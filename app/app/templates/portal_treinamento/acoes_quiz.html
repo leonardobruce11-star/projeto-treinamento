@@ -1,0 +1,12 @@
+{% if pendente and elegibilidade.permitido %}
+<p>Avaliação pendente: você pode continuar sem repetir os módulos.</p>
+<a href="{{ url_for('portal_treinamento.quiz', token=acesso_token) }}">Retomar avaliação pendente</a>
+{% elif elegibilidade.permitido and not repetir_preparacao %}
+<form method="post" action="{{ url_for('portal_treinamento.preparar_quiz', token=acesso_token) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    {% if elegibilidade.tipo == 'refacao' %}
+    <input type="hidden" name="resultado_base_id" value="{{ resultados[-1].id }}">
+    {% endif %}
+    <button class="quiz-submit-button" type="submit">{{ 'Refazer avaliação' if elegibilidade.tipo == 'refacao' else 'Iniciar avaliação' }}</button>
+</form>
+{% endif %}

@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Editar template
+{% endblock %}
+
+{% block content %}
+
+<section class="form-page">
+
+    <header class="form-page-header">
+
+        <div>
+
+            <span class="page-eyebrow">
+                Simulações
+            </span>
+
+            <h1>
+                Editar template
+            </h1>
+
+            <p>
+                Atualize as informações e o conteúdo
+                do template selecionado.
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for('templates_email.listar') }}"
+            class="btn-one-secondary"
+        >
+            Voltar
+        </a>
+
+    </header>
+
+
+    <div class="form-card email-template-form-card">
+
+        <div class="form-card-header">
+
+            <span class="section-eyebrow">
+                Conteúdo de treinamento
+            </span>
+
+            <h2>
+                Informações do template
+            </h2>
+
+            <p>
+                Edite os campos abaixo e salve as alterações.
+            </p>
+
+        </div>
+
+
+        <form
+            method="POST"
+            class="one-form"
+        >
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
+
+
+            <div class="form-field">
+
+                <label for="nome">
+                    Nome do template *
+                </label>
+
+                <input
+                    id="nome"
+                    type="text"
+                    name="nome"
+                    value="{{ template.nome }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-field">
+
+                <label for="cenario_id">
+                    Cenário *
+                </label>
+
+                <select
+                    id="cenario_id"
+                    name="cenario_id"
+                    required
+                >
+
+                    {% for cenario in cenarios %}
+
+                        <option
+                            value="{{ cenario.id }}"
+                            {% if cenario.id == template.cenario_id %}
+                                selected
+                            {% endif %}
+                        >
+                            {{ cenario.nome }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <div class="form-field">
+
+                <label for="assunto">
+                    Assunto *
+                </label>
+
+                <input
+                    id="assunto"
+                    type="text"
+                    name="assunto"
+                    value="{{ template.assunto }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-field">
+
+                <label for="conteudo_html">
+                    Conteúdo HTML *
+                </label>
+
+                <textarea
+                    id="conteudo_html"
+                    name="conteudo_html"
+                    rows="18"
+                    class="code-textarea"
+                    required
+                >{{ template.conteudo_html }}</textarea>
+
+            </div>
+
+
+            <div class="training-notice">
+
+                <span class="training-notice-icon">
+                    i
+                </span>
+
+                <div>
+
+                    <strong>
+                        Ambiente controlado
+                    </strong>
+
+                    <p>
+                        O conteúdo deve permanecer restrito
+                        às atividades internas autorizadas
+                        de conscientização.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('templates_email.listar') }}"
+                    class="btn-one-secondary"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn-one-primary"
+                >
+                    Salvar alterações
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

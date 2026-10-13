@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Editar módulo
+{% endblock %}
+
+{% block content %}
+
+<section class="training-module-edit-page">
+
+    <!-- ======================================================
+         CABEÇALHO
+         ====================================================== -->
+
+    <header class="training-module-edit-header">
+
+        <div>
+
+            <span class="page-eyebrow">
+                Estrutura de aprendizagem
+            </span>
+
+            <h1>
+                Editar módulo
+            </h1>
+
+            <p>
+                Atualize a posição, o título e o conteúdo
+                deste módulo de treinamento.
+            </p>
+
+        </div>
+
+    </header>
+
+
+    <!-- ======================================================
+         IDENTIFICAÇÃO DO MÓDULO
+         ====================================================== -->
+
+    <section class="training-module-edit-context">
+
+        <div class="training-module-edit-number">
+
+            {{ modulo.ordem }}
+
+        </div>
+
+        <div>
+
+            <span class="section-eyebrow">
+                Módulo atual
+            </span>
+
+            <h2>
+                {{ modulo.titulo }}
+            </h2>
+
+            <p>
+                As alterações serão aplicadas
+                ao conteúdo existente.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         FORMULÁRIO
+         ====================================================== -->
+
+    <section class="form-card training-module-edit-card">
+
+        <div class="form-card-header">
+
+            <span class="section-eyebrow">
+                Edição de conteúdo
+            </span>
+
+            <h2>
+                Informações do módulo
+            </h2>
+
+            <p>
+                Revise os dados antes de salvar
+                as alterações.
+            </p>
+
+        </div>
+
+
+        {% if estrutura_bloqueada %}
+        <p id="estrutura-bloqueada" class="form-help" role="status">
+            Este treinamento já possui participação iniciada ou histórico de progresso.
+            A ordem dos módulos está bloqueada. Título e conteúdo continuam editáveis.
+        </p>
+        {% endif %}
+
+        <form
+            method="POST"
+            class="one-form"
+        >
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
+
+
+            <div class="training-module-form-grid">
+
+                <div class="form-field training-module-order-field">
+
+                    <label for="ordem">
+                        Ordem
+                    </label>
+
+                    <input
+                        id="ordem"
+                        type="number"
+                        name="ordem"
+                        value="{{ modulo.ordem }}"
+                        {% if estrutura_bloqueada %}readonly aria-describedby="estrutura-bloqueada"{% endif %}
+                        min="1"
+                        required
+                    >
+
+                    <small class="form-help">
+                        Define a posição deste módulo
+                        no treinamento.
+                    </small>
+
+                </div>
+
+
+                <div class="form-field">
+
+                    <label for="titulo">
+                        Título
+                    </label>
+
+                    <input
+                        id="titulo"
+                        type="text"
+                        name="titulo"
+                        value="{{ modulo.titulo }}"
+                        required
+                    >
+
+                    <small class="form-help">
+                        Utilize um título claro para identificar
+                        esta etapa de aprendizagem.
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-field training-content-field">
+
+                <label for="conteudo">
+                    Conteúdo
+                </label>
+
+                <textarea
+                    id="conteudo"
+                    name="conteudo"
+                    rows="15"
+                    required
+                >{{ modulo.conteudo }}</textarea>
+
+                <small class="form-help">
+                    Atualize somente o conteúdo necessário
+                    e mantenha a linguagem clara e objetiva.
+                </small>
+
+            </div>
+
+
+            <div class="training-edit-note">
+
+                <div class="training-edit-note-icon">
+                    i
+                </div>
+
+                <div>
+
+                    <strong>
+                        Alteração de conteúdo
+                    </strong>
+
+                    <p>
+                        Ao salvar, as informações atuais deste módulo
+                        serão substituídas pelos novos valores informados.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==================================================
+                 AÇÕES
+                 ================================================== -->
+
+            <div class="form-actions">
+
+                <button
+                    type="submit"
+                    class="btn-one-primary"
+                >
+                    Salvar alterações
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+</section>
+
+{% endblock %}

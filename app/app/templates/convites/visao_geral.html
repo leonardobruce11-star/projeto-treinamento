@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}ONE | Convites de treinamento{% endblock %}
+{% block content %}
+<section class="page"><h1>Convites de treinamento</h1>
+<p>Visão geral das solicitações existentes, das mais recentes para as mais antigas.</p>
+<p>Backend fake: simulação sem envio de e-mail. “Enviado” significa aceito pelo transporte; não significa entregue ou lido.</p>
+<p>Esta consulta não cria participações nem solicita envios. Acesse a campanha ou a participação para selecionar convites e confirmar uma ação.</p>
+<div class="table-wrapper"><table class="one-table">
+<thead><tr><th>Solicitação</th><th>Participação / colaborador</th><th>Treinamento</th><th>Sequência / tipo</th><th>Destinatário utilizado</th><th>Solicitado em</th><th>Estado</th><th>Histórico</th></tr></thead>
+<tbody>{% for envio in envios %}<tr>
+<td>{{ envio.id }}</td><td>{{ envio.participacao_id }} — {{ envio.colaborador }}</td><td>{{ envio.treinamento }}</td>
+<td>{{ envio.sequencia }} — {{ 'Primeiro envio' if envio.tipo == 'primeiro_envio' else 'Reenvio' }}</td>
+<td>{{ envio.destinatario }}</td><td>{{ envio.criado_em }}</td><td>{{ estados[envio.estado] }}</td>
+<td><a href="{{ url_for('convites.listar', participacao_id=envio.participacao_id) }}">Convite e histórico</a></td>
+</tr>{% else %}<tr><td colspan="8">Nenhuma solicitação de convite registrada.</td></tr>{% endfor %}</tbody>
+</table></div>
+{% if pagina > 1 %}<a href="{{ url_for('convites.listar', pagina=pagina-1) }}">Página anterior</a>{% endif %}
+{% if more %}<a href="{{ url_for('convites.listar', pagina=pagina+1) }}">Próxima página</a>{% endif %}
+<p>Até 100 solicitações por página.</p>
+</section>
+{% endblock %}

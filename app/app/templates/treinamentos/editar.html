@@ -1,0 +1,281 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Editar treinamento
+{% endblock %}
+
+{% block content %}
+
+<section class="training-create-page">
+
+    <!-- ======================================================
+         CABEÇALHO
+         ====================================================== -->
+
+    <header class="training-create-header">
+
+        <div>
+
+            <span class="page-eyebrow">
+                Capacitação
+            </span>
+
+            <h1>
+                Editar treinamento
+            </h1>
+
+            <p>
+                Atualize as informações principais
+                deste treinamento.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('treinamentos.listar') }}"
+            class="btn-one-secondary"
+        >
+            Voltar
+        </a>
+
+    </header>
+
+
+    <!-- ======================================================
+         FORMULÁRIO
+         ====================================================== -->
+
+    <div class="form-card training-create-card">
+
+        <div class="form-card-header">
+
+            <span class="section-eyebrow">
+                Identificação
+            </span>
+
+            <h2>
+                Informações do treinamento
+            </h2>
+
+            <p>
+                Altere o título ou a descrição
+                do conteúdo de conscientização.
+            </p>
+
+        </div>
+
+
+        <form
+            method="POST"
+            class="one-form"
+        >
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
+
+
+            <!-- ==================================================
+                 TÍTULO
+                 ================================================== -->
+
+            <div class="form-field">
+
+                <label for="titulo">
+                    Título *
+                </label>
+
+                <input
+                    id="titulo"
+                    type="text"
+                    name="titulo"
+                    value="{{ treinamento.titulo }}"
+                    required
+                >
+
+                <small class="form-help">
+                    Utilize um título claro e fácil de identificar.
+                </small>
+
+            </div>
+
+
+
+            <!----novo--->
+            <div class="form-field">
+
+    <label for="categoria_id">
+        Categoria
+    </label>
+
+    <select
+        id="categoria_id"
+        name="categoria_id"
+    >
+
+        <option value="">
+            Sem categoria
+        </option>
+
+        {% for categoria in categorias %}
+
+            <option
+                value="{{ categoria.id }}"
+
+                {% if treinamento.categoria_id == categoria.id %}
+                    selected
+                {% endif %}
+            >
+
+                {{ categoria.nome }}
+
+                {% if not categoria.ativo %}
+                    (inativa)
+                {% endif %}
+
+            </option>
+
+        {% endfor %}
+
+    </select>
+
+    <small class="form-help">
+        Categorias inativas só permanecem disponíveis quando já estão vinculadas ao treinamento.
+    </small>
+
+</div>
+
+            <!-- ==================================================
+                 DESCRIÇÃO
+                 ================================================== -->
+
+            <div class="form-field">
+
+                <label for="descricao">
+                    Descrição
+                </label>
+
+                <textarea
+                    id="descricao"
+                    name="descricao"
+                    rows="5"
+                    placeholder="Descreva brevemente o objetivo deste treinamento."
+                >{{ treinamento.descricao or '' }}</textarea>
+
+                <small class="form-help">
+                    A descrição ajuda na identificação
+                    do conteúdo durante a administração.
+                </small>
+
+            </div>
+
+
+            <!-- ==================================================
+                 INFORMAÇÕES DO REGISTRO
+                 ================================================== -->
+
+            <div class="training-create-flow">
+
+                <div class="training-flow-item">
+
+                    <span class="training-flow-number">
+                        1
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Treinamento
+                        </strong>
+
+                        <span>
+                            {{ treinamento.titulo }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="training-flow-line"></div>
+
+
+                <div class="training-flow-item">
+
+                    <span class="training-flow-number training-flow-muted">
+                        2
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Módulos
+                        </strong>
+
+                        <span>
+                            Gerenciados na visualização do treinamento.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="training-flow-line"></div>
+
+
+                <div class="training-flow-item">
+
+                    <span class="training-flow-number training-flow-muted">
+                        3
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Questões
+                        </strong>
+
+                        <span>
+                            Utilizadas na avaliação do participante.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==================================================
+                 AÇÕES
+                 ================================================== -->
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('treinamentos.listar') }}"
+                    class="btn-one-secondary"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn-one-primary"
+                >
+                    Salvar alterações
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

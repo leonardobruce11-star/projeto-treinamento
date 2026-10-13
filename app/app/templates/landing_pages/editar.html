@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Editar Landing Page
+{% endblock %}
+
+{% block content %}
+
+<section class="form-page">
+
+    <header class="form-page-header">
+
+        <div>
+
+            <span class="page-eyebrow">
+                Simulações
+            </span>
+
+            <h1>
+                Editar Landing Page
+            </h1>
+
+            <p>
+                Atualize o conteúdo educativo
+                da página selecionada.
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for('landing_pages.listar') }}"
+            class="btn-one-secondary"
+        >
+            Voltar
+        </a>
+
+    </header>
+
+
+    <div class="form-card landing-form-card">
+
+        <div class="form-card-header">
+
+            <span class="section-eyebrow">
+                Conteúdo educativo
+            </span>
+
+            <h2>
+                Informações da página
+            </h2>
+
+            <p>
+                Edite os campos abaixo e salve as alterações.
+            </p>
+
+        </div>
+
+
+        <form
+            method="POST"
+            class="one-form"
+        >
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
+
+
+            <div class="form-field">
+
+                <label for="nome">
+                    Nome *
+                </label>
+
+                <input
+                    id="nome"
+                    type="text"
+                    name="nome"
+                    value="{{ pagina.nome }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-field">
+
+                <label for="titulo">
+                    Título *
+                </label>
+
+                <input
+                    id="titulo"
+                    type="text"
+                    name="titulo"
+                    value="{{ pagina.titulo }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-field">
+
+                <label for="mensagem">
+                    Mensagem educativa *
+                </label>
+
+                <textarea
+                    id="mensagem"
+                    name="mensagem"
+                    rows="5"
+                    required
+                >{{ pagina.mensagem }}</textarea>
+
+            </div>
+
+
+            <div class="form-field">
+
+                <label for="conteudo_html">
+                    Conteúdo HTML *
+                </label>
+
+                <textarea
+                    id="conteudo_html"
+                    name="conteudo_html"
+                    rows="20"
+                    class="code-textarea"
+                    required
+                >{{ pagina.conteudo_html }}</textarea>
+
+            </div>
+
+
+            <div class="training-notice">
+
+                <span class="training-notice-icon">
+                    i
+                </span>
+
+                <div>
+
+                    <strong>
+                        Conteúdo de conscientização
+                    </strong>
+
+                    <p>
+                        Preserve o caráter educativo da página
+                        e não utilize campos destinados à coleta
+                        de senhas ou outras credenciais.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('landing_pages.listar') }}"
+                    class="btn-one-secondary"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn-one-primary"
+                >
+                    Salvar alterações
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

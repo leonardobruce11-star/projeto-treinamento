@@ -1,0 +1,485 @@
+<!doctype html>
+
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>
+        Treinamento indisponível | ONE
+    </title>
+
+    <style>
+
+        :root {
+            --one-navy: #335479;
+            --one-blue: #1b6195;
+            --one-sky: #83bde8;
+
+            --one-ink: #173047;
+            --one-ink-soft: #536779;
+
+            --one-bg: #f4f7fa;
+            --one-border: #e5ebf0;
+
+            --one-danger: #b42318;
+        }
+
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+            margin: 0;
+
+            min-height: 100vh;
+
+            font-family:
+                Arial,
+                sans-serif;
+
+            color:
+                var(--one-ink);
+
+            background:
+                var(--one-bg);
+        }
+
+
+        /* =====================================================
+           TOPO
+           ===================================================== */
+
+        .portal-topbar {
+            min-height: 72px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+
+            padding:
+                0
+                32px;
+
+            background:
+                var(--one-navy);
+
+            color:
+                #ffffff;
+        }
+
+
+        .portal-brand {
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+        }
+
+
+        .portal-brand-mark {
+            width: 38px;
+            height: 38px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 10px;
+
+            background:
+                rgba(255,255,255,.12);
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+
+        .portal-brand-copy strong {
+            display: block;
+
+            font-size: 12px;
+        }
+
+
+        .portal-brand-copy span {
+            display: block;
+
+            margin-top: 3px;
+
+            font-size: 9px;
+
+            color:
+                rgba(255,255,255,.68);
+        }
+
+
+        .portal-stage {
+            padding:
+                7px
+                11px;
+
+            border:
+                1px solid
+                rgba(255,255,255,.15);
+
+            border-radius: 999px;
+
+            background:
+                rgba(255,255,255,.06);
+
+            font-size: 9px;
+
+            color:
+                rgba(255,255,255,.85);
+        }
+
+
+        /* =====================================================
+           CONTEÚDO
+           ===================================================== */
+
+        .portal-shell {
+            width:
+                min(
+                    720px,
+                    calc(100% - 36px)
+                );
+
+            margin:
+                55px
+                auto
+                60px;
+        }
+
+
+        .unavailable-card {
+            overflow: hidden;
+
+            border:
+                1px solid
+                var(--one-border);
+
+            border-radius: 20px;
+
+            background:
+                #ffffff;
+
+            box-shadow:
+                0 8px 28px
+                rgba(23,48,71,.05);
+        }
+
+
+        .unavailable-content {
+            padding:
+                44px
+                38px;
+
+            text-align: center;
+        }
+
+
+        .unavailable-icon {
+            width: 58px;
+            height: 58px;
+
+            display: grid;
+            place-items: center;
+
+            margin:
+                0
+                auto
+                20px;
+
+            border-radius: 16px;
+
+            background:
+                rgba(180,35,24,.07);
+
+            color:
+                var(--one-danger);
+
+            font-size: 22px;
+
+            font-weight: 700;
+        }
+
+
+        .unavailable-eyebrow {
+            display: block;
+
+            margin-bottom: 9px;
+
+            font-size: 8px;
+
+            font-weight: 700;
+
+            letter-spacing: .11em;
+
+            text-transform: uppercase;
+
+            color:
+                var(--one-danger);
+        }
+
+
+        .unavailable-content h1 {
+            margin:
+                0
+                0
+                11px;
+
+            font-size:
+                clamp(
+                    27px,
+                    4vw,
+                    37px
+                );
+        }
+
+
+        .unavailable-content > p {
+            max-width: 520px;
+
+            margin:
+                0
+                auto;
+
+            font-size: 10px;
+
+            line-height: 1.65;
+
+            color:
+                var(--one-ink-soft);
+        }
+
+
+        /* =====================================================
+           ORIENTAÇÃO
+           ===================================================== */
+
+        .unavailable-information {
+            margin-top: 26px;
+
+            padding:
+                18px
+                20px;
+
+            border:
+                1px solid
+                var(--one-border);
+
+            border-radius: 13px;
+
+            background:
+                #fbfcfd;
+
+            text-align: left;
+        }
+
+
+        .unavailable-information strong {
+            display: block;
+
+            margin-bottom: 6px;
+
+            font-size: 10px;
+
+            color:
+                var(--one-ink);
+        }
+
+
+        .unavailable-information p {
+            margin: 0;
+
+            font-size: 9px;
+
+            line-height: 1.6;
+
+            color:
+                var(--one-ink-soft);
+        }
+
+
+        .unavailable-note {
+            margin-top: 18px;
+
+            font-size: 8px;
+
+            line-height: 1.55;
+
+            color:
+                #8997a2;
+        }
+
+
+        /* =====================================================
+           RODAPÉ
+           ===================================================== */
+
+        .portal-footer {
+            margin-top: 30px;
+
+            padding-top: 18px;
+
+            border-top:
+                1px solid
+                var(--one-border);
+
+            text-align: center;
+
+            font-size: 8px;
+
+            color:
+                #8a99a5;
+        }
+
+
+        /* =====================================================
+           RESPONSIVO
+           ===================================================== */
+
+        @media (max-width: 650px) {
+
+            .portal-topbar {
+                align-items: flex-start;
+
+                flex-direction: column;
+
+                padding:
+                    16px
+                    18px;
+            }
+
+
+            .portal-shell {
+                width:
+                    calc(100% - 22px);
+
+                margin-top: 18px;
+            }
+
+
+            .unavailable-content {
+                padding:
+                    34px
+                    22px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <!-- ======================================================
+         TOPO
+         ====================================================== -->
+
+    <header class="portal-topbar">
+
+        <div class="portal-brand">
+
+            <div class="portal-brand-mark">
+                ONE
+            </div>
+
+            <div class="portal-brand-copy">
+
+                <strong>
+                    ONE Consultoria
+                </strong>
+
+                <span>
+                    Portal de Conscientização
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="portal-stage">
+            Acesso indisponível
+        </div>
+
+    </header>
+
+
+    <main class="portal-shell">
+
+        <section class="unavailable-card">
+
+            <div class="unavailable-content">
+
+                <div class="unavailable-icon">
+                    !
+                </div>
+
+                <span class="unavailable-eyebrow">
+                    Acesso ao treinamento
+                </span>
+
+                <h1>
+                    Treinamento indisponível
+                </h1>
+
+                <p>
+                    Não foi possível disponibilizar o treinamento
+                    solicitado por meio deste acesso.
+                </p>
+
+
+                <section class="unavailable-information">
+
+                    <strong>
+                        O que fazer?
+                    </strong>
+
+                    <p>
+                        Verifique se você utilizou o endereço
+                        disponibilizado para a sua participação.
+                        Caso o problema continue, entre em contato
+                        com o responsável pelo programa interno
+                        de conscientização.
+                    </p>
+
+                </section>
+
+
+                <p class="unavailable-note">
+                    Por segurança, informações técnicas sobre
+                    este acesso não são exibidas nesta página.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <footer class="portal-footer">
+
+            ONE Consultoria · Programa interno de conscientização
+            em segurança da informação
+
+        </footer>
+
+    </main>
+
+</body>
+
+</html>

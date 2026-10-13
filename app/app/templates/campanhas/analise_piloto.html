@@ -1,0 +1,782 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Análise do piloto
+{% endblock %}
+
+{% block content %}
+
+<section class="campaign-analysis-page">
+
+    <!-- ======================================================
+         CABEÇALHO
+         ====================================================== -->
+
+    <header class="campaign-analysis-header">
+
+        <div>
+
+            <span class="page-eyebrow">
+                Governança da campanha
+            </span>
+
+            <h1>
+                Análise do piloto
+            </h1>
+
+            <p>
+                Revise os indicadores e os resultados do piloto
+                controlado antes de registrar a decisão administrativa.
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for(
+                'campanhas.detalhe',
+                campanha_id=campanha.id
+            ) }}"
+            class="btn-one-secondary"
+        >
+            Voltar para campanha
+        </a>
+
+    </header>
+
+
+    <!-- ======================================================
+         IDENTIFICAÇÃO DA CAMPANHA
+         ====================================================== -->
+
+    <section class="campaign-overview-card">
+
+        <div class="campaign-overview-main">
+
+            <span class="section-eyebrow">
+                Campanha
+            </span>
+
+            <h2>
+                {{ campanha.nome }}
+            </h2>
+
+            <p>
+                Ambiente de análise do piloto controlado.
+            </p>
+
+        </div>
+
+
+        <div class="campaign-status-box">
+
+            <span class="campaign-status-label">
+                Status atual
+            </span>
+
+            <span class="campaign-status-badge">
+                {{ campanha.status.replace("_", " ")|title }}
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         INDICADORES
+         ====================================================== -->
+
+    <section class="campaign-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-eyebrow">
+                    Indicadores do piloto
+                </span>
+
+                <h2>
+                    Visão consolidada
+                </h2>
+
+                <p>
+                    Resultados agregados dos participantes
+                    selecionados para o piloto.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="pilot-metrics-grid">
+
+            <article class="pilot-metric-card pilot-metric-primary">
+
+                <span class="pilot-metric-label">
+                    Participantes
+                </span>
+
+                <strong>
+                    {{ metricas.participantes }}
+                </strong>
+
+                <span class="pilot-metric-caption">
+                    Pessoas incluídas no piloto
+                </span>
+
+            </article>
+
+
+            <article class="pilot-metric-card">
+
+                <span class="pilot-metric-label">
+                    Iniciaram
+                </span>
+
+                <strong>
+                    {{ metricas.iniciados }}
+                </strong>
+
+                <span class="pilot-metric-caption">
+                    Participantes que iniciaram
+                </span>
+
+            </article>
+
+
+            <article class="pilot-metric-card">
+
+                <span class="pilot-metric-label">
+                    Concluíram
+                </span>
+
+                <strong>
+                    {{ metricas.concluidos }}
+                </strong>
+
+                <span class="pilot-metric-caption">
+                    Participantes que finalizaram
+                </span>
+
+            </article>
+
+
+            <article class="pilot-metric-card">
+
+                <span class="pilot-metric-label">
+                    Quizzes realizados
+                </span>
+
+                <strong>
+                    {{ metricas.quizzes }}
+                </strong>
+
+                <span class="pilot-metric-caption">
+                    Avaliações registradas
+                </span>
+
+            </article>
+
+        </div>
+
+
+        <div class="pilot-performance-grid">
+
+            <article class="pilot-performance-card">
+
+                <div>
+
+                    <span class="pilot-metric-label">
+                        Taxa de início
+                    </span>
+
+                    <strong>
+                        {{ metricas.taxa_inicio }}%
+                    </strong>
+
+                    <p>
+                        Proporção de participantes que iniciaram o treinamento.
+                    </p>
+
+                </div>
+
+                <div class="progress-track">
+
+                    <span
+                        class="progress-fill"
+                        style="width: {{ metricas.taxa_inicio }}%;"
+                    ></span>
+
+                </div>
+
+            </article>
+
+
+            <article class="pilot-performance-card">
+
+                <div>
+
+                    <span class="pilot-metric-label">
+                        Taxa de conclusão
+                    </span>
+
+                    <strong>
+                        {{ metricas.taxa_conclusao }}%
+                    </strong>
+
+                    <p>
+                        Percentual de participantes que concluíram o piloto.
+                    </p>
+
+                </div>
+
+                <div class="progress-track">
+
+                    <span
+                        class="progress-fill progress-fill-light"
+                        style="width: {{ metricas.taxa_conclusao }}%;"
+                    ></span>
+
+                </div>
+
+            </article>
+
+
+            <article class="pilot-performance-card">
+
+                <div>
+
+                    <span class="pilot-metric-label">
+                        Média do Quiz
+                    </span>
+
+                    <strong>
+                        {{ metricas.media_quiz }}%
+                    </strong>
+
+                    <p>
+                        Aproveitamento médio nas avaliações concluídas.
+                    </p>
+
+                </div>
+
+                <div class="progress-track">
+
+                    <span
+                        class="progress-fill"
+                        style="width: {{ metricas.media_quiz }}%;"
+                    ></span>
+
+                </div>
+
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         RESULTADOS INDIVIDUAIS
+         ====================================================== -->
+
+    {% if campanha.participacoes_treinamento %}
+
+    <section class="campaign-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-eyebrow">
+                    Participantes
+                </span>
+
+                <h2>
+                    Resultados do piloto
+                </h2>
+
+                <p>
+                    Acompanhe o andamento e o desempenho
+                    individual dos participantes selecionados.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-card">
+
+            <div class="table-wrapper">
+
+                <table class="one-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Participante</th>
+                            <th>Departamento</th>
+                            <th>Iniciado</th>
+                            <th>Concluído</th>
+                            <th>Resultado do Quiz</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for participacao
+                           in campanha.participacoes_treinamento %}
+
+                        <tr>
+
+                            <td>
+
+                                {% if participacao.colaborador %}
+
+                                    <div class="campaign-person-cell">
+
+                                        <div class="campaign-person-avatar">
+
+                                            {% if participacao.colaborador.nome %}
+                                                {{ participacao.colaborador.nome[:1]|upper }}
+                                            {% else %}
+                                                P
+                                            {% endif %}
+
+                                        </div>
+
+                                        <strong>
+                                            {{ participacao.colaborador.nome }}
+                                        </strong>
+
+                                    </div>
+
+                                {% else %}
+
+                                    <span class="muted-text">
+                                        -
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if participacao.colaborador
+                                      and participacao.colaborador.departamento %}
+
+                                    <span class="department-pill">
+                                        {{ participacao.colaborador.departamento.nome }}
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="muted-text">
+                                        -
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if participacao.iniciado_em %}
+
+                                    <span class="status-badge status-success">
+                                        Sim
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="status-badge status-warning">
+                                        Não
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if participacao.concluido_em %}
+
+                                    <span class="status-badge status-success">
+                                        Sim
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="status-badge status-warning">
+                                        Não
+                                    </span>
+
+                                {% endif %}<br><span class="muted-text">{{ situacao_participacao(participacao) }}</span>
+
+                            </td>
+
+
+                            <td>
+
+                                {% set resultado_atual = resultado_representativo(resultados_carregados(participacao)) %}
+                                {% if resultado_atual %}
+
+                                    {% set percentual =
+                                        resultado_atual.percentual
+                                    %}
+
+                                    <span
+                                        class="
+                                            score-badge
+
+                                            {% if percentual >= 80 %}
+                                                score-high
+                                            {% elif percentual >= 60 %}
+                                                score-medium
+                                            {% else %}
+                                                score-low
+                                            {% endif %}
+                                        "
+                                    >
+                                        {{ percentual }}%
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="muted-text">
+                                        -
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    {% endif %}
+
+
+    <!-- ======================================================
+         DECISÃO ADMINISTRATIVA
+         ====================================================== -->
+
+    {% if campanha.status == "piloto_validado" %}
+
+    <section class="campaign-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-eyebrow">
+                    Governança
+                </span>
+
+                <h2>
+                    Decisão administrativa
+                </h2>
+
+                <p>
+                    Registre a decisão após revisar os indicadores
+                    e os resultados do piloto controlado.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="campaign-decision-layout">
+
+            <div class="form-card campaign-decision-form">
+
+                <div class="form-card-header">
+
+                    <span class="section-eyebrow">
+                        Registro de decisão
+                    </span>
+
+                    <h2>
+                        Avaliação do piloto
+                    </h2>
+
+                    <p>
+                        O registro abaixo documenta a decisão administrativa.
+                    </p>
+
+                </div>
+
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'campanhas.decisao_piloto',
+                        campanha_id=campanha.id
+                    ) }}"
+                    class="one-form"
+                >
+
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        value="{{ csrf_token() }}"
+                    >
+
+
+                    <div class="form-field">
+
+                        <label for="decisao">
+                            Decisão *
+                        </label>
+
+                        <select
+                            id="decisao"
+                            name="decisao"
+                            required
+                        >
+
+                            <option value="">
+                                Selecione
+                            </option>
+
+                            <option value="aprovado_continuidade">
+                                Piloto aprovado para continuidade
+                            </option>
+
+                            <option value="ajustes_necessarios">
+                                Necessita ajustes
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-field">
+
+                        <label for="observacao">
+                            Justificativa da decisão *
+                        </label>
+
+                        <textarea
+                            id="observacao"
+                            name="observacao"
+                            rows="7"
+                            required
+                            placeholder="Descreva os motivos da decisão..."
+                        ></textarea>
+
+                        <small class="form-help">
+                            Registre os principais critérios considerados.
+                        </small>
+
+                    </div>
+
+
+                    <div class="form-actions">
+
+                        <button
+                            type="submit"
+                            class="btn-one-primary"
+                        >
+                            Registrar decisão
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <aside class="campaign-governance-note">
+
+                <span class="section-eyebrow">
+                    Controle administrativo
+                </span>
+
+                <h3>
+                    Decisão humana
+                </h3>
+
+                <p>
+                    A decisão registrada nesta etapa documenta
+                    o resultado do piloto.
+                </p>
+
+                <p>
+                    Nenhuma nova execução é iniciada
+                    automaticamente a partir desta ação.
+                </p>
+
+            </aside>
+
+        </div>
+
+    </section>
+
+    {% endif %}
+
+
+    <!-- ======================================================
+         DECISÃO JÁ REGISTRADA
+         ====================================================== -->
+
+    {% if campanha.status in [
+        "piloto_aprovado",
+        "ajustes_necessarios"
+    ] %}
+
+    <section class="campaign-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-eyebrow">
+                    Governança
+                </span>
+
+                <h2>
+                    Decisão registrada
+                </h2>
+
+                <p>
+                    Registro administrativo associado
+                    ao resultado deste piloto.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="campaign-decision-record">
+
+            <div class="decision-record-main">
+
+                <span class="decision-record-label">
+                    Decisão
+                </span>
+
+                <strong class="decision-record-value">
+
+                    {% if campanha.decisao_piloto == "aprovado_continuidade" %}
+
+                        Piloto aprovado para continuidade
+
+                    {% elif campanha.decisao_piloto == "ajustes_necessarios" %}
+
+                        Necessita ajustes
+
+                    {% else %}
+
+                        -
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+
+            <div class="decision-record-grid">
+
+                <div>
+
+                    <span>
+                        Responsável
+                    </span>
+
+                    <strong>
+
+                        {% if campanha.decisor_piloto %}
+
+                            {{ campanha.decisor_piloto.nome }}
+
+                        {% else %}
+
+                            -
+
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Data
+                    </span>
+
+                    <strong>
+                        {{ campanha.decisao_piloto_em }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="decision-justification">
+
+                <span>
+                    Justificativa
+                </span>
+
+                <p>
+                    {{ campanha.observacao_decisao_piloto or "-" }}
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    {% endif %}
+
+
+    <!-- ======================================================
+         RODAPÉ
+         ====================================================== -->
+
+    <div class="campaign-analysis-footer">
+
+        <a
+            href="{{ url_for(
+                'campanhas.detalhe',
+                campanha_id=campanha.id
+            ) }}"
+            class="btn-one-secondary"
+        >
+            Voltar para campanha
+        </a>
+
+    </div>
+
+</section>
+
+{% endblock %}

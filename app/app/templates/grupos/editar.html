@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Editar grupo
+{% endblock %}
+
+{% block content %}
+
+<section class="form-page">
+
+    <header class="form-page-header">
+
+        <div>
+
+            <span class="page-eyebrow">
+                Simulações
+            </span>
+
+            <h1>
+                Editar grupo
+            </h1>
+
+            <p>
+                Atualize os dados e a composição
+                de participantes deste grupo.
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for('grupos.listar') }}"
+            class="btn-one-secondary"
+        >
+            Voltar
+        </a>
+
+    </header>
+
+
+    <div class="group-edit-layout">
+
+
+        <!-- ==================================================
+             FORMULÁRIO
+             ================================================== -->
+
+        <div class="form-card group-form-card">
+
+            <div class="form-card-header">
+
+                <span class="section-eyebrow">
+                    Grupo #{{ grupo.id }}
+                </span>
+
+                <h2>
+                    Informações principais
+                </h2>
+
+                <p>
+                    Atualize o nome, descrição e participantes.
+                </p>
+
+            </div>
+
+
+            <form
+                method="POST"
+                class="one-form"
+            >
+
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token() }}"
+                >
+
+
+                <div class="form-field">
+
+                    <label for="nome">
+                        Nome do grupo *
+                    </label>
+
+                    <input
+                        id="nome"
+                        type="text"
+                        name="nome"
+                        value="{{ grupo.nome }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-field">
+
+                    <label for="descricao">
+                        Descrição
+                    </label>
+
+                    <input
+                        id="descricao"
+                        type="text"
+                        name="descricao"
+                        value="{{ grupo.descricao or '' }}"
+                    >
+
+                </div>
+
+
+                <!-- ==============================================
+                     PARTICIPANTES
+                     ============================================== -->
+
+                <div class="participants-section">
+
+                    <div class="participants-heading">
+
+                        <span class="section-eyebrow">
+                            Participantes
+                        </span>
+
+                        <h3>
+                            Composição do grupo
+                        </h3>
+
+                        <p>
+                            Marque ou desmarque os colaboradores.
+                        </p>
+
+                    </div>
+
+
+                    {% if colaboradores %}
+
+                    <div class="participants-grid">
+
+                        {% for colaborador in colaboradores %}
+
+                        <label class="participant-option">
+
+                            <input
+                                type="checkbox"
+                                name="colaboradores"
+                                value="{{ colaborador.id }}"
+
+                                {% if colaborador.id in participantes_ids %}
+                                    checked
+                                {% endif %}
+                            >
+
+                            <span class="participant-check"></span>
+
+                            <span class="participant-avatar">
+
+                                {% if colaborador.nome %}
+                                    {{ colaborador.nome[:1]|upper }}
+                                {% else %}
+                                    C
+                                {% endif %}
+
+                            </span>
+
+                            <span class="participant-info">
+
+                                <strong>
+                                    {{ colaborador.nome }}
+                                </strong>
+
+                                <span>
+                                    {{ colaborador.email }}
+                                </span>
+
+                                {% if colaborador.departamento %}
+
+                                    <small>
+                                        {{ colaborador.departamento.nome }}
+                                    </small>
+
+                                {% endif %}
+
+                            </span>
+
+                        </label>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    {% else %}
+
+                    <div class="empty-state compact-empty">
+
+                        <strong>
+                            Nenhum colaborador ativo disponível
+                        </strong>
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="form-actions">
+
+                    <a
+                        href="{{ url_for('grupos.listar') }}"
+                        class="btn-one-secondary"
+                    >
+                        Cancelar
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="btn-one-primary"
+                    >
+                        Salvar alterações
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <!-- ==================================================
+             STATUS DE INTEGRAÇÃO
+             ================================================== -->
+
+        <aside class="integration-card">
+
+            <span class="section-eyebrow">
+                Integração
+            </span>
+
+            <h3>
+                Gophish
+            </h3>
+
+
+            {% if grupo.gophish_group_id %}
+
+                <div class="integration-panel connected-panel">
+
+                    <span class="integration-large-dot"></span>
+
+                    <strong>
+                        Grupo sincronizado
+                    </strong>
+
+                    <p>
+                        Existe um grupo correspondente
+                        registrado na integração.
+                    </p>
+
+                    <div class="integration-id">
+
+                        <span>
+                            Gophish ID
+                        </span>
+
+                        <strong>
+                            {{ grupo.gophish_group_id }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            {% else %}
+
+                <div class="integration-panel pending-panel">
+
+                    <span class="integration-large-dot"></span>
+
+                    <strong>
+                        Não sincronizado
+                    </strong>
+
+                    <p>
+                        Este grupo ainda existe apenas
+                        na plataforma da ONE.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </aside>
+
+    </div>
+
+</section>
+
+{% endblock %}

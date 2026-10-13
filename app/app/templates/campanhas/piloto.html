@@ -1,0 +1,340 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Piloto controlado
+{% endblock %}
+
+{% block content %}
+
+<section class="campaign-pilot-page">
+
+    <!-- ======================================================
+         CABEÇALHO
+         ====================================================== -->
+
+    <header class="campaign-pilot-header">
+
+        <div>
+
+            <span class="page-eyebrow">
+                Validação controlada
+            </span>
+
+            <h1>
+                Piloto controlado
+            </h1>
+
+            <p>
+                Selecione entre 1 e 3 participantes pertencentes
+                ao grupo da campanha.
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for(
+                'campanhas.detalhe',
+                campanha_id=campanha.id
+            ) }}"
+            class="btn-one-secondary"
+        >
+            Voltar para campanha
+        </a>
+
+    </header>
+
+
+    <!-- ======================================================
+         IDENTIFICAÇÃO DA CAMPANHA
+         ====================================================== -->
+
+    <section class="campaign-pilot-overview">
+
+        <div>
+
+            <span class="section-eyebrow">
+                Campanha
+            </span>
+
+            <h2>
+                {{ campanha.nome }}
+            </h2>
+
+            <p>
+                Preparação do grupo piloto para validação
+                interna do treinamento.
+            </p>
+
+        </div>
+
+        <div class="campaign-pilot-limit">
+
+            <span>
+                Limite
+            </span>
+
+            <strong>
+                1 a 3
+            </strong>
+
+            <small>
+                participantes
+            </small>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         AVISO DE SEGURANÇA
+         ====================================================== -->
+
+    <div class="campaign-safe-panel">
+
+        <div class="campaign-safe-icon">
+            i
+        </div>
+
+        <div>
+
+            <strong>
+                Ambiente de teste
+            </strong>
+
+            <p>
+                Esta etapa gera somente URLs individuais
+                de treinamento para validação interna.
+            </p>
+
+            <span>
+                Nenhum e-mail será enviado.
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- ======================================================
+         PARTICIPANTES
+         ====================================================== -->
+
+    <section class="campaign-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-eyebrow">
+                    Participantes
+                </span>
+
+                <h2>
+                    Seleção do piloto
+                </h2>
+
+                <p>
+                    Escolha até três colaboradores pertencentes
+                    ao grupo configurado na campanha.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if colaboradores %}
+
+        <form
+            method="POST"
+            class="campaign-pilot-form"
+        >
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
+
+
+            <div class="pilot-selection-toolbar">
+
+                <div>
+
+                    <span class="pilot-selection-label">
+                        Participantes disponíveis
+                    </span>
+
+                    <strong>
+                        {{ colaboradores|length }}
+                    </strong>
+
+                </div>
+
+                <div class="pilot-selection-hint">
+
+                    <span>
+                        Selecione no mínimo 1 e no máximo 3 participantes
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="pilot-participants-grid">
+
+                {% for colaborador in colaboradores %}
+
+                <label class="pilot-participant-option">
+
+                    <input
+                        type="checkbox"
+                        name="colaboradores"
+                        value="{{ colaborador.id }}"
+                        class="pilot-checkbox"
+                    >
+
+                    <span class="pilot-checkmark"></span>
+
+                    <span class="pilot-person-avatar">
+
+                        {% if colaborador.nome %}
+                            {{ colaborador.nome[:1]|upper }}
+                        {% else %}
+                            C
+                        {% endif %}
+
+                    </span>
+
+                    <span class="pilot-person-info">
+
+                        <strong>
+                            {{ colaborador.nome }}
+                        </strong>
+
+                        {% if colaborador.departamento %}
+
+                            <span>
+                                {{ colaborador.departamento.nome }}
+                            </span>
+
+                        {% else %}
+
+                            <span>
+                                Sem departamento
+                            </span>
+
+                        {% endif %}
+
+                    </span>
+
+                </label>
+
+                {% endfor %}
+
+            </div>
+
+
+            <div class="campaign-pilot-actions">
+
+                <a
+                    href="{{ url_for(
+                        'campanhas.detalhe',
+                        campanha_id=campanha.id
+                    ) }}"
+                    class="btn-one-secondary"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn-one-primary"
+                >
+                    Preparar piloto
+                </button>
+
+            </div>
+
+        </form>
+
+
+        {% else %}
+
+        <div class="empty-state management-empty">
+
+            <div class="empty-state-icon">
+                i
+            </div>
+
+            <strong>
+                Nenhum participante disponível
+            </strong>
+
+            <p>
+                O grupo da campanha não possui
+                participantes cadastrados.
+            </p>
+
+            <a
+                href="{{ url_for(
+                    'campanhas.detalhe',
+                    campanha_id=campanha.id
+                ) }}"
+                class="btn-one-secondary"
+            >
+                Voltar para campanha
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+</section>
+
+
+{% if colaboradores %}
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const checkboxes =
+        document.querySelectorAll(".pilot-checkbox");
+
+    const limite = 3;
+
+    checkboxes.forEach(function (checkbox) {
+
+        checkbox.addEventListener("change", function () {
+
+            const selecionados =
+                document.querySelectorAll(
+                    ".pilot-checkbox:checked"
+                );
+
+            if (selecionados.length > limite) {
+
+                checkbox.checked = false;
+
+                alert(
+                    "Selecione no máximo 3 participantes para o piloto."
+                );
+
+            }
+
+        });
+
+    });
+
+});
+
+</script>
+
+{% endif %}
+
+{% endblock %}

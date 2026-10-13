@@ -1,0 +1,311 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Editar questão
+{% endblock %}
+
+{% block content %}
+
+<section class="training-question-page">
+
+    <!-- ======================================================
+         CABEÇALHO
+         ====================================================== -->
+
+    <header class="training-question-header">
+
+        <div>
+
+            <span class="page-eyebrow">
+                Avaliação
+            </span>
+
+            <h1>
+                Editar questão
+            </h1>
+
+            <p>
+                Atualize o enunciado, as alternativas
+                e a resposta correta.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for(
+                'treinamentos.visualizar',
+                treinamento_id=treinamento.id
+            ) }}"
+            class="btn-one-secondary"
+        >
+            Voltar
+        </a>
+
+    </header>
+
+
+    <!-- ======================================================
+         CONTEXTO
+         ====================================================== -->
+
+    <section class="training-question-context">
+
+        <div class="training-question-context-icon">
+            ?
+        </div>
+
+        <div>
+
+            <span class="section-eyebrow">
+                Treinamento
+            </span>
+
+            <h2>
+                {{ treinamento.titulo }}
+            </h2>
+
+            <p>
+                Esta questão pertence ao quiz
+                deste treinamento.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         FORMULÁRIO
+         ====================================================== -->
+
+    <section class="form-card training-question-card">
+
+        <div class="form-card-header">
+
+            <span class="section-eyebrow">
+                Estrutura da questão
+            </span>
+
+            <h2>
+                Informações da avaliação
+            </h2>
+
+            <p>
+                Faça as alterações necessárias
+                e mantenha uma única resposta correta.
+            </p>
+
+        </div>
+
+
+        <form
+            method="POST"
+            class="one-form"
+        >
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
+
+
+            <!-- ==================================================
+                 ORDEM
+                 ================================================== -->
+
+            <div class="form-field training-question-order">
+
+                <label for="ordem">
+                    Ordem
+                </label>
+
+                <input
+                    id="ordem"
+                    type="number"
+                    name="ordem"
+                    value="{{ questao.ordem }}"
+                    min="1"
+                    required
+                >
+
+                <small class="form-help">
+                    Define a posição desta questão no quiz.
+                </small>
+
+            </div>
+
+
+            <!-- ==================================================
+                 ENUNCIADO
+                 ================================================== -->
+
+            <div class="form-field training-question-statement">
+
+                <label for="enunciado">
+                    Enunciado *
+                </label>
+
+                <textarea
+                    id="enunciado"
+                    name="enunciado"
+                    rows="4"
+                    required
+                >{{ questao.enunciado }}</textarea>
+
+                <small class="form-help">
+                    Utilize uma pergunta clara e objetiva.
+                </small>
+
+            </div>
+
+
+            <!-- ==================================================
+                 ALTERNATIVAS
+                 ================================================== -->
+
+            <section class="training-alternatives-section">
+
+                <div class="training-alternatives-heading">
+
+                    <span class="section-eyebrow">
+                        Respostas
+                    </span>
+
+                    <h3>
+                        Alternativas
+                    </h3>
+
+                    <p>
+                        Atualize as quatro alternativas
+                        e marque somente uma como correta.
+                    </p>
+
+                </div>
+
+
+                <div class="training-alternatives-grid">
+
+                    {% for alternativa in alternativas %}
+
+                    <div class="training-alternative-field">
+
+                        <span class="training-alternative-number">
+                            {{ loop.index }}
+                        </span>
+
+                        <div class="form-field">
+
+                            <label
+                                for="alternativa_{{ loop.index }}"
+                            >
+                                Alternativa {{ loop.index }}
+                            </label>
+
+                            <input
+                                id="alternativa_{{ loop.index }}"
+                                type="text"
+                                name="alternativa_{{ loop.index }}"
+                                value="{{ alternativa.texto }}"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </section>
+
+
+            <!-- ==================================================
+                 RESPOSTA CORRETA
+                 ================================================== -->
+
+            <section class="training-correct-section">
+
+                <div class="training-alternatives-heading">
+
+                    <span class="section-eyebrow">
+                        Correção
+                    </span>
+
+                    <h3>
+                        Resposta correta
+                    </h3>
+
+                    <p>
+                        Selecione a alternativa considerada
+                        correta para esta questão.
+                    </p>
+
+                </div>
+
+
+                <div class="correct-answer-group">
+
+    {% for alternativa in alternativas %}
+
+    <label class="correct-answer-option">
+
+        <input
+            type="radio"
+            name="correta"
+            value="{{ loop.index }}"
+
+            {% if alternativa.correta %}
+                checked
+            {% endif %}
+
+            required
+        >
+
+        <span>
+            Alternativa {{ loop.index }}
+        </span>
+
+    </label>
+
+    {% endfor %}
+
+</div>
+
+            </section>
+
+
+            <!-- ==================================================
+                 AÇÕES
+                 ================================================== -->
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for(
+                        'treinamentos.visualizar',
+                        treinamento_id=treinamento.id
+                    ) }}"
+                    class="btn-one-secondary"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn-one-primary"
+                >
+                    Salvar alterações
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+</section>
+
+{% endblock %}

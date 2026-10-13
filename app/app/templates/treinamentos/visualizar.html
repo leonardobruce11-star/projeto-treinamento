@@ -1,0 +1,1582 @@
+<!doctype html>
+
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>
+        Pré-visualização - {{ treinamento.titulo }}
+    </title>
+
+
+    <style>
+
+        :root {
+            --one-navy: #335479;
+            --one-blue: #1b6195;
+            --one-sky: #83bde8;
+            --one-white: #ffffff;
+            --one-gray: #adadad;
+            --one-ink: #173047;
+            --one-ink-soft: #536779;
+            --one-bg: #f4f7fa;
+            --one-border: #e5ebf0;
+            --one-success: #2d7a55;
+        }
+
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+            margin: 0;
+
+            font-family:
+                Arial,
+                sans-serif;
+
+            color:
+                var(--one-ink);
+
+            background:
+                var(--one-bg);
+        }
+
+
+        a {
+            color: inherit;
+        }
+
+
+        /* =====================================================
+           ESTRUTURA
+           ===================================================== */
+
+        .preview-shell {
+            width: 100%;
+            min-height: 100vh;
+        }
+
+
+        .preview-container {
+            width:
+                min(
+                    1000px,
+                    calc(100% - 36px)
+                );
+
+            margin:
+                34px
+                auto
+                60px;
+        }
+
+
+        /* =====================================================
+           TOPO
+           ===================================================== */
+
+        .preview-topbar {
+            position: sticky;
+
+            top: 0;
+
+            z-index: 20;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+
+            min-height: 68px;
+
+            padding:
+                0
+                28px;
+
+            border-bottom:
+                1px solid
+                rgba(255, 255, 255, .08);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--one-navy),
+                    var(--one-blue)
+                );
+
+            color:
+                #ffffff;
+        }
+
+
+        .preview-brand {
+            display: flex;
+            align-items: center;
+
+            gap: 11px;
+        }
+
+
+        .preview-brand-mark {
+            width: 34px;
+            height: 34px;
+
+            display: grid;
+
+            place-items: center;
+
+            border-radius: 9px;
+
+            font-size: 12px;
+            font-weight: 700;
+
+            background:
+                rgba(255, 255, 255, .12);
+        }
+
+
+        .preview-brand strong {
+            display: block;
+
+            font-size: 12px;
+        }
+
+
+        .preview-brand span {
+            display: block;
+
+            margin-top: 2px;
+
+            font-size: 9px;
+
+            color:
+                rgba(255, 255, 255, .70);
+        }
+
+
+        .preview-top-actions {
+            display: flex;
+            align-items: center;
+
+            gap: 8px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .top-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            min-height: 36px;
+
+            padding:
+                8px
+                12px;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, .18);
+
+            border-radius: 8px;
+
+            font-size: 9px;
+            font-weight: 700;
+
+            text-decoration: none;
+
+            color:
+                #ffffff;
+
+            background:
+                rgba(255, 255, 255, .08);
+        }
+
+
+        .top-action:hover {
+            background:
+                rgba(255, 255, 255, .15);
+        }
+
+
+        /* =====================================================
+           AVISO
+           ===================================================== */
+
+        .preview-notice {
+            display: flex;
+            align-items: flex-start;
+
+            gap: 12px;
+
+            padding:
+                14px
+                16px;
+
+            margin-bottom: 22px;
+
+            border:
+                1px solid
+                rgba(27, 97, 149, .12);
+
+            border-radius: 12px;
+
+            background:
+                rgba(131, 189, 232, .08);
+        }
+
+
+        .preview-notice-icon {
+            width: 28px;
+            height: 28px;
+
+            flex:
+                0
+                0
+                28px;
+
+            display: grid;
+
+            place-items: center;
+
+            border-radius: 8px;
+
+            font-size: 10px;
+            font-weight: 700;
+
+            color:
+                #ffffff;
+
+            background:
+                var(--one-blue);
+        }
+
+
+        .preview-notice strong {
+            display: block;
+
+            margin-bottom: 4px;
+
+            font-size: 10px;
+        }
+
+
+        .preview-notice p {
+            margin: 0;
+
+            font-size: 9px;
+
+            line-height: 1.55;
+
+            color:
+                var(--one-ink-soft);
+        }
+
+
+        /* =====================================================
+           CAPA
+           ===================================================== */
+
+        .training-hero {
+            position: relative;
+
+            overflow: hidden;
+
+            padding:
+                38px
+                40px;
+
+            margin-bottom: 28px;
+
+            border-radius: 20px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    var(--one-navy),
+                    var(--one-blue)
+                );
+
+            color:
+                #ffffff;
+        }
+
+
+        .training-hero::after {
+            content: "";
+
+            position: absolute;
+
+            width: 240px;
+            height: 240px;
+
+            right: -90px;
+            top: -90px;
+
+            border:
+                34px solid
+                rgba(255, 255, 255, .05);
+
+            border-radius: 50%;
+        }
+
+
+        .training-hero-label {
+            display: inline-block;
+
+            margin-bottom: 12px;
+
+            font-size: 9px;
+            font-weight: 700;
+
+            letter-spacing: .12em;
+
+            text-transform: uppercase;
+
+            color:
+                rgba(255, 255, 255, .68);
+        }
+
+
+        .training-hero h1 {
+            max-width: 720px;
+
+            margin:
+                0
+                0
+                12px;
+
+            font-size:
+                clamp(
+                    27px,
+                    4vw,
+                    42px
+                );
+
+            line-height: 1.1;
+        }
+
+
+        .training-hero p {
+            max-width: 720px;
+
+            margin: 0;
+
+            font-size: 12px;
+
+            line-height: 1.7;
+
+            color:
+                rgba(255, 255, 255, .78);
+        }
+
+
+        .training-hero-meta {
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+
+            margin-top: 24px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .training-hero-meta span {
+            display: inline-flex;
+            align-items: center;
+
+            min-height: 29px;
+
+            padding:
+                6px
+                10px;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, .12);
+
+            border-radius: 999px;
+
+            font-size: 9px;
+            font-weight: 700;
+
+            color:
+                rgba(255, 255, 255, .82);
+
+            background:
+                rgba(255, 255, 255, .06);
+        }
+
+
+        /* =====================================================
+           AÇÕES ADMINISTRATIVAS
+           ===================================================== */
+
+        .training-admin-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 24px;
+
+            margin-bottom: 24px;
+
+            padding:
+                22px
+                24px;
+
+            border:
+                1px solid
+                var(--one-border);
+
+            border-radius: 16px;
+
+            background:
+                #ffffff;
+        }
+
+
+        .training-admin-label {
+            display: block;
+
+            margin-bottom: 5px;
+
+            font-size: 9px;
+            font-weight: 700;
+
+            letter-spacing: .1em;
+
+            text-transform: uppercase;
+
+            color:
+                var(--one-blue);
+        }
+
+
+        .training-admin-actions strong {
+            display: block;
+
+            font-size: 15px;
+
+            color:
+                var(--one-ink);
+        }
+
+
+        .training-admin-actions p {
+            margin:
+                5px
+                0
+                0;
+
+            font-size: 10px;
+
+            line-height: 1.5;
+
+            color:
+                var(--one-ink-soft);
+        }
+
+
+        .training-admin-buttons {
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .preview-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            min-height: 38px;
+
+            padding:
+                9px
+                14px;
+
+            border-radius: 9px;
+
+            font-size: 10px;
+            font-weight: 700;
+
+            text-decoration: none;
+
+            transition:
+                .2s ease;
+        }
+
+
+        .preview-action.primary {
+            color:
+                #ffffff;
+
+            background:
+                var(--one-blue);
+        }
+
+
+        .preview-action.primary:hover {
+            opacity: .9;
+        }
+
+
+        .preview-action.secondary {
+            color:
+                var(--one-blue);
+
+            border:
+                1px solid
+                var(--one-border);
+
+            background:
+                #ffffff;
+        }
+
+
+        .preview-action.secondary:hover {
+            background:
+                var(--one-bg);
+        }
+
+
+        /* =====================================================
+           PROGRESSO
+           ===================================================== */
+
+        .preview-progress {
+            margin-bottom: 24px;
+
+            padding:
+                18px
+                20px;
+
+            border:
+                1px solid
+                var(--one-border);
+
+            border-radius: 14px;
+
+            background:
+                #ffffff;
+        }
+
+
+        .preview-progress-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 16px;
+
+            margin-bottom: 11px;
+        }
+
+
+        .preview-progress-header span {
+            font-size: 9px;
+
+            color:
+                var(--one-ink-soft);
+        }
+
+
+        .preview-progress-header strong {
+            font-size: 10px;
+
+            color:
+                var(--one-ink);
+        }
+
+
+        .preview-progress-track {
+            width: 100%;
+            height: 5px;
+
+            overflow: hidden;
+
+            border-radius: 999px;
+
+            background:
+                #edf2f6;
+        }
+
+
+        .preview-progress-fill {
+            width: 100%;
+            height: 100%;
+
+            border-radius: inherit;
+
+            background:
+                var(--one-blue);
+        }
+
+
+        /* =====================================================
+           MÓDULOS
+           ===================================================== */
+
+        .modules-section {
+            display: grid;
+
+            gap: 18px;
+        }
+
+
+        .module-card {
+            overflow: hidden;
+
+            border:
+                1px solid
+                var(--one-border);
+
+            border-radius: 16px;
+
+            background:
+                #ffffff;
+        }
+
+
+        .module-header {
+            display: flex;
+            align-items: center;
+
+            gap: 16px;
+
+            padding:
+                18px
+                20px;
+
+            border-bottom:
+                1px solid
+                var(--one-border);
+
+            background:
+                #fbfcfd;
+        }
+
+
+        .module-number {
+            width: 38px;
+            height: 38px;
+
+            flex:
+                0
+                0
+                38px;
+
+            display: grid;
+
+            place-items: center;
+
+            border-radius: 10px;
+
+            font-size: 11px;
+            font-weight: 700;
+
+            color:
+                #ffffff;
+
+            background:
+                var(--one-blue);
+        }
+
+
+        .module-header-content {
+            width: 100%;
+            min-width: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+        }
+
+
+        .module-header span {
+            display: block;
+
+            margin-bottom: 4px;
+
+            font-size: 8px;
+            font-weight: 700;
+
+            letter-spacing: .08em;
+
+            text-transform: uppercase;
+
+            color:
+                var(--one-blue);
+        }
+
+
+        .module-header h2 {
+            margin: 0;
+
+            font-size: 16px;
+
+            color:
+                var(--one-ink);
+        }
+
+
+        .module-edit-link {
+            flex:
+                0
+                0
+                auto;
+
+            padding:
+                7px
+                11px;
+
+            border:
+                1px solid
+                var(--one-border);
+
+            border-radius: 8px;
+
+            font-size: 9px;
+            font-weight: 700;
+
+            color:
+                var(--one-blue);
+
+            text-decoration: none;
+
+            background:
+                #ffffff;
+        }
+
+
+        .module-edit-link:hover {
+            background:
+                var(--one-bg);
+        }
+
+
+        .module-content {
+            padding:
+                22px
+                24px;
+
+            font-size: 11px;
+
+            line-height: 1.75;
+
+            white-space: pre-line;
+
+            color:
+                var(--one-ink-soft);
+        }
+
+
+        /* =====================================================
+           ESTADO VAZIO
+           ===================================================== */
+
+        .empty-modules {
+            padding:
+                36px
+                28px;
+
+            text-align: center;
+
+            border:
+                1px dashed
+                #ccd8e2;
+
+            border-radius: 16px;
+
+            background:
+                #ffffff;
+        }
+
+
+        .empty-modules strong {
+            display: block;
+
+            margin-bottom: 7px;
+
+            font-size: 14px;
+        }
+
+
+        .empty-modules p {
+            max-width: 480px;
+
+            margin:
+                0
+                auto
+                20px;
+
+            font-size: 10px;
+
+            line-height: 1.6;
+
+            color:
+                var(--one-ink-soft);
+        }
+
+
+        /* =====================================================
+           RODAPÉ
+           ===================================================== */
+
+        .preview-footer {
+            margin-top: 30px;
+
+            padding-top: 20px;
+
+            border-top:
+                1px solid
+                var(--one-border);
+
+            text-align: center;
+
+            font-size: 9px;
+
+            color:
+                var(--one-gray);
+        }
+
+
+        /* =====================================================
+           RESPONSIVO
+           ===================================================== */
+
+        @media (
+            max-width: 720px
+        ) {
+
+            .preview-topbar {
+                align-items: flex-start;
+
+                flex-direction: column;
+
+                padding:
+                    14px
+                    18px;
+            }
+
+
+            .preview-top-actions {
+                width: 100%;
+            }
+
+
+            .top-action {
+                flex: 1;
+            }
+
+
+            .training-hero {
+                padding:
+                    28px
+                    24px;
+            }
+
+
+            .training-admin-actions {
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+
+            .training-admin-buttons {
+                width: 100%;
+            }
+
+
+            .preview-action {
+                width: 100%;
+            }
+
+
+            .module-header {
+                align-items: flex-start;
+            }
+
+
+            .module-header-content {
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+        }
+
+
+                     /* =====================================================
+   QUESTÕES
+   ===================================================== */
+
+.questions-section {
+    margin-top: 30px;
+}
+
+
+.questions-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 16px;
+}
+
+
+.questions-section-header h2 {
+    margin:
+        4px
+        0
+        5px;
+
+    font-size: 18px;
+
+    color:
+        var(--one-ink);
+}
+
+
+.questions-section-header p {
+    margin: 0;
+
+    font-size: 10px;
+
+    color:
+        var(--one-ink-soft);
+}
+
+
+.questions-list {
+    display: grid;
+
+    gap: 14px;
+}
+
+
+.question-card {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 16px;
+
+    padding:
+        18px
+        20px;
+
+    border:
+        1px solid
+        var(--one-border);
+
+    border-radius: 14px;
+
+    background:
+        #ffffff;
+}
+
+
+.question-number {
+    width: 36px;
+    height: 36px;
+
+    flex:
+        0
+        0
+        36px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 9px;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    color:
+        #ffffff;
+
+    background:
+        var(--one-navy);
+}
+
+
+.question-content {
+    width: 100%;
+    min-width: 0;
+}
+
+
+.question-meta {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 6px;
+
+    flex-wrap: wrap;
+}
+
+
+.question-meta span {
+    font-size: 8px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    color:
+        var(--one-blue);
+}
+
+
+.question-content h3 {
+    margin:
+        0
+        0
+        14px;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+
+    color:
+        var(--one-ink);
+}
+
+
+.question-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 14px;
+
+    padding-top: 12px;
+
+    border-top:
+        1px solid
+        var(--one-border);
+}
+
+
+.question-footer > span {
+    font-size: 9px;
+
+    color:
+        var(--one-ink-soft);
+}
+
+
+@media (max-width: 720px) {
+
+    .questions-section-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .questions-section-header .preview-action {
+        width: 100%;
+    }
+
+    .question-footer {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+}
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="preview-shell">
+
+
+    <!-- ======================================================
+         TOPO
+         ====================================================== -->
+
+    <header class="preview-topbar">
+
+        <div class="preview-brand">
+
+            <div class="preview-brand-mark">
+                ONE
+            </div>
+
+            <div>
+
+                <strong>
+                    Portal de Conscientização
+                </strong>
+
+                <span>
+                    Pré-visualização administrativa
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="preview-top-actions">
+
+            <a
+                href="{{ url_for(
+                    'treinamentos.editar',
+                    treinamento_id=treinamento.id
+                ) }}"
+                class="top-action"
+            >
+                Editar treinamento
+            </a>
+
+            <a
+                href="{{ url_for(
+                    'treinamentos.listar'
+                ) }}"
+                class="top-action"
+            >
+                Voltar
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <main class="preview-container">
+
+
+        <!-- ==================================================
+             AVISO
+             ================================================== -->
+
+        <section class="preview-notice">
+
+            <div class="preview-notice-icon">
+                i
+            </div>
+
+            <div>
+
+                <strong>
+                    Pré-visualização administrativa
+                </strong>
+
+                <p>
+                    Esta página permite revisar e administrar
+                    a estrutura do treinamento. O progresso do
+                    participante não é registrado nesta visualização.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             CAPA
+             ================================================== -->
+
+        <section class="training-hero">
+
+            <span class="training-hero-label">
+                Treinamento de conscientização
+            </span>
+
+            <h1>
+                {{ treinamento.titulo }}
+            </h1>
+
+
+            {% if treinamento.descricao %}
+
+                <p>
+                    {{ treinamento.descricao }}
+                </p>
+
+            {% else %}
+
+                <p>
+                    Este treinamento ainda não possui
+                    uma descrição cadastrada.
+                </p>
+
+            {% endif %}
+
+
+            <div class="training-hero-meta">
+
+                <span>
+                    {{ modulos|length }}
+                    módulo{% if modulos|length != 1 %}s{% endif %}
+                </span>
+
+                <span>
+                    Prévia administrativa
+                </span>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             AÇÕES ADMINISTRATIVAS
+             ================================================== -->
+
+        <section class="training-admin-actions">
+
+            <div>
+
+                <span class="training-admin-label">
+                    Administração do conteúdo
+                </span>
+
+                <strong>
+                    Estrutura do treinamento
+                </strong>
+
+                <p>
+                    Adicione módulos de conteúdo
+                    e questões para a avaliação.
+                </p>
+
+            </div>
+
+
+            <div class="training-admin-buttons">
+
+                <a
+                    href="{{ url_for(
+                        'treinamentos.novo_modulo',
+                        treinamento_id=treinamento.id
+                    ) }}"
+                    class="preview-action primary"
+                >
+                    + Adicionar módulo
+                </a>
+
+                <a
+                    href="{{ url_for(
+                        'treinamentos.nova_questao',
+                        treinamento_id=treinamento.id
+                    ) }}"
+                    class="preview-action secondary"
+                >
+                    + Adicionar questão
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             INDICADOR
+             ================================================== -->
+
+        {% if modulos %}
+
+        <section class="preview-progress">
+
+            <div class="preview-progress-header">
+
+                <span>
+                    Estrutura do treinamento
+                </span>
+
+                <strong>
+                    {{ modulos|length }}
+                    módulo{% if modulos|length != 1 %}s{% endif %}
+                </strong>
+
+            </div>
+
+
+            <div class="preview-progress-track">
+
+                <div class="preview-progress-fill"></div>
+
+            </div>
+
+        </section>
+
+        {% endif %}
+
+
+
+         <!-- ==================================================
+     QUESTÕES DO QUIZ
+     ================================================== -->
+
+<section class="questions-section">
+
+    <div class="questions-section-header">
+
+        <div>
+
+            <span class="training-admin-label">
+                Avaliação
+            </span>
+
+            <h2>
+                Questões do quiz
+            </h2>
+
+            <p>
+                Revise as questões cadastradas
+                para este treinamento.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for(
+                'treinamentos.nova_questao',
+                treinamento_id=treinamento.id
+            ) }}"
+            class="preview-action secondary"
+        >
+            + Adicionar questão
+        </a>
+
+    </div>
+
+
+    {% if questoes %}
+
+        <div class="questions-list">
+
+            {% for questao in questoes %}
+
+                <article class="question-card">
+
+                    <div class="question-number">
+                        {{ loop.index }}
+                    </div>
+
+
+                    <div class="question-content">
+
+                        <div class="question-meta">
+
+                            <span>
+                                Questão {{ loop.index }}
+                            </span>
+
+                            <span>
+                                Ordem {{ questao.ordem }}
+                            </span>
+
+                        </div>
+
+
+                        <h3>
+                            {{ questao.enunciado }}
+                        </h3>
+
+
+                        <div class="question-footer">
+
+                            <span>
+                                {{ questao.alternativas|length }}
+                                alternativas
+                            </span>
+
+
+                            <a
+                                href="{{ url_for(
+                                    'treinamentos.editar_questao',
+                                    questao_id=questao.id
+                                ) }}"
+                                class="module-edit-link"
+                            >
+                                Editar questão
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            {% endfor %}
+
+        </div>
+
+
+    {% else %}
+
+        <div class="empty-modules">
+
+            <strong>
+                Nenhuma questão cadastrada
+            </strong>
+
+            <p>
+                Este treinamento ainda não possui
+                questões para o quiz.
+            </p>
+
+            <a
+                href="{{ url_for(
+                    'treinamentos.nova_questao',
+                    treinamento_id=treinamento.id
+                ) }}"
+                class="preview-action primary"
+            >
+                + Criar primeira questão
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</section>
+
+
+
+
+
+        <!-- ==================================================
+             MÓDULOS
+             ================================================== -->
+
+        {% if modulos %}
+
+        <section class="modules-section">
+
+            {% for modulo in modulos %}
+
+            <article class="module-card">
+
+                <header class="module-header">
+
+                    <div class="module-number">
+                        {{ loop.index }}
+                    </div>
+
+
+                    <div class="module-header-content">
+
+                        <div>
+
+                            <span>
+                                Módulo {{ loop.index }}
+                                de {{ modulos|length }}
+                            </span>
+
+                            <h2>
+                                {{ modulo.titulo }}
+                            </h2>
+
+                        </div>
+
+
+                        <a
+                            href="{{ url_for(
+                                'treinamentos.editar_modulo',
+                                modulo_id=modulo.id
+                            ) }}"
+                            class="module-edit-link"
+                        >
+                            Editar módulo
+                        </a>
+
+                    </div>
+
+                </header>
+
+
+                <div class="module-content">
+                    {{ modulo.conteudo }}
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </section>
+
+
+        {% else %}
+
+        <section class="empty-modules">
+
+            <strong>
+                Nenhum módulo cadastrado
+            </strong>
+
+            <p>
+                Este treinamento ainda não possui
+                conteúdo estruturado em módulos.
+                Adicione o primeiro módulo para
+                começar a construir o treinamento.
+            </p>
+
+            <a
+                href="{{ url_for(
+                    'treinamentos.novo_modulo',
+                    treinamento_id=treinamento.id
+                ) }}"
+                class="preview-action primary"
+            >
+                + Criar primeiro módulo
+            </a>
+
+        </section>
+
+        {% endif %}
+
+
+        <!-- ==================================================
+             RODAPÉ
+             ================================================== -->
+
+        <footer class="preview-footer">
+
+            ONE Consultoria —
+            Portal interno de conscientização
+            em segurança da informação.
+
+        </footer>
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

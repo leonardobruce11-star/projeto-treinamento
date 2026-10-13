@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Novo grupo
+{% endblock %}
+
+{% block content %}
+
+<section class="form-page">
+
+    <header class="form-page-header">
+
+        <div>
+
+            <span class="page-eyebrow">
+                Simulações
+            </span>
+
+            <h1>
+                Novo grupo
+            </h1>
+
+            <p>
+                Crie um grupo e selecione os colaboradores
+                que participarão das ações internas.
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for('grupos.listar') }}"
+            class="btn-one-secondary"
+        >
+            Voltar
+        </a>
+
+    </header>
+
+
+    <div class="form-card group-form-card">
+
+        <div class="form-card-header">
+
+            <span class="section-eyebrow">
+                Configuração do grupo
+            </span>
+
+            <h2>
+                Informações principais
+            </h2>
+
+            <p>
+                Defina a identificação do grupo e os participantes.
+            </p>
+
+        </div>
+
+
+        <form
+            method="POST"
+            class="one-form"
+        >
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
+
+
+            <div class="form-field">
+
+                <label for="nome">
+                    Nome do grupo *
+                </label>
+
+                <input
+                    id="nome"
+                    type="text"
+                    name="nome"
+                    placeholder="Ex.: Equipe Financeiro"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-field">
+
+                <label for="descricao">
+                    Descrição
+                </label>
+
+                <input
+                    id="descricao"
+                    type="text"
+                    name="descricao"
+                    placeholder="Descreva a finalidade do grupo"
+                >
+
+                <small class="form-help">
+                    Campo opcional.
+                </small>
+
+            </div>
+
+
+            <!-- ==================================================
+                 PARTICIPANTES
+                 ================================================== -->
+
+            <div class="participants-section">
+
+                <div class="participants-heading">
+
+                    <div>
+
+                        <span class="section-eyebrow">
+                            Participantes
+                        </span>
+
+                        <h3>
+                            Selecione os colaboradores
+                        </h3>
+
+                        <p>
+                            Marque as pessoas que farão parte deste grupo.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                {% if colaboradores %}
+
+                <div class="participants-grid">
+
+                    {% for colaborador in colaboradores %}
+
+                    <label class="participant-option">
+
+                        <input
+                            type="checkbox"
+                            name="colaboradores"
+                            value="{{ colaborador.id }}"
+                        >
+
+                        <span class="participant-check"></span>
+
+                        <span class="participant-avatar">
+
+                            {% if colaborador.nome %}
+                                {{ colaborador.nome[:1]|upper }}
+                            {% else %}
+                                C
+                            {% endif %}
+
+                        </span>
+
+                        <span class="participant-info">
+
+                            <strong>
+                                {{ colaborador.nome }}
+                            </strong>
+
+                            <span>
+                                {{ colaborador.email }}
+                            </span>
+
+                            {% if colaborador.departamento %}
+
+                                <small>
+                                    {{ colaborador.departamento.nome }}
+                                </small>
+
+                            {% endif %}
+
+                        </span>
+
+                    </label>
+
+                    {% endfor %}
+
+                </div>
+
+
+                {% else %}
+
+                <div class="empty-state compact-empty">
+
+                    <strong>
+                        Nenhum colaborador disponível
+                    </strong>
+
+                    <p>
+                        Cadastre colaboradores antes de criar
+                        grupos de participantes.
+                    </p>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('grupos.listar') }}"
+                    class="btn-one-secondary"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn-one-primary"
+                >
+                    Criar grupo
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Nova categoria
+{% endblock %}
+
+{% block content %}
+
+<section class="form-page">
+
+    <header class="form-page-header">
+
+        <div>
+
+            <span class="page-eyebrow">
+                Capacitação
+            </span>
+
+            <h1>
+                Nova categoria
+            </h1>
+
+            <p>
+                Cadastre uma categoria para organizar os treinamentos da plataforma.
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for('categorias_treinamento.listar') }}"
+            class="btn-one-secondary"
+        >
+            Voltar
+        </a>
+
+    </header>
+
+
+    <div class="form-card">
+
+        <div class="form-card-header">
+
+            <span class="section-eyebrow">
+                Cadastro
+            </span>
+
+            <h2>
+                Informações da categoria
+            </h2>
+
+            <p>
+                Defina um nome e, opcionalmente, uma descrição.
+            </p>
+
+        </div>
+
+
+        <form
+            method="POST"
+            class="one-form"
+        >
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
+
+
+            <div class="form-field">
+
+                <label for="nome">
+                    Nome da categoria
+                </label>
+
+                <input
+                    id="nome"
+                    type="text"
+                    name="nome"
+                    placeholder="Ex.: Segurança da Informação"
+                    required
+                >
+
+                <small class="form-help">
+                    Utilize um nome que represente claramente a finalidade do treinamento.
+                </small>
+
+            </div>
+
+
+            <div class="form-field">
+
+                <label for="descricao">
+                    Descrição
+                </label>
+
+                <textarea
+                    id="descricao"
+                    name="descricao"
+                    rows="4"
+                    placeholder="Ex.: Treinamentos relacionados à conscientização e segurança da informação."
+                ></textarea>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('categorias_treinamento.listar') }}"
+                    class="btn-one-secondary"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn-one-primary"
+                >
+                    Criar categoria
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,10 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Orientação educativa ONE</title></head><body>
+<main><h1>Orientação educativa ONE</h1>
+{% if disponivel %}
+<p>Esta interação fazia parte de uma simulação interna autorizada.</p>
+<p>Mensagens com urgência, remetente inesperado ou links pouco claros merecem verificação. Confira o endereço completo e procure o canal oficial da organização antes de agir.</p>
+<ul><li>Verifique solicitações por um canal independente.</li><li>Evite informar senhas ou dados sensíveis em links recebidos.</li><li>Comunique mensagens suspeitas à equipe responsável.</li></ul>
+<p>Registros de abertura e acesso são sinais técnicos e podem ser produzidos por ferramentas automáticas.</p>
+{% if continuar %}<form method="post" action="{{ url_for('educacao_simulacao.treinamento',identificador=identificador) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit">Acessar treinamento</button></form>{% else %}<p>O acesso ao treinamento correspondente deve ser disponibilizado pela equipe responsável.</p>{% endif %}
+{% else %}<p>Este acesso educativo está indisponível. Procure a equipe responsável pelos canais internos conhecidos.</p>{% endif %}
+</main></body></html>

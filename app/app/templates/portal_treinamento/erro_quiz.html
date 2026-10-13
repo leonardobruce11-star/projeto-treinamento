@@ -1,0 +1,6 @@
+{% extends 'portal_treinamento/quiz.html' %}
+{% block titulo %}Atualizar avaliação | ONE{% endblock %}
+{% block conteudo %}
+<p class="quiz-summary" role="alert">{{ mensagem }}</p>
+<p><a href="{{ url_for('portal_treinamento.quiz', token=acesso_token) }}">Atualizar ou retomar avaliação</a></p>
+{% endblock %}

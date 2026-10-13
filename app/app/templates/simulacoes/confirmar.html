@@ -1,0 +1,7 @@
+{% extends 'base.html' %}{% block content %}
+<h1>Confirmar ação administrativa</h1><p>Campanha {{ nome }}. Ação: {{ acao }}.</p>
+{% if escopo %}<p>Revisão {{ escopo.revisao }}; SHA-256 <code>{{ escopo.digest }}</code>.</p><p>Fase {{ escopo.fase }}; {{ escopo.alvos }} alvos; instância {{ escopo.instancia }}.</p>{% endif %}
+<p>Alvo local {{ escopo.alvo or '—' }}; ID externo {{ escopo.externo_id or '—' }}; operação {{ escopo.operacao or '—' }}; executor legado encerrado {{ escopo.legado_encerrado or false }}.</p><p>Importação/reconciliação consulta somente eventos técnicos; não inicia treinamento. Encerramento é local, revoga pontes e não presume ausência externa.</p><p>A preparação pode criar somente recursos auxiliares. Verifique a revisão e o público autorizado antes de confirmar.</p>
+<form method="post" action="{{ url_for('simulacoes.executar',campanha_id=campanha_id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="confirmacao" value="{{ confirmacao }}"><label><input type="checkbox" required name="confirmar" value="sim">Confirmo explicitamente esta ação.</label><button type="submit">Confirmar</button></form>
+<a href="{{ url_for('simulacoes.detalhe',campanha_id=campanha_id) }}">Voltar</a>
+{% endblock %}

@@ -1,0 +1,375 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Templates de e-mail
+{% endblock %}
+
+{% block content %}
+<p>Sincronização avulsa indisponível. A preparação de simulações após aprovação
+   será definida na etapa 18.7C.</p>
+
+<section class="management-page">
+
+    <header class="management-header">
+
+        <div class="management-header-copy">
+
+            <span class="page-eyebrow">
+                Simulações
+            </span>
+
+            <h1>
+                Templates de e-mail
+            </h1>
+
+            <p>
+                Gerencie os conteúdos utilizados nas simulações
+                internas de conscientização da plataforma.
+            </p>
+
+        </div>
+
+        <div class="management-header-actions">
+
+            <a
+                href="{{ url_for('templates_email.novo') }}"
+                class="btn-one-primary"
+            >
+                <span class="btn-one-icon">+</span>
+
+                <span>
+                    Novo template
+                </span>
+            </a>
+
+        </div>
+
+    </header>
+
+
+    {% set sincronizados = namespace(valor=0) %}
+
+    {% if templates %}
+
+        {% for template in templates %}
+
+            {% if template.gophish_template_id %}
+
+                {% set sincronizados.valor =
+                    sincronizados.valor + 1
+                %}
+
+            {% endif %}
+
+        {% endfor %}
+
+    {% endif %}
+
+
+    <section class="management-summary template-summary">
+
+        <article class="summary-card">
+
+            <span class="summary-label">
+                Templates
+            </span>
+
+            <strong class="summary-value">
+                {{ templates|length if templates else 0 }}
+            </strong>
+
+            <span class="summary-caption">
+                Conteúdos cadastrados
+            </span>
+
+        </article>
+
+
+        <article class="summary-card summary-card-soft">
+
+            <span class="summary-label">
+                Sincronizados
+            </span>
+
+            <strong class="summary-value">
+                {{ sincronizados.valor }}
+            </strong>
+
+            <span class="summary-caption">
+                Vinculados à integração
+            </span>
+
+        </article>
+
+
+        <article class="summary-card summary-card-soft">
+
+            <span class="summary-label">
+                Somente locais
+            </span>
+
+            <strong class="summary-value">
+                {{
+                    (templates|length if templates else 0)
+                    -
+                    sincronizados.valor
+                }}
+            </strong>
+
+            <span class="summary-caption">
+                Ainda não sincronizados
+            </span>
+
+        </article>
+
+    </section>
+
+
+    <section class="management-section">
+
+        <div class="section-heading management-section-heading">
+
+            <div>
+
+                <span class="section-eyebrow">
+                    Biblioteca de conteúdo
+                </span>
+
+                <h2>
+                    Templates cadastrados
+                </h2>
+
+                <p>
+                    Consulte o cenário associado, assunto
+                    e estado de sincronização.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if templates %}
+
+        <div class="table-card">
+
+            <div class="table-wrapper">
+
+                <table class="one-table template-email-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Template</th>
+                            <th>Cenário</th>
+                            <th>Assunto</th>
+                            <th>Integração</th>
+                            <th>Última sincronização</th>
+                            <th>Ações</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for template in templates %}
+
+                        <tr>
+
+                            <td>
+
+                                <div class="email-template-cell">
+
+                                    <div class="email-template-symbol">
+                                        @
+                                    </div>
+
+                                    <div>
+
+                                        <strong>
+                                            {{ template.nome }}
+                                        </strong>
+
+                                        <span>
+                                            Conteúdo de treinamento
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="department-pill">
+                                    {{ template.cenario.nome }}
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="template-subject">
+                                    {{ template.assunto }}
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                {% if template.gophish_template_id %}
+
+                                    <div class="integration-status">
+
+                                        <span class="integration-dot connected"></span>
+
+                                        <div>
+
+                                            <strong>
+                                                Sincronizado
+                                            </strong>
+
+                                            <small>
+                                                ID {{ template.gophish_template_id }}
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                {% else %}
+
+                                    <div class="integration-status">
+
+                                        <span class="integration-dot pending"></span>
+
+                                        <div>
+
+                                            <strong>
+                                                Local
+                                            </strong>
+
+                                            <small>
+                                                Não sincronizado
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if template.ultima_sincronizacao %}
+
+                                    <span class="sync-date">
+                                        {{ template.ultima_sincronizacao }}
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="muted-text">
+                                        Nunca
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="table-actions">
+
+                                    <a
+                                        href="{{ url_for(
+                                            'templates_email.editar',
+                                            template_id=template.id
+                                        ) }}"
+                                        class="btn-table-action"
+                                    >
+                                        Editar
+                                    </a>
+
+
+                                    <form
+                                        method="POST"
+                                        action="{{ url_for(
+                                            'templates_email.sincronizar',
+                                            template_id=template.id
+                                        ) }}"
+                                        class="inline-action-form"
+                                    >
+
+                                        <input
+                                            type="hidden"
+                                            name="csrf_token"
+                                            value="{{ csrf_token() }}"
+                                        >
+
+                                        <button
+                                            type="submit"
+                                            class="btn-table-action btn-sync" disabled
+                                        >
+                                            Sincronizar
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-state management-empty">
+
+            <div class="empty-state-icon">
+                +
+            </div>
+
+            <strong>
+                Nenhum template cadastrado
+            </strong>
+
+            <p>
+                Crie um conteúdo para começar a compor
+                as simulações internas da plataforma.
+            </p>
+
+            <a
+                href="{{ url_for('templates_email.novo') }}"
+                class="btn-one-primary"
+            >
+                Criar template
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+</section>
+
+{% endblock %}

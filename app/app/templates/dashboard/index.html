@@ -1,0 +1,894 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Dashboard
+{% endblock %}
+
+{% block content %}
+
+<section class="dashboard-page">
+
+    <!-- ======================================================
+         CABEÇALHO
+         ====================================================== -->
+
+    <header class="dashboard-header">
+
+        <div>
+
+            <span class="page-eyebrow">
+                Visão geral
+            </span>
+
+            <h1>
+                Dashboard de Conscientização
+            </h1>
+
+            <p>
+                Acompanhe o desempenho dos treinamentos,
+                participações e resultados registrados no sistema.
+            </p>
+
+        </div>
+
+        <div class="dashboard-header-badge">
+            Ambiente interno
+        </div>
+
+    </header>
+
+
+    <!-- ======================================================
+         VISÃO ADMINISTRATIVA DO AMBIENTE
+         ====================================================== -->
+
+    <section class="dashboard-environment">
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-eyebrow">
+                    Ambiente
+                </span>
+
+                <h2>
+                    Visão do ambiente
+                </h2>
+
+                <p>
+                    Resumo dos recursos cadastrados na plataforma
+                    de conscientização.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="environment-grid">
+
+            <article class="environment-card">
+
+                <span class="environment-label">
+                    Colaboradores
+                </span>
+
+                <strong>
+                    {{ total_colaboradores }}
+                </strong>
+
+                <p>
+                    {{ total_colaboradores_ativos }} ativos
+                </p>
+
+            </article>
+
+
+            <article class="environment-card">
+
+                <span class="environment-label">
+                    Departamentos
+                </span>
+
+                <strong>
+                    {{ total_departamentos }}
+                </strong>
+
+                <p>
+                    Áreas cadastradas
+                </p>
+
+            </article>
+
+
+            <article class="environment-card">
+
+                <span class="environment-label">
+                    Treinamentos
+                </span>
+
+                <strong>
+                    {{ total_treinamentos }}
+                </strong>
+
+                <p>
+                    Conteúdos cadastrados
+                </p>
+
+            </article>
+
+
+            <article class="environment-card">
+
+                <span class="environment-label">
+                    Campanhas
+                </span>
+
+                <strong>
+                    {{ total_campanhas }}
+                </strong>
+
+                <p>
+                    Campanhas cadastradas
+                </p>
+
+            </article>
+
+        </div>
+
+    </section>
+
+        <!-- ======================================================
+         ACOMPANHAMENTO DAS CAMPANHAS
+         ====================================================== -->
+
+    <section class="dashboard-campaign-status">
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-eyebrow">
+                    Campanhas
+                </span>
+
+                <h2>
+                    Acompanhamento das campanhas
+                </h2>
+
+                <p>
+                    Distribuição das campanhas conforme a etapa
+                    atual do processo.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="campaign-status-panel">
+
+            <div class="campaign-status-total">
+
+                <span>
+                    Total de campanhas
+                </span>
+
+                <strong>
+                    {{ total_campanhas }}
+                </strong>
+
+            </div>
+
+
+            <div class="campaign-status-list">
+
+                <div class="campaign-status-item">
+
+                    <span class="campaign-status-name">
+                        Rascunho
+                    </span>
+
+                    <strong>
+                        {{ campanhas_rascunho }}
+                    </strong>
+
+                </div>
+
+
+                <div class="campaign-status-item">
+
+                    <span class="campaign-status-name">
+                        Aprovadas
+                    </span>
+
+                    <strong>
+                        {{ campanhas_aprovadas }}
+                    </strong>
+
+                </div>
+
+
+                <div class="campaign-status-item">
+
+                    <span class="campaign-status-name">
+                        Em preparação / piloto
+                    </span>
+
+                    <strong>
+                        {{ campanhas_em_preparacao }}
+                    </strong>
+
+                </div>
+
+
+                <div class="campaign-status-item">
+
+                    <span class="campaign-status-name">
+                        Piloto aprovado
+                    </span>
+
+                    <strong>
+                        {{ campanhas_piloto_aprovado }}
+                    </strong>
+
+                </div>
+
+
+                <div class="campaign-status-item">
+
+                    <span class="campaign-status-name">
+                        Reprovadas
+                    </span>
+
+                    <strong>
+                        {{ campanhas_reprovadas }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ======================================================
+         INDICADORES PRINCIPAIS
+         ====================================================== -->
+
+    <section class="dashboard-primary-grid">
+
+        <article class="metric-card metric-card-primary">
+
+            <div class="metric-card-top">
+
+                <span class="metric-label">
+                    Participações
+                </span>
+
+                <span class="metric-index">
+                    01
+                </span>
+
+            </div>
+
+            <strong class="metric-value">
+                {{ total_participacoes }}
+            </strong>
+
+            <p>
+                Participações cadastradas no sistema.
+            </p>
+
+        </article>
+
+
+        <article class="metric-card">
+
+            <div class="metric-card-top">
+
+                <span class="metric-label">
+                  Não iniciados
+                </span>
+
+                <span class="metric-index">
+                    02
+                </span>
+
+            </div>
+
+            <strong class="metric-value">
+                {{ total_nao_iniciados }}
+            </strong>
+
+            <p>
+                Participações que ainda não foram iniciadas.
+            </p>
+
+        </article>
+
+
+        <article class="metric-card">
+
+            <div class="metric-card-top">
+
+                <span class="metric-label">
+                    Em andamento
+                </span>
+
+                <span class="metric-index">
+                    03
+                </span>
+
+            </div>
+
+            <strong class="metric-value">
+                {{ total_em_andamento }}
+            </strong>
+
+            <p>
+                Treinamentos iniciados e ainda não concluídos.
+            </p>
+
+        </article>
+
+
+        <article class="metric-card">
+
+            <div class="metric-card-top">
+
+                <span class="metric-label">
+                    Concluídos
+                </span>
+
+                <span class="metric-index">
+                    04
+                </span>
+
+            </div>
+
+            <strong class="metric-value">
+                {{ total_concluidos }}
+            </strong>
+
+            <p>
+                Participações finalizadas.
+            </p>
+
+        </article>
+
+    </section>
+
+
+    <!-- ======================================================
+         INDICADORES DE DESEMPENHO
+         ====================================================== -->
+
+    <section class="dashboard-performance-grid">
+
+        <article class="performance-card">
+
+            <div class="performance-card-copy">
+
+                <span class="performance-label">
+                    Taxa de conclusão
+                </span>
+
+                <strong>
+                    {% if total_participacoes > 0 %}
+                       {{ taxa_conclusao ~ "%" if taxa_conclusao is not none else "—" }}
+                    {% else %}
+                      Sem dados
+                    {% endif %}
+                </strong>
+
+                <p>
+                    Percentual geral de participações concluídas.
+                </p>
+
+            </div>
+
+            <div class="performance-progress">
+
+                <div class="progress-track">
+
+                    <span
+                        class="progress-fill"
+                        style="width: {% if total_participacoes > 0 %}{{ taxa_conclusao }}{% else %}0{% endif %}%;"
+                    ></span>
+
+                </div>
+
+                <span class="performance-caption">
+                    Progresso geral
+                </span>
+
+            </div>
+
+        </article>
+
+
+        <article class="performance-card">
+
+            <div class="performance-card-copy">
+
+                <span class="performance-label">
+                    Média do Quiz
+                </span>
+
+                <strong>
+                     {% if total_quizzes > 0 %}
+                       {{ media_quiz }}%
+                     {% else %}
+                       Sem dados
+                     {% endif %}
+                </strong>
+
+                <p>
+                    Aproveitamento médio nas avaliações.
+                </p>
+
+            </div>
+
+            <div class="performance-progress">
+
+                <div class="progress-track">
+
+                    <span
+                        class="progress-fill progress-fill-light"
+                        style="width: {% if total_quizzes > 0 %}{{ media_quiz }}{% else %}0{% endif %}%;"
+
+                    ></span>
+
+                </div>
+
+                <span class="performance-caption">
+                    Desempenho médio
+                </span>
+
+            </div>
+
+        </article>
+
+
+        <article class="quiz-summary-card">
+
+            <span class="performance-label">
+                Quizzes realizados
+            </span>
+
+            <strong>
+                {{ total_quizzes }}
+            </strong>
+
+            <p>
+                Avaliações concluídas pelos participantes.
+            </p>
+
+        </article>
+
+    </section>
+
+
+    <!-- ======================================================
+         INDICADORES POR DEPARTAMENTO
+         ====================================================== -->
+
+    <section class="dashboard-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-eyebrow">
+                    Análise por área
+                </span>
+
+                <h2>
+                    Indicadores por departamento
+                </h2>
+
+                <p>
+                    Visão consolidada da participação e do desempenho
+                    dos setores da organização.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if indicadores_departamentos %}
+
+        <div class="table-card">
+
+            <div class="table-wrapper">
+
+                <table class="one-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Departamento
+                            </th>
+
+                            <th>
+                                Colaboradores
+                            </th>
+
+                            <th>
+                                Participações
+                            </th>
+
+                            <th>
+                                Iniciados
+                            </th>
+
+                            <th>
+                                Concluídos
+                            </th>
+
+                            <th>
+                                Pendentes
+                            </th>
+
+                            <th>
+                                Conclusão
+                            </th>
+
+                            <th>
+                                Quizzes
+                            </th>
+
+                            <th>
+                                Média Quiz
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for item in indicadores_departamentos %}
+
+                        <tr>
+
+                            <td>
+
+                                <div class="department-name">
+
+                                    <span class="department-dot"></span>
+
+                                    <strong>
+                                        {{ item.departamento }}
+                                    </strong>
+
+                                </div>
+
+                            </td>
+
+                            <td>
+                                {{ item.colaboradores }}
+                            </td>
+
+                            <td>
+                                {{ item.participacoes }}
+                            </td>
+
+                            <td>
+                                {{ item.iniciados }}
+                            </td>
+
+                            <td>
+                                {{ item.concluidos }}
+                            </td>
+
+                            <td>
+                                {{ item.pendentes }}
+                            </td>
+
+                            <td>
+
+
+                              {% if item.participacoes > 0 %}
+
+        <span
+            class="
+                status-badge
+
+                {% if item.taxa_conclusao >= 80 %}
+                    status-success
+                {% elif item.taxa_conclusao >= 50 %}
+                    status-warning
+                {% else %}
+                    status-danger
+                {% endif %}
+            "
+        >
+            {{ item.taxa_conclusao }}%
+        </span>
+
+    {% else %}
+
+        <span class="status-badge">
+            Sem dados
+        </span>
+
+    {% endif %}
+
+                            </td>
+
+                            <td>
+                                {{ item.quizzes }}
+                            </td>
+
+                            <td>
+
+                                {% if item.quizzes > 0 %}
+
+        <span class="score-text">
+            {{ item.media_quiz }}%
+        </span>
+
+    {% else %}
+
+        <span class="score-text">
+            Sem dados
+        </span>
+
+    {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-state">
+
+            <strong>
+                Nenhum departamento cadastrado
+            </strong>
+
+            <p>
+                Os indicadores serão exibidos assim que houver
+                departamentos e participações registradas.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+
+    {% with metricas=metricas_participacao %}{% include "shared/metricas_aprovacao.html" %}{% endwith %}
+    {% include "dashboard/tempo_capacitacao.html" %}
+
+    <!-- ======================================================
+         RESULTADOS RECENTES
+         ====================================================== -->
+
+    <section class="dashboard-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-eyebrow">
+                    Atividade recente
+                </span>
+
+                <h2>
+                    Resultados recentes
+                </h2>
+
+                <p>
+                    Últimos resultados registrados nas avaliações
+                    dos treinamentos.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if resultados_recentes %}
+
+        <div class="table-card">
+
+            <div class="table-wrapper">
+
+                <table class="one-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Colaborador
+                            </th>
+
+                            <th>
+                                Departamento
+                            </th>
+
+                            <th>
+                                Treinamento
+                            </th>
+
+                            <th>
+                                Acertos
+                            </th>
+
+                            <th>
+                                Resultado
+                            </th>
+
+                            <th>
+                                Conclusão
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for resultado in resultados_recentes %}
+                        {% set situacao_resultado = situacao_participacao(resultado.participacao, resultado) %}
+
+                        <tr>
+
+                            <td>
+
+                                <strong class="person-name">
+
+                                    {{
+                                        resultado
+                                        .participacao
+                                        .colaborador
+                                        .nome
+                                    }}
+
+                                </strong>
+
+                            </td>
+
+                            <td>
+
+                                {% if
+                                    resultado
+                                    .participacao
+                                    .colaborador
+                                    .departamento
+                                %}
+
+                                    {{
+                                        resultado
+                                        .participacao
+                                        .colaborador
+                                        .departamento
+                                        .nome
+                                    }}
+
+                                {% else %}
+
+                                    <span class="muted-text">
+                                        -
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                {{
+                                    resultado
+                                    .participacao
+                                    .treinamento
+                                    .titulo
+                                }}
+
+                            </td>
+
+                            <td>
+
+                                {{ resultado.total_acertos }}
+                                /
+                                {{ resultado.total_questoes }}
+
+                            </td>
+
+                            <td>
+
+                                <span
+                                    class="
+                                        score-badge
+
+                                        {% if resultado.aprovado is sameas true %}
+                                            score-high
+                                        {% elif resultado.aprovado is none %}
+                                            score-medium
+                                        {% else %}
+                                            score-low
+                                        {% endif %}
+                                    "
+                                >
+
+                                    {{ resultado.percentual | round(0) | int }}%<br><span class="muted-text">{{ situacao_resultado }}</span>
+
+                                </span>
+
+                            </td>
+
+                            <td class="date-cell">
+
+                            {% if resultado.concluido_em %}
+
+                            {{ resultado.concluido_em.strftime("%d/%m/%Y") }}
+
+                            <span class="muted-text">
+                             {{ resultado.concluido_em.strftime("%H:%M") }}
+                            </span>
+
+                            {% else %}
+
+                            <span class="muted-text">
+                               -
+                            </span>
+
+                             {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-state">
+
+            <strong>
+                Nenhum resultado disponível
+            </strong>
+
+            <p>
+                Os resultados aparecerão aqui quando os participantes
+                concluírem as avaliações.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+</section>
+
+{% endblock %}

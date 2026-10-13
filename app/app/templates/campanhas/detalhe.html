@@ -1,0 +1,1885 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | {{ campanha.nome }}
+{% endblock %}
+
+{% block content %}
+
+<section class="campaign-detail-page">
+{% if campanha.tipo == 'simulacao_phishing' and current_user.ativo and current_user.perfil == 'administrador' %}
+<a class="btn btn-outline-primary" href="{{ url_for('simulacoes.detalhe', campanha_id=campanha.id) }}">Revisões e preparação da simulação</a>
+{% endif %}
+{% if campanha.eh_simulacao_phishing %}
+<p>A aprovação utiliza apenas recursos locais. Preparação e sincronização da simulação
+   estão indisponíveis até a etapa 18.7C; nenhum envio é autorizado nesta etapa.</p>
+{% endif %}
+{% if current_user.is_authenticated and current_user.ativo and current_user.perfil == 'administrador' %}
+<p><a href="{{ url_for('convites.listar', campanha_id=campanha.id) }}">Convites das participações existentes</a></p>
+{% endif %}
+
+
+    <!-- ======================================================
+         CABEÇALHO
+         ====================================================== -->
+
+    <header class="campaign-detail-header">
+
+        <div>
+
+            <span class="page-eyebrow">
+                Gestão de campanhas
+            </span>
+
+            <h1>
+                {{ campanha.nome }}
+            </h1>
+
+            {% if campanha.descricao %}
+                <p>
+                    {{ campanha.descricao }}
+                </p>
+            {% else %}
+                <p>
+                    Acompanhe a configuração, governança e
+                    evolução desta campanha.
+                </p>
+            {% endif %}
+
+        </div>
+
+
+        <div class="campaign-detail-header-status">
+
+            <span>
+                Status atual
+            </span>
+
+            <strong class="campaign-main-status">
+                {{ campanha.status.replace("_", " ")|title }}
+            </strong>
+
+        </div>
+
+    </header>
+
+
+    <!-- ======================================================
+         NAVEGAÇÃO RÁPIDA
+         ====================================================== -->
+
+    <nav class="campaign-quick-nav">
+
+        <a href="#configuracao">
+            Configuração
+        </a>
+
+        <a href="#checklist">
+            Checklist
+        </a>
+
+        <a href="#governanca">
+            Governança
+        </a>
+
+        <a href="#acoes">
+            Ações
+        </a>
+
+    </nav>
+
+
+         <!-- ======================================================
+         RESUMO DA CAMPANHA
+         ====================================================== -->
+
+    <section class="campaign-summary">
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-eyebrow">
+                    Indicadores
+                </span>
+
+                <h2>
+                    Resumo da campanha
+                </h2>
+
+                <p>
+                    Visão consolidada das participações e dos
+                    resultados vinculados a esta campanha.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="campaign-summary-grid">
+
+            <article class="campaign-summary-card">
+
+                <span>
+                    Participantes
+                </span>
+
+                <strong>
+                    {{ total_participantes }}
+                </strong>
+
+            </article>
+
+
+            <article class="campaign-summary-card">
+
+                <span>
+                    Não iniciados
+                </span>
+
+                <strong>
+                    {{ total_nao_iniciados }}
+                </strong>
+
+            </article>
+
+
+            <article class="campaign-summary-card">
+
+                <span>
+                    Em andamento
+                </span>
+
+                <strong>
+                    {{ total_em_andamento }}
+                </strong>
+
+            </article>
+
+
+            <article class="campaign-summary-card">
+
+                <span>
+                    Concluídos
+                </span>
+
+                <strong>
+                    {{ total_concluidos }}
+                </strong>
+
+            </article>
+
+
+            <article class="campaign-summary-card">
+
+                <span>
+                    Taxa de conclusão
+                </span>
+
+                <strong>
+
+                    {% if total_participantes > 0 %}
+
+                        {{ taxa_conclusao_campanha }}%
+
+                    {% else %}
+
+                        Sem dados
+
+                    {% endif %}
+
+                </strong>
+
+            </article>
+
+
+            <article class="campaign-summary-card">
+
+                <span>
+                    Média do quiz
+                </span>
+
+                <strong>
+
+                    {% if total_quizzes_campanha > 0 %}
+
+                        {{ media_quiz_campanha }}%
+
+                    {% else %}
+
+                        Sem dados
+
+                    {% endif %}
+
+                </strong>
+
+                <small>
+                    {{ total_quizzes_campanha }}
+                    quiz{% if total_quizzes_campanha != 1 %}zes{% endif %}
+                    realizado{% if total_quizzes_campanha != 1 %}s{% endif %}
+                </small>
+
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         CONFIGURAÇÃO
+         ====================================================== -->
+
+    <section
+        id="configuracao"
+        class="campaign-section"
+    >
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-eyebrow">
+                    Estrutura
+                </span>
+
+                <h2>
+                    Configuração da campanha
+                </h2>
+
+                <p>
+                    Recursos associados à execução controlada.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="campaign-config-grid">
+
+            <article class="campaign-config-item">
+
+                <span>
+                    Grupo
+                </span>
+
+                <strong>
+                    {% if campanha.grupo %}
+                        {{ campanha.grupo.nome }}
+                    {% else %}
+                        Não configurado
+                    {% endif %}
+                </strong>
+
+            </article>
+
+
+            <article class="campaign-config-item">
+
+                <span>
+                    Cenário
+                </span>
+
+                <strong>
+                    {% if campanha.cenario %}
+                        {{ campanha.cenario.nome }}
+                    {% else %}
+                        Não configurado
+                    {% endif %}
+                </strong>
+
+            </article>
+
+
+            <article class="campaign-config-item">
+
+                <span>
+                    Template de e-mail
+                </span>
+
+                <strong>
+                    {% if campanha.template_email %}
+                        {{ campanha.template_email.nome }}
+                    {% else %}
+                        Não configurado
+                    {% endif %}
+                </strong>
+
+            </article>
+
+
+            <article class="campaign-config-item">
+
+                <span>
+                    Landing Page
+                </span>
+
+                <strong>
+                    {% if campanha.landing_page %}
+                        {{ campanha.landing_page.nome }}
+                    {% else %}
+                        Não configurada
+                    {% endif %}
+                </strong>
+
+            </article>
+
+
+            <article class="campaign-config-item">
+
+                <span>
+                    Treinamento
+                </span>
+
+                <strong>
+                    {% if campanha.treinamento %}
+                        {{ campanha.treinamento.titulo }}
+                    {% else %}
+                        Não configurado
+                    {% endif %}
+                </strong>
+
+            </article>
+
+
+            <article class="campaign-config-item">
+
+                <span>
+                    Integração
+                </span>
+
+                {% if campanha.gophish_campaign_id %}
+
+                    <div class="integration-status">
+
+                        <span class="integration-dot connected"></span>
+
+                        <div>
+
+                            <strong>
+                                Vinculada
+                            </strong>
+
+                            <small>
+                                ID {{ campanha.gophish_campaign_id }}
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                {% else %}
+
+                    <div class="integration-status">
+
+                        <span class="integration-dot pending"></span>
+
+                        <div>
+
+                            <strong>
+                                Somente local
+                            </strong>
+
+                            <small>
+                                Ainda não criada na integração
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         CHECKLIST TÉCNICO
+         ====================================================== -->
+
+    <section
+        id="checklist"
+        class="campaign-section"
+    >
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-eyebrow">
+                    Validação técnica
+                </span>
+
+                <h2>
+                    Checklist técnico
+                </h2>
+
+                <p>
+                    Verificação dos recursos necessários
+                    antes das próximas etapas.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-card">
+
+            <div class="table-wrapper">
+
+                <table class="one-table checklist-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Verificação</th>
+                            <th>Status</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+
+                            <td>
+                                Grupo configurado
+                            </td>
+
+                            <td>
+
+                                {% if campanha.grupo %}
+                                    <span class="status-badge status-success">
+                                        OK
+                                    </span>
+                                {% else %}
+                                    <span class="status-badge status-warning">
+                                        Pendente
+                                    </span>
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+
+                        
+
+
+                        <tr>
+
+                            <td>
+                                Cenário configurado
+                            </td>
+
+                            <td>
+
+                                {% if campanha.cenario %}
+                                    <span class="status-badge status-success">
+                                        OK
+                                    </span>
+                                {% else %}
+                                    <span class="status-badge status-warning">
+                                        Pendente
+                                    </span>
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                Template configurado
+                            </td>
+
+                            <td>
+
+                                {% if campanha.template_email %}
+                                    <span class="status-badge status-success">
+                                        OK
+                                    </span>
+                                {% else %}
+                                    <span class="status-badge status-warning">
+                                        Pendente
+                                    </span>
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+
+                        
+
+
+                        <tr>
+
+                            <td>
+                                Landing Page configurada
+                            </td>
+
+                            <td>
+
+                                {% if campanha.landing_page %}
+                                    <span class="status-badge status-success">
+                                        OK
+                                    </span>
+                                {% else %}
+                                    <span class="status-badge status-warning">
+                                        Pendente
+                                    </span>
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+
+                        
+
+
+                        <tr>
+
+                            <td>
+                                Treinamento configurado
+                            </td>
+
+                            <td>
+
+                                {% if campanha.treinamento %}
+                                    <span class="status-badge status-success">
+                                        OK
+                                    </span>
+                                {% else %}
+                                    <span class="status-badge status-warning">
+                                        Pendente
+                                    </span>
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                Módulos do treinamento
+                            </td>
+
+                            <td>
+
+                                {% if campanha.treinamento
+                                      and campanha.treinamento.modulos|length > 0 %}
+
+                                    <span class="status-badge status-success">
+                                        OK
+                                    </span>
+
+                                    <span class="check-detail">
+                                        {{ campanha.treinamento.modulos|length }} módulo(s)
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="status-badge status-warning">
+                                        Pendente
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                Quiz configurado
+                            </td>
+
+                            <td>
+
+                                {% if campanha.treinamento
+                                      and campanha.treinamento.questoes|length > 0 %}
+
+                                    <span class="status-badge status-success">
+                                        OK
+                                    </span>
+
+                                    <span class="check-detail">
+                                        {{ campanha.treinamento.questoes|length }} questão(ões)
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="status-badge status-warning">
+                                        Pendente
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         GOVERNANÇA
+         ====================================================== -->
+
+    <section
+        id="governanca"
+        class="campaign-section"
+    >
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-eyebrow">
+                    Rastreabilidade
+                </span>
+
+                <h2>
+                    Governança
+                </h2>
+
+                <p>
+                    Responsáveis e registros administrativos
+                    do ciclo da campanha.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="governance-grid">
+
+            <article class="governance-item">
+
+                <span>
+                    Criada por
+                </span>
+
+                <strong>
+                    {% if campanha.criador %}
+                        {{ campanha.criador.nome }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </strong>
+
+                <small>
+                    {{ campanha.criado_em }}
+                </small>
+
+            </article>
+
+
+            {% if campanha.aprovador %}
+
+            <article class="governance-item">
+
+                <span>
+                    Aprovada por
+                </span>
+
+                <strong>
+                    {{ campanha.aprovador.nome }}
+                </strong>
+
+                <small>
+                    {{ campanha.aprovado_em }}
+                </small>
+
+            </article>
+
+            {% endif %}
+
+
+            {% if campanha.preparador %}
+
+            <article class="governance-item">
+
+                <span>
+                    Preparada por
+                </span>
+
+                <strong>
+                    {{ campanha.preparador.nome }}
+                </strong>
+
+                <small>
+                    {{ campanha.preparada_em }}
+                </small>
+
+            </article>
+
+            {% endif %}
+
+
+            {% if campanha.piloto_preparador %}
+
+            <article class="governance-item">
+
+                <span>
+                    Piloto preparado por
+                </span>
+
+                <strong>
+                    {{ campanha.piloto_preparador.nome }}
+                </strong>
+
+                <small>
+                    {{ campanha.piloto_preparado_em }}
+                </small>
+
+            </article>
+
+            {% endif %}
+
+
+            {% if campanha.piloto_validador %}
+
+            <article class="governance-item">
+
+                <span>
+                    Piloto validado por
+                </span>
+
+                <strong>
+                    {{ campanha.piloto_validador.nome }}
+                </strong>
+
+                <small>
+                    {{ campanha.piloto_validado_em }}
+                </small>
+
+            </article>
+
+            {% endif %}
+
+
+            {% if campanha.decisor_piloto %}
+
+            <article class="governance-item">
+
+                <span>
+                    Decisão do piloto
+                </span>
+
+                <strong>
+                    {{ campanha.decisor_piloto.nome }}
+                </strong>
+
+                <small>
+                    {{ campanha.decisao_piloto_em }}
+                </small>
+
+            </article>
+
+            {% endif %}
+
+        </div>
+
+
+        {% if campanha.motivo_reprovacao %}
+
+        <div class="campaign-alert campaign-alert-danger">
+
+            <strong>
+                Motivo da reprovação
+            </strong>
+
+            <p>
+                {{ campanha.motivo_reprovacao }}
+            </p>
+
+        </div>
+
+        {% endif %}
+
+
+        {% if campanha.observacao_decisao_piloto %}
+
+        <div class="campaign-alert campaign-alert-info">
+
+            <strong>
+                Observação da análise do piloto
+            </strong>
+
+            <p>
+                {{ campanha.observacao_decisao_piloto }}
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- ======================================================
+         AÇÕES
+         ====================================================== -->
+
+    <section
+        id="acoes"
+        class="campaign-section"
+    >
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-eyebrow">
+                    Fluxo administrativo
+                </span>
+
+                <h2>
+                    Próxima ação
+                </h2>
+
+                <p>
+                    As ações abaixo são exibidas de acordo
+                    com o status atual da campanha.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==================================================
+             RASCUNHO / REPROVADA
+             ================================================== -->
+
+        {% if campanha.status in ["rascunho", "reprovada"] %}
+
+        <div class="campaign-action-card">
+
+            <div class="campaign-action-copy">
+
+                <span class="campaign-action-kicker">
+                    Configuração
+                </span>
+
+                <h3>
+                    Revisar campanha
+                </h3>
+
+                <p>
+                    Revise os recursos antes de encaminhar
+                    a campanha para aprovação.
+                </p>
+
+            </div>
+
+
+            <div class="campaign-action-buttons">
+
+                <a
+                    href="{{ url_for(
+                        'campanhas.editar',
+                        campanha_id=campanha.id
+                    ) }}"
+                    class="btn-one-secondary"
+                >
+                    Editar campanha
+                </a>
+
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'campanhas.solicitar_aprovacao',
+                        campanha_id=campanha.id
+                    ) }}"
+                >
+
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        value="{{ csrf_token() }}"
+                    >
+
+                    <button
+                        type="submit"
+                        class="btn-one-primary"
+                    >
+                        Solicitar aprovação
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- ==================================================
+             AGUARDANDO APROVAÇÃO
+             ================================================== -->
+
+        {% if campanha.status == "aguardando_aprovacao" %}
+
+        <div class="campaign-action-card">
+
+            <div class="campaign-action-copy">
+
+                <span class="campaign-action-kicker">
+                    Decisão humana
+                </span>
+
+                <h3>
+                    Campanha aguardando aprovação
+                </h3>
+
+                <p>
+                    O responsável deve revisar a configuração
+                    antes de registrar uma decisão.
+                </p>
+
+            </div>
+
+
+            <div class="campaign-approval-grid">
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'campanhas.aprovar',
+                        campanha_id=campanha.id
+                    ) }}"
+                    class="campaign-simple-action"
+                >
+
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        value="{{ csrf_token() }}"
+                    >
+
+                    <strong>
+                        Aprovar campanha
+                    </strong>
+
+                    <p>
+                        Registra a aprovação administrativa.
+                    </p>
+
+                    <button
+                        type="submit"
+                        class="btn-one-primary"
+                    >
+                        Aprovar
+                    </button>
+
+                </form>
+
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'campanhas.reprovar',
+                        campanha_id=campanha.id
+                    ) }}"
+                    class="campaign-reject-form"
+                >
+
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        value="{{ csrf_token() }}"
+                    >
+
+                    <strong>
+                        Solicitar ajustes
+                    </strong>
+
+                    <p>
+                        Informe o motivo antes de devolver
+                        a campanha para revisão.
+                    </p>
+
+
+                    <div class="form-field">
+
+                        <label for="motivo">
+                            Motivo da reprovação
+                        </label>
+
+                        <textarea
+                            id="motivo"
+                            name="motivo"
+                            rows="5"
+                            required
+                        ></textarea>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="btn-one-secondary"
+                    >
+                        Reprovar campanha
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- ==================================================
+             APROVADA
+             ================================================== -->
+
+        {% if campanha.status == "aprovada" %}
+
+        <div class="campaign-action-card">
+
+            <div class="campaign-action-copy">
+
+                <span class="campaign-action-kicker">
+                    Validação técnica
+                </span>
+
+                <h3>
+                    Campanha aprovada
+                </h3>
+
+                <p>
+                    A aprovação foi registrada. A próxima etapa
+                    é a preparação técnica da campanha.
+                </p>
+
+            </div>
+
+
+            <div class="campaign-safe-note">
+
+                <strong>
+                    Nenhum e-mail será enviado nesta etapa.
+                </strong>
+
+            </div>
+
+
+            {% if not campanha.eh_simulacao_phishing %}
+            <form
+                method="POST"
+                action="{{ url_for(
+                    'campanhas.preparar',
+                    campanha_id=campanha.id
+                ) }}"
+            >
+
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token() }}"
+                >
+
+                <button
+                    type="submit"
+                    class="btn-one-primary"
+                >
+                    Preparar campanha
+                </button>
+
+            </form>
+            {% endif %}
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- ==================================================
+             PREPARADA
+             ================================================== -->
+
+        {% if campanha.status == "preparada" %}
+
+        <div class="campaign-action-card">
+
+            <div class="campaign-action-copy">
+
+                <span class="campaign-action-kicker">
+                    Preparação concluída
+                </span>
+
+                <h3>
+                    Campanha preparada
+                </h3>
+
+                <p>
+                    A campanha passou pelas verificações
+                    administrativas e técnicas.
+                </p>
+
+            </div>
+
+
+            <div class="campaign-action-meta">
+
+                <div>
+
+                    <span>
+                        Preparada por
+                    </span>
+
+                    <strong>
+                        {% if campanha.preparador %}
+                            {{ campanha.preparador.nome }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Data
+                    </span>
+
+                    <strong>
+                        {{ campanha.preparada_em }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="campaign-safe-note">
+
+                Nenhum envio foi realizado.
+
+            </div>
+
+
+            <a
+                href="{{ url_for(
+                    'campanhas.piloto',
+                    campanha_id=campanha.id
+                ) }}"
+                class="btn-one-primary"
+            >
+                Configurar piloto
+            </a>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- ==================================================
+             PILOTO PRONTO
+             ================================================== -->
+
+        {% if campanha.status == "piloto_pronto" %}
+
+        <div class="campaign-action-card">
+
+            <div class="campaign-action-copy">
+
+                <span class="campaign-action-kicker">
+                    Piloto controlado
+                </span>
+
+                <h3>
+                    Piloto preparado
+                </h3>
+
+                <p>
+                    Utilize os links somente para validar
+                    internamente o fluxo de treinamento.
+                </p>
+
+            </div>
+
+
+            <div class="campaign-safe-note">
+
+                <strong>
+                    Nenhum e-mail foi enviado.
+                </strong>
+
+            </div>
+
+
+            {% if participacoes %}
+
+            <div class="table-card">
+
+                <div class="table-wrapper">
+
+                    <table class="one-table">
+
+                        <thead>
+
+                            <tr>
+                                <th>Participante</th>
+                                <th>Departamento</th>
+                                <th>Iniciado</th>
+                                <th>Último módulo</th>
+                                <th>Concluído</th>
+                                <th>Teste</th>
+                            <th>Tempo ativo</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for participacao in participacoes %}
+
+                            <tr>
+
+                                <td>
+
+                                    {% if participacao.colaborador %}
+                                        {{ participacao.colaborador.nome }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+
+                                    {% if participacao.colaborador
+                                          and participacao.colaborador.departamento %}
+
+                                        <span class="department-pill">
+                                            {{ participacao.colaborador.departamento.nome }}
+                                        </span>
+
+                                    {% else %}
+                                        -
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+
+                                    {% if participacao.iniciado_em %}
+
+                                        <span class="status-badge status-success">
+                                            Sim
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="status-badge status-warning">
+                                            Não
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+
+                                    {% if participacao.ultimo_modulo %}
+                                        {{ participacao.ultimo_modulo.titulo }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+
+                                    {% if participacao.concluido_em %}
+
+                                        <span class="status-badge status-success">
+                                            Sim
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="status-badge status-warning">
+                                            Não
+                                        </span>
+
+                                    {% endif %}<br><span class="muted-text">{{ situacao_participacao(participacao) }}</span>
+
+                                </td>
+
+
+                                <td>
+
+                                    <a
+                                        href="{{ url_for(
+                                            'portal_treinamento.inicio',
+                                            token=participacao.token
+                                        ) }}"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="btn-table-action"
+                                    >
+                                        Abrir treinamento
+                                    </a>
+
+                                </td>
+
+                            <td>{{ tempos_ativos.get(participacao.id, 0) | tempo_ativo }}</td>
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+            {% else %}
+
+            <div class="empty-state management-empty">
+
+                <strong>
+                    Nenhuma participação cadastrada
+                </strong>
+
+                <p>
+                    O piloto ainda não possui participantes.
+                </p>
+
+            </div>
+
+            {% endif %}
+
+
+            <div class="campaign-validation-block">
+
+                <span class="section-eyebrow">
+                    Validação
+                </span>
+
+                <h3>
+                    Validar piloto
+                </h3>
+
+                <p>
+                    A validação somente será permitida
+                    quando todos os participantes tiverem concluído
+                    o treinamento e o quiz.
+                </p>
+
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'campanhas.validar_piloto',
+                        campanha_id=campanha.id
+                    ) }}"
+                >
+
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        value="{{ csrf_token() }}"
+                    >
+
+                    <button
+                        type="submit"
+                        class="btn-one-primary"
+                    >
+                        Validar piloto
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- ==================================================
+             PILOTO VALIDADO
+             ================================================== -->
+
+        {% if campanha.status == "piloto_validado" %}
+
+        <div class="campaign-action-card">
+
+            <div class="campaign-action-copy">
+
+                <span class="campaign-action-kicker">
+                    Piloto concluído
+                </span>
+
+                <h3>
+                    Piloto validado
+                </h3>
+
+                <p>
+                    O fluxo controlado foi concluído
+                    e validado.
+                </p>
+
+            </div>
+
+
+            <div class="campaign-action-meta">
+
+                <div>
+
+                    <span>
+                        Validado por
+                    </span>
+
+                    <strong>
+                        {% if campanha.piloto_validador %}
+                            {{ campanha.piloto_validador.nome }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Data
+                    </span>
+
+                    <strong>
+                        {{ campanha.piloto_validado_em }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            {% if participacoes %}
+
+            <div class="table-card">
+
+                <div class="table-wrapper">
+
+                    <table class="one-table">
+
+                        <thead>
+
+                            <tr>
+                                <th>Participante</th>
+                                <th>Iniciado</th>
+                                <th>Concluído</th>
+                                <th>Quiz</th>
+                            <th>Tempo ativo</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for participacao in participacoes %}
+
+                            <tr>
+
+                                <td>
+
+                                    {% if participacao.colaborador %}
+                                        {{ participacao.colaborador.nome }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+
+                                    {% if participacao.iniciado_em %}
+                                        <span class="status-badge status-success">Sim</span>
+                                    {% else %}
+                                        <span class="status-badge status-warning">Não</span>
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+
+                                    {% if participacao.concluido_em %}
+                                        <span class="status-badge status-success">Sim</span>
+                                    {% else %}
+                                        <span class="status-badge status-warning">Não</span>
+                                    {% endif %}<br><span class="muted-text">{{ situacao_participacao(participacao) }}</span>
+
+                                </td>
+
+
+                                <td>
+
+                                    {% set resultado_atual = resultado_representativo(resultados_carregados(participacao)) %}
+                                {% if resultado_atual %}
+
+                                        <span class="score-badge">
+                                            {{ resultado_atual.percentual }}%
+                                        </span>
+
+                                    {% else %}
+                                        -
+                                    {% endif %}
+
+                                </td>
+
+                            <td>{{ tempos_ativos.get(participacao.id, 0) | tempo_ativo }}</td>
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+
+            <div class="campaign-analysis-callout">
+
+                <div>
+
+                    <span class="section-eyebrow">
+                        Próxima etapa
+                    </span>
+
+                    <h3>
+                        Análise administrativa
+                    </h3>
+
+                    <p>
+                        Analise os resultados antes de decidir
+                        pela continuidade ou pela necessidade
+                        de ajustes.
+                    </p>
+
+                </div>
+
+
+                <a
+                    href="{{ url_for(
+                        'campanhas.analise_piloto',
+                        campanha_id=campanha.id
+                    ) }}"
+                    class="btn-one-primary"
+                >
+                    Analisar resultados
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- ==================================================
+             PILOTO APROVADO
+             ================================================== -->
+
+        {% if campanha.status == "piloto_aprovado" %}
+
+        <div class="campaign-action-card">
+
+            <div class="campaign-action-copy">
+
+                <span class="campaign-action-kicker">
+                    Decisão registrada
+                </span>
+
+                <h3>
+                    Piloto aprovado para continuidade
+                </h3>
+
+                <p>
+                    A análise administrativa do piloto
+                    foi concluída.
+                </p>
+
+            </div>
+
+
+            <div class="campaign-safe-note">
+
+                <strong>
+                    Nenhuma nova execução foi iniciada automaticamente.
+                </strong>
+
+            </div>
+
+
+            {% if campanha.decisor_piloto %}
+
+            <div class="campaign-action-meta">
+
+                <div>
+
+                    <span>
+                        Decisão registrada por
+                    </span>
+
+                    <strong>
+                        {{ campanha.decisor_piloto.nome }}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Data
+                    </span>
+
+                    <strong>
+                        {{ campanha.decisao_piloto_em }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+
+            {% if campanha.observacao_decisao_piloto %}
+
+            <div class="campaign-decision-text">
+
+                <span>
+                    Justificativa
+                </span>
+
+                <p>
+                    {{ campanha.observacao_decisao_piloto }}
+                </p>
+
+            </div>
+
+            {% endif %}
+
+
+            <a
+                href="{{ url_for(
+                    'campanhas.analise_piloto',
+                    campanha_id=campanha.id
+                ) }}"
+                class="btn-one-secondary"
+            >
+                Consultar análise
+            </a>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- ==================================================
+             AJUSTES NECESSÁRIOS
+             ================================================== -->
+
+        {% if campanha.status == "ajustes_necessarios" %}
+
+        <div class="campaign-action-card campaign-action-warning">
+
+            <div class="campaign-action-copy">
+
+                <span class="campaign-action-kicker">
+                    Revisão necessária
+                </span>
+
+                <h3>
+                    Ajustes necessários
+                </h3>
+
+                <p>
+                    A análise do piloto identificou necessidade
+                    de revisão antes de qualquer continuidade.
+                </p>
+
+            </div>
+
+
+            {% if campanha.observacao_decisao_piloto %}
+
+            <div class="campaign-decision-text">
+
+                <span>
+                    Justificativa
+                </span>
+
+                <p>
+                    {{ campanha.observacao_decisao_piloto }}
+                </p>
+
+            </div>
+
+            {% endif %}
+
+
+            <div class="campaign-action-buttons">
+
+                <a
+                    href="{{ url_for(
+                        'campanhas.analise_piloto',
+                        campanha_id=campanha.id
+                    ) }}"
+                    class="btn-one-secondary"
+                >
+                    Consultar análise
+                </a>
+
+
+                <a
+                    href="{{ url_for(
+                        'campanhas.editar',
+                        campanha_id=campanha.id
+                    ) }}"
+                    class="btn-one-primary"
+                >
+                    Editar campanha
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- ==================================================
+             STATUS NÃO PREVISTO
+             ================================================== -->
+
+        {% if campanha.status not in [
+            "rascunho",
+            "reprovada",
+            "aguardando_aprovacao",
+            "aprovada",
+            "preparada",
+            "piloto_pronto",
+            "piloto_validado",
+            "piloto_aprovado",
+            "ajustes_necessarios"
+        ] %}
+
+        <div class="campaign-action-card">
+
+            <div class="campaign-action-copy">
+
+                <span class="campaign-action-kicker">
+                    Situação atual
+                </span>
+
+                <h3>
+                    {{ campanha.status.replace("_", " ")|title }}
+                </h3>
+
+                <p>
+                    Consulte o histórico e os registros
+                    associados à campanha.
+                </p>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- ======================================================
+         NAVEGAÇÃO FINAL
+         ====================================================== -->
+
+    <footer class="campaign-detail-footer">
+
+        <a
+            href="{{ url_for(
+                'campanhas.auditoria_campanha',
+                campanha_id=campanha.id
+            ) }}"
+            class="btn-one-secondary"
+        >
+            Histórico de auditoria
+        </a>
+
+
+        <a
+            href="{{ url_for(
+                'campanhas.relatorio',
+                campanha_id=campanha.id
+            ) }}"
+            class="btn-one-secondary"
+        >
+            Relatório consolidado
+        </a>
+
+
+        <a
+            href="{{ url_for('campanhas.listar') }}"
+            class="btn-one-secondary"
+        >
+            Voltar para campanhas
+        </a>
+
+    </footer>
+
+</section>
+
+{% endblock %}

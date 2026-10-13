@@ -1,0 +1,353 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Colaboradores
+{% endblock %}
+
+{% block content %}
+
+<section class="management-page">
+
+    <!-- ======================================================
+         CABEÇALHO
+         ====================================================== -->
+
+    <header class="management-header">
+
+        <div class="management-header-copy">
+
+            <span class="page-eyebrow">
+                Gestão de pessoas
+            </span>
+
+            <h1>
+                Colaboradores
+            </h1>
+
+            <p>
+                Consulte os colaboradores cadastrados,
+                seus departamentos e o status de participação
+                na plataforma.
+            </p>
+
+        </div>
+
+
+        <div class="management-header-actions">
+
+            <a href="{{ url_for('colaboradores.painel') }}" class="btn-one-secondary">
+                Painel de capacitação
+            </a>
+
+            <a
+                href="{{ url_for('colaboradores.novo') }}"
+                class="btn-one-primary"
+            >
+
+                <span class="btn-one-icon">
+                    +
+                </span>
+
+                <span>
+                    Novo colaborador
+                </span>
+
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- ======================================================
+         RESUMO
+         ====================================================== -->
+
+    <section class="management-summary collaborators-summary">
+
+        <article class="summary-card">
+
+            <span class="summary-label">
+                Colaboradores
+            </span>
+
+            <strong class="summary-value">
+                {{ colaboradores|length }}
+            </strong>
+
+            <span class="summary-caption">
+                Pessoas cadastradas
+            </span>
+
+        </article>
+
+
+        <article class="summary-card summary-card-soft">
+
+            {% set ativos = namespace(valor=0) %}
+
+            {% for colaborador in colaboradores %}
+
+                {% if colaborador.ativo %}
+
+                    {% set ativos.valor =
+                        ativos.valor + 1
+                    %}
+
+                {% endif %}
+
+            {% endfor %}
+
+            <span class="summary-label">
+                Ativos
+            </span>
+
+            <strong class="summary-value">
+                {{ ativos.valor }}
+            </strong>
+
+            <span class="summary-caption">
+                Colaboradores ativos
+            </span>
+
+        </article>
+
+
+        <article class="summary-card summary-card-soft">
+
+            <span class="summary-label">
+                Inativos
+            </span>
+
+            <strong class="summary-value">
+                {{ colaboradores|length - ativos.valor }}
+            </strong>
+
+            <span class="summary-caption">
+                Cadastros inativos
+            </span>
+
+        </article>
+
+    </section>
+
+
+    <!-- ======================================================
+         LISTAGEM
+         ====================================================== -->
+
+    <section class="management-section">
+
+        <div class="section-heading management-section-heading">
+
+            <div>
+
+                <span class="section-eyebrow">
+                    Diretório interno
+                </span>
+
+                <h2>
+                    Colaboradores cadastrados
+                </h2>
+
+                <p>
+                    Visualize as informações organizacionais
+                    registradas na plataforma.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if colaboradores %}
+
+        <div class="table-card">
+
+            <div class="table-wrapper">
+
+                <table class="one-table collaborator-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Colaborador
+                            </th>
+
+                            <th>
+                                E-mail
+                            </th>
+
+                            <th>
+                                Departamento
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Ações
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for colaborador in colaboradores %}
+
+                        <tr>
+
+                            <td>
+
+                                <div class="collaborator-cell">
+
+                                    <div class="collaborator-avatar">
+
+                                        {% if colaborador.nome %}
+                                            {{ colaborador.nome[:1]|upper }}
+                                        {% else %}
+                                            C
+                                        {% endif %}
+
+                                    </div>
+
+                                    <div>
+
+                                        <strong>
+                                            {{ colaborador.nome }}
+                                        </strong>
+
+                                        {% if colaborador.cargo %}
+
+                                            <span>
+                                                {{ colaborador.cargo }}
+                                            </span>
+
+                                        {% else %}
+
+                                            <span>
+                                                Cargo não informado
+                                            </span>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="email-cell">
+                                    {{ colaborador.email }}
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                {% if colaborador.departamento %}
+
+                                    <span class="department-pill">
+                                        {{ colaborador.departamento.nome }}
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="muted-text">
+                                        Sem departamento
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if colaborador.ativo %}
+
+                                    <span class="status-badge status-success">
+                                        Ativo
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="status-badge status-danger">
+                                        Inativo
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+ 
+                            <td>
+
+                                   <a
+                                      href="{{ url_for(
+                                      'colaboradores.detalhe',
+                                      colaborador_id=colaborador.id
+                                       ) }}"
+                                       class="btn-one-secondary"
+                                   >
+                                    Visualizar
+                                   </a>
+
+                           </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        {% else %}
+
+        <div class="empty-state management-empty">
+
+            <div class="empty-state-icon">
+                +
+            </div>
+
+            <strong>
+                Nenhum colaborador cadastrado
+            </strong>
+
+            <p>
+                Cadastre o primeiro colaborador para começar
+                a estruturar os treinamentos da plataforma.
+            </p>
+
+            <a
+                href="{{ url_for('colaboradores.novo') }}"
+                class="btn-one-primary"
+            >
+                Cadastrar colaborador
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Editar categoria
+{% endblock %}
+
+{% block content %}
+
+<section class="form-page">
+
+    <header class="form-page-header">
+
+        <div>
+
+            <span class="page-eyebrow">
+                Capacitação
+            </span>
+
+            <h1>
+                Editar categoria
+            </h1>
+
+            <p>
+                Atualize as informações da categoria selecionada.
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for('categorias_treinamento.listar') }}"
+            class="btn-one-secondary"
+        >
+            Voltar
+        </a>
+
+    </header>
+
+
+    <div class="form-card">
+
+        <div class="form-card-header">
+
+            <span class="section-eyebrow">
+                Dados da categoria
+            </span>
+
+            <h2>
+                Informações principais
+            </h2>
+
+            <p>
+                Edite o nome ou a descrição e salve as alterações.
+            </p>
+
+        </div>
+
+
+        <form
+            method="POST"
+            class="one-form"
+        >
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
+
+
+            <div class="form-field">
+
+                <label for="nome">
+                    Nome da categoria
+                </label>
+
+                <input
+                    id="nome"
+                    type="text"
+                    name="nome"
+                    value="{{ categoria.nome }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-field">
+
+                <label for="descricao">
+                    Descrição
+                </label>
+
+                <textarea
+                    id="descricao"
+                    name="descricao"
+                    rows="4"
+                >{{ categoria.descricao or "" }}</textarea>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('categorias_treinamento.listar') }}"
+                    class="btn-one-secondary"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn-one-primary"
+                >
+                    Salvar alterações
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

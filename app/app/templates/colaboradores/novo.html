@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Novo colaborador
+{% endblock %}
+
+{% block content %}
+
+<section class="form-page">
+
+    <!-- ======================================================
+         CABEÇALHO
+         ====================================================== -->
+
+    <header class="form-page-header">
+
+        <div>
+
+            <span class="page-eyebrow">
+                Gestão de pessoas
+            </span>
+
+            <h1>
+                Novo colaborador
+            </h1>
+
+            <p>
+                Cadastre uma pessoa para incluí-la nas ações
+                de treinamento e conscientização da plataforma.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('colaboradores.listar') }}"
+            class="btn-one-secondary"
+        >
+            Voltar
+        </a>
+
+    </header>
+
+
+    <!-- ======================================================
+         FORMULÁRIO
+         ====================================================== -->
+
+    <div class="form-card collaborator-form-card">
+
+        <div class="form-card-header">
+
+            <span class="section-eyebrow">
+                Cadastro
+            </span>
+
+            <h2>
+                Informações do colaborador
+            </h2>
+
+            <p>
+                Preencha os dados organizacionais necessários
+                para criar o cadastro.
+            </p>
+
+        </div>
+
+
+        <form
+            method="POST"
+            class="one-form"
+        >
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
+
+
+            <!-- Nome -->
+
+            <div class="form-field">
+
+                <label for="nome">
+                    Nome completo *
+                </label>
+
+                <input
+                    id="nome"
+                    type="text"
+                    name="nome"
+                    placeholder="Ex.: João da Silva"
+                    autocomplete="name"
+                    required
+                >
+
+                <small class="form-help">
+                    Informe o nome utilizado internamente pela organização.
+                </small>
+
+            </div>
+
+
+            <!-- Email -->
+
+            <div class="form-field">
+
+                <label for="email">
+                    E-mail corporativo *
+                </label>
+
+                <input
+                    id="email"
+                    type="email"
+                    name="email"
+                    placeholder="nome@empresa.com.br"
+                    autocomplete="email"
+                    required
+                >
+
+                <small class="form-help">
+                    Utilize preferencialmente o endereço corporativo.
+                </small>
+
+            </div>
+
+
+            <!-- Cargo -->
+
+            <div class="form-field">
+
+                <label for="cargo">
+                    Cargo
+                </label>
+
+                <input
+                    id="cargo"
+                    type="text"
+                    name="cargo"
+                    placeholder="Ex.: Analista Fiscal"
+                >
+
+                <small class="form-help">
+                    Campo opcional.
+                </small>
+
+            </div>
+
+
+            <!-- Departamento -->
+
+            <div class="form-field">
+
+                <label for="departamento_id">
+                    Departamento *
+                </label>
+
+                <select
+                    id="departamento_id"
+                    name="departamento_id"
+                    required
+                >
+
+                    <option value="">
+                        Selecione um departamento
+                    </option>
+
+                    {% for departamento in departamentos %}
+
+                        <option
+                            value="{{ departamento.id }}"
+                        >
+                            {{ departamento.nome }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+                <small class="form-help">
+                    O colaborador será vinculado a essa área.
+                </small>
+
+            </div>
+
+
+            <!-- Ações -->
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('colaboradores.listar') }}"
+                    class="btn-one-secondary"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn-one-primary"
+                >
+                    Salvar colaborador
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

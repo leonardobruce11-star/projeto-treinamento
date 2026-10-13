@@ -1,0 +1,397 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Grupos
+{% endblock %}
+
+{% block content %}
+<p>Sincronização avulsa indisponível. A preparação de simulações após aprovação
+   será definida na etapa 18.7C.</p>
+
+<section class="management-page">
+
+    <header class="management-header">
+
+        <div class="management-header-copy">
+
+            <span class="page-eyebrow">
+                Simulações
+            </span>
+
+            <h1>
+                Grupos
+            </h1>
+
+            <p>
+                Organize os colaboradores em grupos para utilização
+                nas ações internas de conscientização e treinamento.
+            </p>
+
+        </div>
+
+        <div class="management-header-actions">
+
+            <a
+                href="{{ url_for('grupos.novo') }}"
+                class="btn-one-primary"
+            >
+                <span class="btn-one-icon">+</span>
+
+                <span>
+                    Novo grupo
+                </span>
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- ======================================================
+         RESUMO
+         ====================================================== -->
+
+    <section class="management-summary group-summary">
+
+        <article class="summary-card">
+
+            <span class="summary-label">
+                Grupos
+            </span>
+
+            <strong class="summary-value">
+                {{ grupos|length if grupos else 0 }}
+            </strong>
+
+            <span class="summary-caption">
+                Grupos cadastrados
+            </span>
+
+        </article>
+
+
+        {% set participantes = namespace(valor=0) %}
+        {% set sincronizados = namespace(valor=0) %}
+
+        {% if grupos %}
+
+            {% for grupo in grupos %}
+
+                {% set participantes.valor =
+                    participantes.valor
+                    +
+                    (grupo.participantes|length)
+                %}
+
+                {% if grupo.gophish_group_id %}
+
+                    {% set sincronizados.valor =
+                        sincronizados.valor + 1
+                    %}
+
+                {% endif %}
+
+            {% endfor %}
+
+        {% endif %}
+
+
+        <article class="summary-card summary-card-soft">
+
+            <span class="summary-label">
+                Participações em grupos
+            </span>
+
+            <strong class="summary-value">
+                {{ participantes.valor }}
+            </strong>
+
+            <span class="summary-caption">
+                Vínculos com colaboradores
+            </span>
+
+        </article>
+
+
+        <article class="summary-card summary-card-soft">
+
+            <span class="summary-label">
+                Sincronizados
+            </span>
+
+            <strong class="summary-value">
+                {{ sincronizados.valor }}
+            </strong>
+
+            <span class="summary-caption">
+                Grupos vinculados ao Gophish
+            </span>
+
+        </article>
+
+    </section>
+
+
+    <!-- ======================================================
+         LISTAGEM
+         ====================================================== -->
+
+    <section class="management-section">
+
+        <div class="section-heading management-section-heading">
+
+            <div>
+
+                <span class="section-eyebrow">
+                    Organização das campanhas
+                </span>
+
+                <h2>
+                    Grupos cadastrados
+                </h2>
+
+                <p>
+                    Consulte os participantes e o estado de
+                    sincronização dos grupos.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if grupos %}
+
+        <div class="table-card">
+
+            <div class="table-wrapper">
+
+                <table class="one-table group-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Grupo</th>
+                            <th>Participantes</th>
+                            <th>Integração</th>
+                            <th>Última sincronização</th>
+                            <th>Ações</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for grupo in grupos %}
+
+                        <tr>
+
+                            <td>
+
+                                <div class="group-cell">
+
+                                    <div class="group-symbol">
+
+                                        {% if grupo.nome %}
+                                            {{ grupo.nome[:1]|upper }}
+                                        {% else %}
+                                            G
+                                        {% endif %}
+
+                                    </div>
+
+                                    <div>
+
+                                        <strong>
+                                            {{ grupo.nome }}
+                                        </strong>
+
+                                        <span>
+                                            Grupo de participantes
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="people-count">
+
+                                    <span class="people-count-number">
+                                        {{ grupo.participantes|length }}
+                                    </span>
+
+                                    <span class="people-count-label">
+
+                                        {% if grupo.participantes|length == 1 %}
+                                            participante
+                                        {% else %}
+                                            participantes
+                                        {% endif %}
+
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                {% if grupo.gophish_group_id %}
+
+                                    <div class="integration-status">
+
+                                        <span class="integration-dot connected"></span>
+
+                                        <div>
+
+                                            <strong>
+                                                Sincronizado
+                                            </strong>
+
+                                            <small>
+                                                ID {{ grupo.gophish_group_id }}
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                {% else %}
+
+                                    <div class="integration-status">
+
+                                        <span class="integration-dot pending"></span>
+
+                                        <div>
+
+                                            <strong>
+                                                Local
+                                            </strong>
+
+                                            <small>
+                                                Não sincronizado
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if grupo.ultima_sincronizacao %}
+
+                                    <span class="sync-date">
+                                        {{ grupo.ultima_sincronizacao }}
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="muted-text">
+                                        Nunca
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="table-actions">
+
+                                    <a
+                                        href="{{ url_for(
+                                            'grupos.editar',
+                                            grupo_id=grupo.id
+                                        ) }}"
+                                        class="btn-table-action"
+                                    >
+                                        Editar
+                                    </a>
+
+
+                                    <form
+                                        method="POST"
+                                        action="{{ url_for(
+                                            'grupos.sincronizar',
+                                            grupo_id=grupo.id
+                                        ) }}"
+                                        class="inline-action-form"
+                                    >
+
+                                        <input
+                                            type="hidden"
+                                            name="csrf_token"
+                                            value="{{ csrf_token() }}"
+                                        >
+
+                                        <button
+                                            type="submit"
+                                            class="btn-table-action btn-sync" disabled
+                                        >
+                                            Sincronizar
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-state management-empty">
+
+            <div class="empty-state-icon">
+                +
+            </div>
+
+            <strong>
+                Nenhum grupo cadastrado
+            </strong>
+
+            <p>
+                Crie um grupo para começar a organizar
+                os participantes das ações de conscientização.
+            </p>
+
+            <a
+                href="{{ url_for('grupos.novo') }}"
+                class="btn-one-primary"
+            >
+                Criar grupo
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+</section>
+
+{% endblock %}

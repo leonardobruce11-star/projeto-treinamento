@@ -1,0 +1,813 @@
+<!doctype html>
+
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="utf-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <meta
+        name="theme-color"
+        content="#335479"
+    >
+
+    <title>
+        {% block title %}
+            ONE | Security Awareness
+        {% endblock %}
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/one.css') }}"
+    >
+
+</head>
+
+
+<body
+    class="
+        {% if current_user.is_authenticated %}
+            app-body
+        {% else %}
+            auth-body
+        {% endif %}
+    "
+>
+
+
+{% if current_user.is_authenticated %}
+
+<!-- ==========================================================
+     APLICAÇÃO AUTENTICADA
+     ========================================================== -->
+
+<div class="app-layout">
+
+    <!-- ======================================================
+         SIDEBAR
+         ====================================================== -->
+
+    <aside
+        class="sidebar"
+        id="sidebar"
+    >
+
+        <!-- ==================================================
+             MARCA
+             ================================================== -->
+
+        <div class="brand">
+
+            <img
+                src="{{ url_for('static', filename='img/one-logo-white.png') }}"
+                alt="ONE Inteligência"
+                class="brand-logo"
+            >
+
+            <div class="brand-product">
+
+                <span class="brand-product-label">
+                    SECURITY
+                </span>
+
+                <span class="brand-product-name">
+                    Awareness
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==================================================
+             NAVEGAÇÃO
+             ================================================== -->
+
+        {% set endpoint = request.endpoint or '' %}
+
+        <nav class="sidebar-nav">
+
+
+            <!-- ==============================================
+                 VISÃO GERAL
+                 ============================================== -->
+
+            <div class="nav-section">
+
+                <span class="nav-section-title">
+                    Visão geral
+                </span>
+
+
+                <a
+                    href="{{ url_for('dashboard.index') }}"
+                    class="
+                        nav-item
+
+                        {% if endpoint.startswith('dashboard.') %}
+                            active
+                        {% endif %}
+                    "
+                >
+
+                    <span class="nav-icon">
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                        >
+
+                            <path
+                                d="
+                                    M4 13h6V4H4v9Zm0 7h6v-5H4v5Zm10
+                                    0h6v-9h-6v9Zm0-16v5h6V4h-6Z
+                                "
+                            />
+
+                        </svg>
+
+                    </span>
+
+                    <span>
+                        Dashboard
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <!-- ==============================================
+                 GESTÃO
+                 ============================================== -->
+
+            <div class="nav-section">
+
+                <span class="nav-section-title">
+                    Gestão
+                </span>
+
+
+                <a
+                    href="{{ url_for('departamentos.listar') }}"
+                    class="
+                        nav-item
+
+                        {% if endpoint.startswith('departamentos.') %}
+                            active
+                        {% endif %}
+                    "
+                >
+
+                    <span class="nav-icon">
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                        >
+
+                            <path
+                                d="
+                                    M3 21h18v-2H3v2Zm2-4h3V8H5v9Zm5
+                                    0h4V3h-4v14Zm6 0h3v-6h-3v6Z
+                                "
+                            />
+
+                        </svg>
+
+                    </span>
+
+                    <span>
+                        Departamentos
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('colaboradores.listar') }}"
+                    class="
+                        nav-item
+
+                        {% if endpoint.startswith('colaboradores.') %}
+                            active
+                        {% endif %}
+                    "
+                >
+
+                    <span class="nav-icon">
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                        >
+
+                            <path
+                                d="
+                                    M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3
+                                    -3 1.34-3 3 1.34 3 3 3Zm-8 0c1.66
+                                    0 3-1.34 3-3S9.66 5 8 5 5 6.34 5
+                                    8s1.34 3 3 3Zm0 2c-2.33 0-7
+                                    1.17-7 3.5V19h14v-2.5C15 14.17
+                                    10.33 13 8 13Zm8 0c-.29 0-.62
+                                    .02-.97.05 1.16.84 1.97 1.97
+                                    1.97 3.45V19h6v-2.5c0-2.33-4.67
+                                    -3.5-7-3.5Z
+                                "
+                            />
+
+                        </svg>
+
+                    </span>
+
+                    <span>
+                        Colaboradores
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <!-- ==============================================
+                 SIMULAÇÕES
+                 ============================================== -->
+
+            <div class="nav-section">
+
+                <span class="nav-section-title">
+                    Simulações
+                </span>
+
+
+                <a
+                    href="{{ url_for('grupos.listar') }}"
+                    class="
+                        nav-item
+
+                        {% if endpoint.startswith('grupos.') %}
+                            active
+                        {% endif %}
+                    "
+                >
+
+                    <span class="nav-dot"></span>
+
+                    <span>
+                        Grupos
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('cenarios.listar') }}"
+                    class="
+                        nav-item
+
+                        {% if endpoint.startswith('cenarios.') %}
+                            active
+                        {% endif %}
+                    "
+                >
+
+                    <span class="nav-dot"></span>
+
+                    <span>
+                        Cenários
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('templates_email.listar') }}"
+                    class="
+                        nav-item
+
+                        {% if endpoint.startswith('templates_email.') %}
+                            active
+                        {% endif %}
+                    "
+                >
+
+                    <span class="nav-dot"></span>
+
+                    <span>
+                        Templates
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('landing_pages.listar') }}"
+                    class="
+                        nav-item
+
+                        {% if endpoint.startswith('landing_pages.') %}
+                            active
+                        {% endif %}
+                    "
+                >
+
+                    <span class="nav-dot"></span>
+
+                    <span>
+                        Landing Pages
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('campanhas.listar') }}"
+                    class="
+                        nav-item
+
+                        {% if endpoint.startswith('campanhas.') %}
+                            active
+                        {% endif %}
+                    "
+                >
+
+                    <span class="nav-dot"></span>
+
+                    <span>
+                        Campanhas
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <!-- ==============================================
+                 CAPACITAÇÃO
+                 ============================================== -->
+
+            <div class="nav-section">
+
+                <span class="nav-section-title">
+                    Capacitação
+                </span>
+
+
+                <a
+                    href="{{ url_for('treinamentos.listar') }}"
+                    class="
+                        nav-item
+
+                        {% if endpoint.startswith('treinamentos.') and endpoint != 'treinamentos.feedback' %}
+                            active
+                        {% endif %}
+                    "
+                >
+
+                    <span class="nav-dot"></span>
+
+                    <span>
+                        Treinamentos
+                    </span>
+
+                </a>
+
+                <a
+                    href="{{ url_for('treinamentos.feedback') }}"
+                    class="nav-item {% if endpoint == 'treinamentos.feedback' %}active{% endif %}"
+                >
+                    <span class="nav-dot"></span>
+                    <span>Feedback dos treinamentos</span>
+                </a>
+
+                <a
+                    href="{{ url_for('convites.listar') }}"
+                    class="nav-item {% if endpoint.startswith('convites.') %}active{% endif %}"
+                >
+                    <span class="nav-dot"></span>
+                    <span>Convites</span>
+                </a>
+
+                    <a
+                     href="{{ url_for('categorias_treinamento.listar') }}"
+    		   class="
+        		nav-item
+
+        		{% if endpoint.startswith('categorias_treinamento.') %}
+            			active
+       			 {% endif %}
+    			"
+		>
+
+    			<span class="nav-dot"></span>
+
+    			<span>
+        			Categorias
+    			</span>
+
+		</a>
+
+            </div>
+
+
+            <!-- ==============================================
+                 INTEGRAÇÕES
+                 ============================================== -->
+
+            <div class="nav-section">
+
+                <span class="nav-section-title">
+                    Integrações
+                </span>
+
+
+                <a
+                    href="{{ url_for('gophish.index') }}"
+                    class="
+                        nav-item
+
+                        {% if endpoint.startswith('gophish.') %}
+                            active
+                        {% endif %}
+                    "
+                >
+
+                    <span class="nav-dot"></span>
+
+                    <span>
+                        Gophish
+                    </span>
+
+                </a>
+
+            </div>
+
+        </nav>
+
+
+        <!-- ==================================================
+             RODAPÉ DA SIDEBAR
+             ================================================== -->
+
+        <div class="sidebar-footer">
+
+            <div class="environment-status">
+
+                <span class="environment-dot"></span>
+
+                <div>
+
+                    <strong>
+                        Ambiente interno
+                    </strong>
+
+                    <small>
+                        ONE Inteligência
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <form
+                method="POST"
+                action="{{ url_for('auth.logout') }}"
+                class="logout-form"
+            >
+
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token() }}"
+                >
+
+                <button
+                    type="submit"
+                    class="logout-button"
+                >
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                    >
+
+                        <path
+                            d="
+                                M10 17v-3H3v-4h7V7l5 5-5 5Zm1-14h8
+                                a2 2 0 0 1 2 2v14a2 2 0 0 1-2
+                                2h-8v-2h8V5h-8V3Z
+                            "
+                        />
+
+                    </svg>
+
+                    <span>
+                        Sair
+                    </span>
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </aside>
+
+
+    <!-- ======================================================
+         ÁREA PRINCIPAL
+         ====================================================== -->
+
+    <div class="app-main">
+
+
+        <!-- ==================================================
+             TOPBAR
+             ================================================== -->
+
+        <header class="topbar">
+
+            <div class="topbar-left">
+
+                <button
+                    class="menu-toggle"
+                    type="button"
+                    id="menuToggle"
+                    aria-label="Abrir menu"
+                >
+
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
+                </button>
+
+
+                <div>
+
+                    <span class="topbar-eyebrow">
+                        ONE Inteligência
+                    </span>
+
+                    <strong class="topbar-product">
+                        Portal de Conscientização em Segurança
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="topbar-user">
+
+                <div class="user-copy">
+
+                    <strong>
+                        {{ current_user.nome }}
+                    </strong>
+
+                    <span>
+                        {{ current_user.perfil|capitalize }}
+                    </span>
+
+                </div>
+
+
+                <div class="user-avatar">
+
+                    {% if current_user.nome %}
+
+                        {{ current_user.nome[:1]|upper }}
+
+                    {% else %}
+
+                        U
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- ==================================================
+             ÁREA DE CONTEÚDO
+             ================================================== -->
+
+        <main class="content-area">
+
+
+            <!-- ==============================================
+                 MENSAGENS DO SISTEMA
+                 ============================================== -->
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+
+                {% if messages %}
+
+                    <div class="flash-stack">
+
+                        {% for category, message in messages %}
+
+                            <div
+                                class="
+                                    flash-message
+                                    flash-{{ category }}
+                                "
+                            >
+
+                                <span class="flash-indicator"></span>
+
+                                <span>
+                                    {{ message }}
+                                </span>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+            {% endwith %}
+
+
+            <div class="page-content">
+
+
+{% else %}
+
+
+<!-- ==========================================================
+     ÁREA PÚBLICA / NÃO AUTENTICADA
+     ========================================================== -->
+
+<div class="auth-layout">
+
+    <!-- Elemento visual da identidade ONE -->
+
+    <div class="auth-brand-mark"></div>
+
+
+    <div class="auth-content">
+
+
+        <!-- ==================================================
+             MENSAGENS
+             ================================================== -->
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                <div class="flash-stack">
+
+                    {% for category, message in messages %}
+
+                        <div
+                            class="
+                                flash-message
+                                flash-{{ category }}
+                            "
+                        >
+
+                            <span class="flash-indicator"></span>
+
+                            <span>
+                                {{ message }}
+                            </span>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+        {% endwith %}
+
+
+{% endif %}
+
+
+<!-- ==========================================================
+     CONTEÚDO DAS PÁGINAS
+
+     IMPORTANTE:
+     Existe apenas UMA declaração deste bloco em todo o arquivo.
+     ========================================================== -->
+
+{% block content %}
+{% endblock %}
+
+
+{% if current_user.is_authenticated %}
+
+            </div>
+
+        </main>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================================
+     OVERLAY MOBILE
+     ========================================================== -->
+
+<div
+    class="sidebar-overlay"
+    id="sidebarOverlay"
+></div>
+
+
+{% else %}
+
+
+    </div>
+
+</div>
+
+
+{% endif %}
+
+
+<!-- ==========================================================
+     JAVASCRIPT DO LAYOUT
+     ========================================================== -->
+
+<script>
+
+    const menuToggle =
+        document.getElementById(
+            "menuToggle"
+        );
+
+    const sidebar =
+        document.getElementById(
+            "sidebar"
+        );
+
+    const overlay =
+        document.getElementById(
+            "sidebarOverlay"
+        );
+
+
+    if (
+        menuToggle &&
+        sidebar &&
+        overlay
+    ) {
+
+        menuToggle.addEventListener(
+            "click",
+            function () {
+
+                sidebar.classList.toggle(
+                    "open"
+                );
+
+                overlay.classList.toggle(
+                    "active"
+                );
+
+            }
+        );
+
+
+        overlay.addEventListener(
+            "click",
+            function () {
+
+                sidebar.classList.remove(
+                    "open"
+                );
+
+                overlay.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+    }
+
+</script>
+
+
+</body>
+
+</html>

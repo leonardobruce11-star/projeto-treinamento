@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}ONE | Painel de capacitação dos colaboradores{% endblock %}
+{% block content %}
+<section class="management-page">
+    <header class="management-header">
+        <div class="management-header-copy">
+            <span class="page-eyebrow">Capacitação</span>
+            <h1>Painel de capacitação dos colaboradores</h1>
+            <p>Visão geral das atribuições, conclusões e do tempo ativo, incluindo cadastros inativos.</p>
+        </div>
+        <div class="management-header-actions">
+            <a href="{{ url_for('colaboradores.listar') }}" class="btn-one-secondary">Voltar para colaboradores</a>
+        </div>
+    </header>
+    <section class="management-section" aria-label="Filtros do painel">
+        <form method="get" action="{{ url_for('colaboradores.painel') }}" class="collaborator-edit-form">
+            <div class="collaborator-form-grid">
+                <div class="collaborator-form-field">
+                    <label for="painel-departamento">Departamento</label>
+                    <select id="painel-departamento" name="departamento">
+                        <option value="">Todos</option>
+                        {% for departamento in departamentos %}<option value="{{ departamento.id }}" {% if filtros.departamento == departamento.id %}selected{% endif %}>{{ departamento.nome }}</option>{% endfor %}
+                    </select>
+                </div>
+                <div class="collaborator-form-field">
+                    <label for="painel-treinamento">Treinamento</label>
+                    <select id="painel-treinamento" name="treinamento">
+                        <option value="">Todos</option>
+                        {% for treinamento in treinamentos %}<option value="{{ treinamento.id }}" {% if filtros.treinamento == treinamento.id %}selected{% endif %}>{{ treinamento.titulo }}</option>{% endfor %}
+                    </select>
+                </div>
+                {% for chave, titulo, opcoes in [('status', 'Status de capacitação', status_opcoes), ('atividade', 'Atividade', atividade_opcoes), ('situacao', 'Situação cadastral', situacao_opcoes)] %}
+                <div class="collaborator-form-field">
+                    <label for="painel-{{ chave }}">{{ titulo }}</label>
+                    <select id="painel-{{ chave }}" name="{{ chave }}">
+                        <option value="">Todos</option>
+                        {% for valor, texto in opcoes.items() %}<option value="{{ valor }}" {% if filtros[chave] == valor %}selected{% endif %}>{{ texto }}</option>{% endfor %}
+                    </select>
+                </div>
+                {% endfor %}
+                <div class="collaborator-form-field">
+                    <label for="painel-busca">Nome ou e-mail</label>
+                    <input id="painel-busca" type="search" name="busca" value="{{ filtros.busca }}" placeholder="Buscar colaborador">
+                </div>
+            </div>
+            <div class="management-header-actions">
+                <button type="submit" class="btn-one-primary">Aplicar filtros</button>
+                <a href="{{ url_for('colaboradores.painel') }}" class="btn-one-secondary">Limpar filtros</a>
+            </div>
+        </form>
+        <p role="status"><strong>Escopo:</strong> {{ escopo | join(' · ') if escopo else 'Todos os colaboradores · Todos os treinamentos' }}</p>
+        {% if filtros.treinamento %}<p>Contagens, tempo, última atividade e quiz consideram somente as participações do treinamento selecionado.</p>{% endif %}
+    </section>
+    <section class="management-summary" aria-label="Indicadores gerais de capacitação">
+        {% for chave, titulo in [
+            ('total_colaboradores', 'Total de colaboradores'),
+            ('com_treinamento_atribuido', 'Com treinamento atribuído'),
+            ('com_treinamento_em_andamento', 'Com treinamento em andamento'),
+            ('com_treinamentos_concluidos', 'Com treinamentos concluídos'),
+            ('sem_atividade', 'Sem atividade')
+        ] %}
+        <article class="summary-card">
+            <span class="summary-label">{{ titulo }}</span>
+            <strong class="summary-value">{{ indicadores[chave] }}</strong>
+            {% if chave == 'sem_atividade' %}<span class="summary-caption">Sem tempo ativo positivo registrado</span>{% endif %}
+        </article>
+        {% endfor %}
+        <article class="summary-card">
+            <span class="summary-label">Tempo total de capacitação</span>
+            <strong class="summary-value">{{ indicadores.total_segundos | tempo_ativo }}</strong>
+            <span class="summary-caption">Tempo ativo de todos os colaboradores no escopo selecionado</span>
+        </article>
+        <article class="summary-card">
+            <span class="summary-label">Tempo médio por colaborador com atividade</span>
+            <strong class="summary-value">{{ indicadores.media_segundos_por_colaborador_com_atividade | tempo_ativo }}</strong>
+            <span class="summary-caption">Considera somente colaboradores com tempo positivo</span>
+        </article>
+    </section>
+    {% with metricas=indicadores %}{% include "shared/metricas_aprovacao.html" %}{% endwith %}
+    <section class="management-section">
+        <div class="section-heading management-section-heading">
+            <div>
+                <h2>Capacitação por colaborador</h2>
+                <p>Cada atribuição conta como uma participação. Iniciados inclui concluídos com início registrado; pendentes inclui não iniciados e em andamento. Os indicadores gerais consideram todas as páginas. Concluído não significa aprovado. Os filtros Com aprovação, Com reprovação e Com histórico selecionam colaboradores com ao menos uma participação nessa situação; podem se sobrepor. Concluído mantém o filtro de todas as atribuições concluídas.</p>
+            </div>
+        </div>
+        {% if colaboradores %}
+        <div class="table-card">
+            <div class="table-wrapper">
+                <table class="one-table collaborator-table">
+                    <thead><tr>
+                        {% for titulo in ['Colaborador', 'Departamento', 'Situação cadastral', 'Atribuídos', 'Iniciados', 'Concluídos', 'Pendentes', 'Conclusão', 'Tempo total', 'Última atividade', 'Quiz mais recente', 'Treinamentos e situação'] %}
+                        <th scope="col">{{ titulo }}</th>
+                        {% endfor %}
+                    </tr></thead>
+                    <tbody>
+                        {% for colaborador in colaboradores %}
+                        {% set quiz = quizzes.get(colaborador.colaborador_id) %}
+                        <tr>
+                            <td><a href="{{ url_for('colaboradores.detalhe', colaborador_id=colaborador.colaborador_id) }}">{{ colaborador.nome }}</a></td>
+                            <td>{{ colaborador.departamento or '—' }}</td>
+                            <td><span class="status-badge {{ 'status-success' if colaborador.ativo else 'status-danger' }}">{{ 'Ativo' if colaborador.ativo else 'Inativo' }}</span></td>
+                            <td>{{ colaborador.atribuidas }}</td>
+                            <td>{{ colaborador.iniciadas }}</td>
+                            <td>{{ colaborador.concluidas }}<br><span class="muted-text">{{ colaborador.aprovadas }} aprovados · {{ colaborador.reprovadas }} reprovados · {{ colaborador.historicas }} históricos</span></td>
+                            <td>{{ colaborador.pendentes }}</td>
+                            <td>{{ ('%.1f' | format(colaborador.percentual_conclusao)) ~ '%' if colaborador.percentual_conclusao is not none else '—' }}</td>
+                            <td>{{ colaborador.total_segundos | tempo_ativo }}</td>
+                            <td>{{ colaborador.ultima_atividade_em.strftime('%d/%m/%Y %H:%M') if colaborador.ultima_atividade_em else 'Sem registro' }}</td>
+                            <td>{% if quiz %}{{ '%.1f' | format(quiz.percentual) }}%<br><span class="muted-text">{{ quiz.concluido_em.strftime('%d/%m/%Y %H:%M') }}</span>{% else %}Sem quiz{% endif %}</td>
+                            <td><details><summary>{{ colaborador.atribuidas }} participações</summary>
+                            {% for p in participacoes_painel.get(colaborador.colaborador_id, []) %}
+                                <p><strong>{{ p.treinamento }}</strong><br>{{ rotulos_participacao[p.status] }}<br>
+                                Concluído: {{ 'Sim' if p.concluido_em else 'Não' }}<br>
+                                {% if p.resultado_quiz_id is not none %}
+                                    <span>Tentativas: {{ p.total_tentativas }} · Tentativa {{ p.numero_tentativa }}</span>
+                                Nota: {{ '%.2f' | format(p.percentual) }}%<br>
+                                {% if p.percentual_minimo_aplicado is not none %}Mínimo aplicado: {{ p.percentual_minimo_aplicado }}% · {{ p.minimo_acertos_aplicado }} acertos<br>{% endif %}
+                                {% elif p.aprovado_em and p.concluido_em %}Conclusão sem quiz · nota não aplicável<br>
+                                {% else %}Sem resultado de quiz<br>{% endif %}
+                                Conclusão: {{ p.concluido_em.strftime('%d/%m/%Y %H:%M') if p.concluido_em else '—' }}<br>
+                                Aprovação: {{ p.aprovado_em.strftime('%d/%m/%Y %H:%M') if p.aprovado_em else '—' }}<br>
+                                Tempo ativo: {{ p.total_segundos | tempo_ativo }}</p>
+                            {% endfor %}</details></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <nav class="management-header-actions" aria-label="Paginação dos colaboradores">
+            {% if pagina > 1 %}<a class="btn-one-secondary" rel="prev" href="{{ url_for('colaboradores.painel', page=pagina-1, **parametros) }}">Anterior</a>{% endif %}
+            <span aria-current="page">Página {{ pagina }} de {{ total_paginas }} · {{ indicadores.total_colaboradores }} colaboradores</span>
+            {% if pagina < total_paginas %}<a class="btn-one-secondary" rel="next" href="{{ url_for('colaboradores.painel', page=pagina+1, **parametros) }}">Próxima</a>{% endif %}
+        </nav>
+        {% else %}
+        <div class="empty-state management-empty">
+            <strong>{{ 'Nenhum colaborador encontrado para os filtros selecionados' if parametros else 'Nenhum colaborador cadastrado' }}</strong>
+            <p>Os indicadores de capacitação aparecerão conforme os colaboradores e suas participações forem registrados.</p>
+        </div>
+        {% endif %}
+    </section>
+</section>
+{% endblock %}

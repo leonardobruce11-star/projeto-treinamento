@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Nova campanha
+{% endblock %}
+
+{% block content %}
+
+<section class="form-page campaign-create-page">
+
+    <header class="form-page-header">
+
+        <div>
+
+            <span class="page-eyebrow">
+                Gestão de campanhas
+            </span>
+
+            <h1>
+                Nova campanha
+            </h1>
+
+            <p>
+                Crie o registro inicial da campanha
+                para começar a configurar seu fluxo administrativo.
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for('campanhas.listar') }}"
+            class="btn-one-secondary"
+        >
+            Voltar
+        </a>
+
+    </header>
+
+
+    <div class="campaign-draft-notice">
+
+        <div class="campaign-draft-icon">
+            01
+        </div>
+
+        <div>
+
+            <span>
+                Status inicial
+            </span>
+
+            <strong>
+                Rascunho
+            </strong>
+
+            <p>
+                A nova campanha será criada como rascunho.
+                Depois disso, os demais recursos poderão ser configurados
+                e revisados antes da aprovação.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="form-card campaign-create-card">
+
+        <div class="form-card-header">
+
+            <span class="section-eyebrow">
+                Identificação
+            </span>
+
+            <h2>
+                Informações iniciais
+            </h2>
+
+            <p>
+                Defina o nome e a descrição da campanha.
+            </p>
+
+        </div>
+
+
+        <form
+            method="POST"
+            class="one-form"
+        >
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
+
+
+            {% set tipo_selecionado = '' %}
+            <div class="form-field">
+                <label for="tipo">Tipo de campanha *</label>
+                <select id="tipo" name="tipo" required>
+                    <option value="" selected disabled>Selecione um tipo de campanha</option>
+                    {% for valor, rotulo in tipos_campanha.items() %}
+                    <option value="{{ valor }}" {% if tipo_selecionado == valor %}selected{% endif %}>{{ rotulo }}</option>
+                    {% endfor %}
+                </select>
+                <small class="form-help">
+                    Todos os tipos utilizam grupo e treinamento. Simulações de phishing
+                    também utilizam cenário, template de e-mail e landing page.
+                </small>
+            </div>
+
+            <div class="form-field">
+
+                <label for="nome">
+                    Nome *
+                </label>
+
+                <input
+                    id="nome"
+                    type="text"
+                    name="nome"
+                    placeholder="Ex.: Campanha de conscientização - Financeiro"
+                    required
+                >
+
+                <small class="form-help">
+                    Utilize um nome claro para facilitar
+                    a identificação administrativa.
+                </small>
+
+            </div>
+
+
+            <div class="form-field">
+
+                <label for="descricao">
+                    Descrição
+                </label>
+
+                <textarea
+                    id="descricao"
+                    name="descricao"
+                    rows="5"
+                    placeholder="Descreva o objetivo interno da campanha."
+                ></textarea>
+
+                <small class="form-help">
+                    Campo opcional.
+                </small>
+
+            </div>
+
+
+            <div class="campaign-create-flow">
+
+                <div class="campaign-create-flow-item">
+
+                    <span class="campaign-flow-number">
+                        1
+                    </span>
+
+                    <div>
+                        <strong>
+                            Criar rascunho
+                        </strong>
+
+                        <span>
+                            Registro inicial da campanha.
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <div class="campaign-create-flow-line"></div>
+
+
+                <div class="campaign-create-flow-item">
+
+                    <span class="campaign-flow-number campaign-flow-muted">
+                        2
+                    </span>
+
+                    <div>
+                        <strong>
+                            Configurar recursos
+                        </strong>
+
+                        <span>
+                            Grupo e treinamento; recursos adicionais para phishing.
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <div class="campaign-create-flow-line"></div>
+
+
+                <div class="campaign-create-flow-item">
+
+                    <span class="campaign-flow-number campaign-flow-muted">
+                        3
+                    </span>
+
+                    <div>
+                        <strong>
+                            Revisar e aprovar
+                        </strong>
+
+                        <span>
+                            Validação administrativa posterior.
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('campanhas.listar') }}"
+                    class="btn-one-secondary"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn-one-primary"
+                >
+                    Criar rascunho
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

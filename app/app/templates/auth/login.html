@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Acesso administrativo
+{% endblock %}
+
+{% block content %}
+
+<section class="login-shell">
+
+    <div class="login-panel login-panel-brand">
+
+        <div class="login-brand-content">
+
+            <img
+                src="{{ url_for('static', filename='img/one-logo-white.png') }}"
+                alt="ONE Inteligência"
+                class="login-logo"
+            >
+
+            <span class="login-kicker">
+                Segurança da Informação
+            </span>
+
+            <h1 class="login-brand-title">
+                Conscientização com método,
+                clareza e segurança.
+            </h1>
+
+            <p class="login-brand-text">
+                Ambiente interno da ONE para gestão de treinamentos,
+                campanhas e ações de conscientização em segurança.
+            </p>
+
+            <div class="login-brand-footer">
+
+                <span class="login-brand-line"></span>
+
+                <span>
+                    Portal corporativo
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="login-panel login-panel-form">
+
+        <div class="login-form-wrap">
+
+            <div class="login-form-header">
+
+                <span class="login-eyebrow">
+                    Acesso restrito
+                </span>
+
+                <h2>
+                    Bem-vindo ao portal
+                </h2>
+
+                <p>
+                    Entre com suas credenciais administrativas
+                    para acessar o ambiente.
+                </p>
+
+            </div>
+
+
+            <form
+                method="POST"
+                class="login-form"
+            >
+
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token() }}"
+                >
+
+
+                <div class="form-field">
+
+                    <label for="email">
+                        E-mail corporativo
+                    </label>
+
+                    <input
+                        id="email"
+                        type="email"
+                        name="email"
+                        autocomplete="username"
+                        placeholder="nome@empresa.com.br"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-field">
+
+                    <label for="senha">
+                        Senha
+                    </label>
+
+                    <div class="password-field">
+
+                        <input
+                            id="senha"
+                            type="password"
+                            name="senha"
+                            autocomplete="current-password"
+                            placeholder="Digite sua senha"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            id="passwordToggle"
+                            aria-label="Mostrar senha"
+                        >
+                            <span id="passwordToggleText">
+                                Mostrar
+                            </span>
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="login-submit"
+                >
+                    Entrar no portal
+                </button>
+
+            </form>
+
+
+            <div class="login-security">
+
+                <span class="login-security-dot"></span>
+
+                <span>
+                    Ambiente protegido por HTTPS
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<script>
+
+    const passwordInput =
+        document.getElementById(
+            "senha"
+        );
+
+    const passwordToggle =
+        document.getElementById(
+            "passwordToggle"
+        );
+
+    const passwordToggleText =
+        document.getElementById(
+            "passwordToggleText"
+        );
+
+
+    if (
+        passwordInput &&
+        passwordToggle &&
+        passwordToggleText
+    ) {
+
+        passwordToggle.addEventListener(
+            "click",
+            function () {
+
+                const isPassword =
+                    passwordInput.type === "password";
+
+                passwordInput.type =
+                    isPassword
+                        ? "text"
+                        : "password";
+
+                passwordToggleText.textContent =
+                    isPassword
+                        ? "Ocultar"
+                        : "Mostrar";
+
+                passwordToggle.setAttribute(
+                    "aria-label",
+                    isPassword
+                        ? "Ocultar senha"
+                        : "Mostrar senha"
+                );
+
+            }
+        );
+
+    }
+
+</script>
+
+{% endblock %}

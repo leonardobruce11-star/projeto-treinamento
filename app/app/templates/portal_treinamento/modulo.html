@@ -1,0 +1,887 @@
+<!doctype html>
+
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>
+        {{ modulo.titulo }} | ONE
+    </title>
+
+    <style>
+
+        :root {
+            --one-navy: #335479;
+            --one-blue: #1b6195;
+            --one-sky: #83bde8;
+            --one-white: #ffffff;
+
+            --one-ink: #173047;
+            --one-ink-soft: #536779;
+
+            --one-bg: #f4f7fa;
+            --one-border: #e5ebf0;
+            --one-border-strong: #d5dee6;
+        }
+
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+            margin: 0;
+
+            min-height: 100vh;
+
+            font-family:
+                Arial,
+                sans-serif;
+
+            color:
+                var(--one-ink);
+
+            background:
+                var(--one-bg);
+        }
+
+
+        /* =====================================================
+           TOPO
+           ===================================================== */
+
+        .portal-topbar {
+            min-height: 72px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+
+            padding:
+                0
+                32px;
+
+            background:
+                var(--one-navy);
+
+            color:
+                #ffffff;
+        }
+
+
+        .portal-brand {
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+        }
+
+
+        .portal-brand-mark {
+            width: 38px;
+            height: 38px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 10px;
+
+            background:
+                rgba(255,255,255,.12);
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+
+        .portal-brand-copy strong {
+            display: block;
+
+            font-size: 12px;
+        }
+
+
+        .portal-brand-copy span {
+            display: block;
+
+            margin-top: 3px;
+
+            font-size: 9px;
+
+            color:
+                rgba(255,255,255,.68);
+        }
+
+
+        .portal-stage {
+            padding:
+                7px
+                11px;
+
+            border:
+                1px solid
+                rgba(255,255,255,.15);
+
+            border-radius: 999px;
+
+            background:
+                rgba(255,255,255,.06);
+
+            font-size: 9px;
+
+            color:
+                rgba(255,255,255,.85);
+        }
+
+
+        /* =====================================================
+           CONTAINER
+           ===================================================== */
+
+        .portal-shell {
+            width:
+                min(
+                    1050px,
+                    calc(100% - 36px)
+                );
+
+            margin:
+                34px
+                auto
+                60px;
+        }
+
+
+        /* =====================================================
+           CABEÇALHO DO MÓDULO
+           ===================================================== */
+
+        .module-header {
+            padding:
+                32px
+                34px;
+
+            border:
+                1px solid
+                var(--one-border);
+
+            border-radius: 18px;
+
+            background:
+                #ffffff;
+        }
+
+
+        .module-training-name {
+            display: block;
+
+            margin-bottom: 9px;
+
+            font-size: 9px;
+
+            font-weight: 700;
+
+            letter-spacing: .1em;
+
+            text-transform: uppercase;
+
+            color:
+                var(--one-blue);
+        }
+
+
+        .module-header h1 {
+            margin:
+                0
+                0
+                10px;
+
+            font-size:
+                clamp(
+                    25px,
+                    4vw,
+                    36px
+                );
+
+            line-height: 1.15;
+        }
+
+
+        .module-position {
+            margin: 0;
+
+            font-size: 10px;
+
+            color:
+                var(--one-ink-soft);
+        }
+
+
+        /* =====================================================
+           PROGRESSO
+           ===================================================== */
+
+        .progress-card {
+            margin-top: 16px;
+
+            padding:
+                17px
+                20px;
+
+            border:
+                1px solid
+                var(--one-border);
+
+            border-radius: 13px;
+
+            background:
+                #ffffff;
+        }
+
+
+        .progress-header {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 16px;
+
+            margin-bottom: 10px;
+        }
+
+
+        .progress-header span {
+            font-size: 9px;
+
+            color:
+                var(--one-ink-soft);
+        }
+
+
+        .progress-header strong {
+            font-size: 10px;
+
+            color:
+                var(--one-blue);
+        }
+
+
+        .progress-track {
+            width: 100%;
+            height: 7px;
+
+            overflow: hidden;
+
+            border-radius: 999px;
+
+            background:
+                #e9eff3;
+        }
+
+
+        .progress-fill {
+            height: 100%;
+
+            border-radius: inherit;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    var(--one-blue),
+                    var(--one-sky)
+                );
+        }
+
+
+        /* =====================================================
+           CONTEÚDO
+           ===================================================== */
+
+        .module-content-card {
+            margin-top: 22px;
+
+            overflow: hidden;
+
+            border:
+                1px solid
+                var(--one-border);
+
+            border-radius: 18px;
+
+            background:
+                #ffffff;
+
+            box-shadow:
+                0 5px 18px
+                rgba(23,48,71,.03);
+        }
+
+
+        .module-content-heading {
+            padding:
+                18px
+                26px;
+
+            border-bottom:
+                1px solid
+                var(--one-border);
+
+            background:
+                #fbfcfd;
+        }
+
+
+        .module-content-heading span {
+            font-size: 8px;
+
+            font-weight: 700;
+
+            letter-spacing: .1em;
+
+            text-transform: uppercase;
+
+            color:
+                var(--one-blue);
+        }
+
+
+        .module-content {
+            padding:
+                32px
+                34px;
+
+            font-size: 12px;
+
+            line-height: 1.85;
+
+            white-space: pre-line;
+
+            color:
+                var(--one-ink);
+        }
+
+
+        /* =====================================================
+           NAVEGAÇÃO
+           ===================================================== */
+
+        .module-navigation {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 18px;
+
+            margin-top: 22px;
+
+            padding:
+                20px;
+
+            border:
+                1px solid
+                var(--one-border);
+
+            border-radius: 15px;
+
+            background:
+                #ffffff;
+        }
+
+
+        .navigation-side {
+            min-width: 140px;
+        }
+
+
+        .navigation-side:last-child {
+            display: flex;
+
+            justify-content: flex-end;
+        }
+
+
+        .navigation-button {
+            min-height: 42px;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 8px;
+
+            padding:
+                10px
+                17px;
+
+            border-radius: 10px;
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+            text-decoration: none;
+
+            cursor: pointer;
+
+            transition:
+                background .15s ease,
+                transform .15s ease;
+        }
+
+
+        .navigation-button-secondary {
+            border:
+                1px solid
+                var(--one-border-strong);
+
+            background:
+                #ffffff;
+
+            color:
+                var(--one-ink);
+        }
+
+
+        .navigation-button-secondary:hover {
+            background:
+                #f6f8fa;
+        }
+
+
+        .navigation-button-primary {
+            border: 0;
+
+            background:
+                var(--one-blue);
+
+            color:
+                #ffffff;
+        }
+
+
+        .navigation-button-primary:hover {
+            background:
+                var(--one-navy);
+
+            transform:
+                translateY(-1px);
+        }
+
+
+        .navigation-context {
+            text-align: center;
+        }
+
+
+        .navigation-context strong {
+            display: block;
+
+            margin-bottom: 3px;
+
+            font-size: 9px;
+        }
+
+
+        .navigation-context span {
+            font-size: 8px;
+
+            color:
+                var(--one-ink-soft);
+        }
+
+
+        form {
+            margin: 0;
+        }
+
+
+        /* =====================================================
+           RODAPÉ
+           ===================================================== */
+
+        .portal-footer {
+            margin-top: 30px;
+
+            padding-top: 18px;
+
+            border-top:
+                1px solid
+                var(--one-border);
+
+            text-align: center;
+
+            font-size: 8px;
+
+            color:
+                #8a99a5;
+        }
+
+
+        /* =====================================================
+           RESPONSIVO
+           ===================================================== */
+
+        @media (max-width: 650px) {
+
+            .portal-topbar {
+                align-items: flex-start;
+
+                flex-direction: column;
+
+                padding:
+                    16px
+                    18px;
+            }
+
+
+            .portal-shell {
+                width:
+                    calc(100% - 22px);
+
+                margin-top: 18px;
+            }
+
+
+            .module-header {
+                padding:
+                    25px
+                    22px;
+            }
+
+
+            .module-content {
+                padding:
+                    25px
+                    22px;
+            }
+
+
+            .module-navigation {
+                align-items: stretch;
+
+                flex-direction: column;
+            }
+
+
+            .navigation-side,
+            .navigation-side:last-child {
+                width: 100%;
+
+                min-width: 0;
+
+                display: block;
+            }
+
+
+            .navigation-button {
+                width: 100%;
+            }
+
+
+            .navigation-context {
+                order: -1;
+
+                padding-bottom: 5px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <!-- ======================================================
+         TOPO
+         ====================================================== -->
+
+    <header class="portal-topbar">
+
+        <div class="portal-brand">
+
+            <div class="portal-brand-mark">
+                ONE
+            </div>
+
+            <div class="portal-brand-copy">
+
+                <strong>
+                    ONE Consultoria
+                </strong>
+
+                <span>
+                    Portal de Conscientização
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="portal-stage">
+            Treinamento em andamento
+        </div>
+
+    </header>
+
+
+    <main class="portal-shell">
+
+        <!-- ==================================================
+             CABEÇALHO
+             ================================================== -->
+
+        <section class="module-header">
+
+            <span class="module-training-name">
+                {{ treinamento.titulo }}
+            </span>
+
+            <h1>
+                {{ modulo.titulo }}
+            </h1>
+
+            <p class="module-position">
+                Módulo {{ numero_modulo }}
+                de {{ total_modulos }}
+            </p>
+
+            <p class="module-position">
+                Tempo ativo no treinamento: {{ tempo_total_ativo | tempo_ativo }}
+                · Neste módulo: {{ tempo_modulo_ativo | tempo_ativo }}
+            </p>
+
+        </section>
+
+
+        <!-- ==================================================
+             PROGRESSO
+             ================================================== -->
+
+        <section class="progress-card">
+
+            <div class="progress-header">
+
+                <span>
+                    Progresso do treinamento · {{ estado_progresso.quantidade_concluidos }} de {{ total_modulos }} módulos concluídos
+                </span>
+
+                <strong>
+                    {{ progresso }}%
+                </strong>
+
+            </div>
+
+
+            <div class="progress-track" role="progressbar" aria-label="Progresso do treinamento"
+                 aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ progresso }}">
+
+                <div
+                    class="progress-fill"
+                    style="width: {{ progresso }}%;"
+                ></div>
+
+            </div>
+
+            <p class="module-position">{{ estado_progresso.status_modulo(modulo.id, modulo.id) }}</p>
+            <ul class="module-position">
+                {% for item in estado_progresso.modulos %}
+                <li>
+                    {% if estado_progresso.pode_acessar(item.id) %}
+                    <a href="{{ url_for('portal_treinamento.modulo', token=(acesso_token|default(participacao.token)), modulo_id=item.id) }}"
+                       {% if item.id == modulo.id %}aria-current="page"{% endif %}>{{ item.titulo }}</a>
+                    {% else %}
+                    <span aria-disabled="true">{{ item.titulo }}</span>
+                    {% endif %}
+                    · {{ estado_progresso.status_modulo(item.id, modulo.id) }}
+                </li>
+                {% endfor %}
+            </ul>
+
+        </section>
+
+
+        <!-- ==================================================
+             CONTEÚDO
+             ================================================== -->
+
+        <article class="module-content-card">
+
+            <header class="module-content-heading">
+
+                <span>
+                    Conteúdo do módulo
+                </span>
+
+            </header>
+
+
+            <div class="module-content">
+                {{ modulo.conteudo }}
+            </div>
+
+        </article>
+
+
+        <!-- ==================================================
+             NAVEGAÇÃO
+             ================================================== -->
+
+        <nav class="module-navigation">
+
+            <!-- ==============================================
+                 ANTERIOR
+                 ============================================== -->
+
+            <div class="navigation-side">
+
+                {% if modulo_anterior %}
+
+                    <a
+                        class="
+                            navigation-button
+                            navigation-button-secondary
+                        "
+                        href="{{ url_for(
+                            'portal_treinamento.modulo',
+                            token=(acesso_token|default(participacao.token)),
+                            modulo_id=modulo_anterior.id
+                        ) }}"
+                    >
+                        ← Anterior
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- ==============================================
+                 CONTEXTO
+                 ============================================== -->
+
+            <div class="navigation-context">
+
+                <strong>
+                    Módulo {{ numero_modulo }}
+                    de {{ total_modulos }}
+                </strong>
+
+                {% if proximo_modulo %}
+
+                    <span>
+                        Continue para avançar no treinamento.
+                    </span>
+
+                {% else %}
+
+                    <span>
+                        Último módulo antes da avaliação.
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- ==============================================
+                 AVANÇAR / QUIZ
+                 ============================================== -->
+
+            <div class="navigation-side">
+
+                {% if estado_progresso.ja_concluido(modulo.id) %}
+                <a class="navigation-button navigation-button-primary"
+                   href="{% if proximo_modulo %}{{ url_for('portal_treinamento.modulo', token=(acesso_token|default(participacao.token)), modulo_id=proximo_modulo.id) }}{% else %}{{ url_for('portal_treinamento.quiz', token=(acesso_token|default(participacao.token))) }}{% endif %}">
+                    {% if proximo_modulo %}Próximo módulo →{% else %}Ir para avaliação →{% endif %}
+                </a>
+                {% else %}
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'portal_treinamento.avancar_modulo',
+                        token=(acesso_token|default(participacao.token)),
+                        modulo_id=modulo.id
+                    ) }}"
+                >
+
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        value="{{ csrf_token() }}"
+                    >
+
+
+                    {% if proximo_modulo %}
+
+                        <button
+                            class="
+                                navigation-button
+                                navigation-button-primary
+                            "
+                            type="submit"
+                        >
+                            Próximo →
+                        </button>
+
+
+                    {% else %}
+
+                        <button
+                            class="
+                                navigation-button
+                                navigation-button-primary
+                            "
+                            type="submit"
+                        >
+                            Ir para avaliação →
+                        </button>
+
+                    {% endif %}
+
+                </form>
+                {% endif %}
+
+            </div>
+
+        </nav>
+
+
+        <footer class="portal-footer">
+
+            ONE Consultoria · Programa interno de conscientização
+            em segurança da informação
+
+        </footer>
+
+    </main>
+
+    {% if participacao and (acesso_token|default(participacao.token)) %}
+    <script
+        src="{{ url_for('static', filename='js/portal_treinamento_heartbeat.js') }}"
+        data-one-heartbeat-url="{{ url_for('portal_treinamento.heartbeat', token=(acesso_token|default(participacao.token)), modulo_id=modulo.id) }}"
+        data-csrf-token="{{ csrf_token() }}"
+    ></script>
+    {% endif %}
+
+</body>
+
+</html>

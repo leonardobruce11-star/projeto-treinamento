@@ -1,0 +1,15 @@
+{% if resultados %}
+<section aria-label="Histórico das avaliações">
+<h2>Histórico das avaliações</h2>
+<div style="overflow-x:auto">
+<table style="width:100%;text-align:left;border-spacing:0 12px">
+<thead><tr><th>Tentativa</th><th>Resultado</th><th>Nota</th><th>Acertos</th><th>Critério aplicado</th><th>Data</th></tr></thead>
+<tbody>{% for item in resultados %}
+<tr><td><a href="{{ url_for('portal_treinamento.resultado_quiz', token=acesso_token, resultado_id=item.id) }}">{{ item.numero_tentativa }}</a></td>
+<td>{{ 'Aprovada' if item.aprovado is sameas true else 'Reprovada' if item.aprovado is sameas false else 'Histórico não classificado' }}</td>
+<td>{{ item.percentual }}%</td><td>{{ item.total_acertos }}/{{ item.total_questoes }}</td>
+<td>{{ item.percentual_minimo_aplicado if item.percentual_minimo_aplicado is not none else 'Não registrado' }}{% if item.percentual_minimo_aplicado is not none %}%{% endif %}; {{ item.minimo_acertos_aplicado if item.minimo_acertos_aplicado is not none else 'Não registrado' }} acertos mínimos</td>
+<td>{{ item.concluido_em.strftime('%d/%m/%Y %H:%M') if item.concluido_em else 'Não registrada' }}</td></tr>
+{% endfor %}</tbody></table>
+</div></section>
+{% endif %}

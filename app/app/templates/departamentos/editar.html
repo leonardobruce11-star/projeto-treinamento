@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Editar departamento
+{% endblock %}
+
+{% block content %}
+
+<section class="form-page">
+
+    <header class="form-page-header">
+
+        <div>
+
+            <span class="page-eyebrow">
+                Gestão organizacional
+            </span>
+
+            <h1>
+                Editar departamento
+            </h1>
+
+            <p>
+                Atualize as informações da área selecionada
+                mantendo a estrutura organizacional da plataforma.
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for('departamentos.listar') }}"
+            class="btn-one-secondary"
+        >
+            Voltar
+        </a>
+
+    </header>
+
+
+    <div class="form-card">
+
+        <div class="form-card-header">
+
+            <span class="section-eyebrow">
+                Dados do departamento
+            </span>
+
+            <h2>
+                Informações principais
+            </h2>
+
+            <p>
+                Edite o nome do departamento e salve as alterações.
+            </p>
+
+        </div>
+
+
+        <form
+            method="POST"
+            class="one-form"
+        >
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
+
+
+            <div class="form-field">
+
+                <label for="nome">
+                    Nome do departamento
+                </label>
+
+                <input
+                    id="nome"
+                    type="text"
+                    name="nome"
+                    value="{{ departamento.nome }}"
+                    placeholder="Ex.: Financeiro"
+                    required
+                >
+
+                <small class="form-help">
+                    Use o nome oficial da área dentro da organização.
+                </small>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('departamentos.listar') }}"
+                    class="btn-one-secondary"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn-one-primary"
+                >
+                    Salvar alterações
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

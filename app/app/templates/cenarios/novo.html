@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Novo cenário
+{% endblock %}
+
+{% block content %}
+
+<section class="form-page">
+
+    <header class="form-page-header">
+
+        <div>
+
+            <span class="page-eyebrow">
+                Simulações
+            </span>
+
+            <h1>
+                Novo cenário
+            </h1>
+
+            <p>
+                Cadastre um cenário para organizar as ações
+                internas de conscientização da plataforma.
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for('cenarios.listar') }}"
+            class="btn-one-secondary"
+        >
+            Voltar
+        </a>
+
+    </header>
+
+
+    <div class="form-card scenario-form-card">
+
+        <div class="form-card-header">
+
+            <span class="section-eyebrow">
+                Configuração
+            </span>
+
+            <h2>
+                Informações do cenário
+            </h2>
+
+            <p>
+                Defina a identificação, descrição e nível
+                de complexidade.
+            </p>
+
+        </div>
+
+
+        <form
+            method="POST"
+            class="one-form"
+        >
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
+
+
+            <div class="form-field">
+
+                <label for="nome">
+                    Nome do cenário *
+                </label>
+
+                <input
+                    id="nome"
+                    type="text"
+                    name="nome"
+                    placeholder="Ex.: Reconhecimento de mensagens suspeitas"
+                    required
+                >
+
+                <small class="form-help">
+                    Utilize um nome claro para facilitar a identificação interna.
+                </small>
+
+            </div>
+
+
+            <div class="form-field">
+
+                <label for="descricao">
+                    Descrição
+                </label>
+
+                <textarea
+                    id="descricao"
+                    name="descricao"
+                    placeholder="Descreva o objetivo deste cenário"
+                ></textarea>
+
+                <small class="form-help">
+                    Campo opcional.
+                </small>
+
+            </div>
+
+
+            <div class="form-field">
+
+                <label for="nivel">
+                    Nível
+                </label>
+
+                <select
+                    id="nivel"
+                    name="nivel"
+                >
+
+                    <option value="basico">
+                        Básico
+                    </option>
+
+                    <option value="intermediario">
+                        Intermediário
+                    </option>
+
+                    <option value="avancado">
+                        Avançado
+                    </option>
+
+                </select>
+
+                <small class="form-help">
+                    Classifique a complexidade do conteúdo para os participantes.
+                </small>
+
+            </div>
+
+
+            <div class="scenario-level-guide">
+
+                <div class="scenario-level-item">
+
+                    <span class="level-dot level-basic"></span>
+
+                    <div>
+                        <strong>Básico</strong>
+                        <span>Conteúdo introdutório e reconhecimento inicial.</span>
+                    </div>
+
+                </div>
+
+
+                <div class="scenario-level-item">
+
+                    <span class="level-dot level-medium"></span>
+
+                    <div>
+                        <strong>Intermediário</strong>
+                        <span>Situações que exigem maior atenção e análise.</span>
+                    </div>
+
+                </div>
+
+
+                <div class="scenario-level-item">
+
+                    <span class="level-dot level-advanced"></span>
+
+                    <div>
+                        <strong>Avançado</strong>
+                        <span>Cenários mais complexos para usuários experientes.</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('cenarios.listar') }}"
+                    class="btn-one-secondary"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn-one-primary"
+                >
+                    Criar cenário
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

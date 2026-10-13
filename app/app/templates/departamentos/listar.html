@@ -1,0 +1,307 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Departamentos
+{% endblock %}
+
+{% block content %}
+
+<section class="management-page">
+
+    <!-- ======================================================
+         CABEÇALHO
+         ====================================================== -->
+
+    <header class="management-header">
+
+        <div class="management-header-copy">
+
+            <span class="page-eyebrow">
+                Gestão organizacional
+            </span>
+
+            <h1>
+                Departamentos
+            </h1>
+
+            <p>
+                Organize as áreas da empresa e acompanhe a distribuição
+                dos colaboradores cadastrados na plataforma.
+            </p>
+
+        </div>
+
+
+        <div class="management-header-actions">
+
+            <a
+                href="{{ url_for('departamentos.novo') }}"
+                class="btn-one-primary"
+            >
+
+                <span class="btn-one-icon">
+                    +
+                </span>
+
+                <span>
+                    Novo departamento
+                </span>
+
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- ======================================================
+         RESUMO
+         ====================================================== -->
+
+    <section class="management-summary">
+
+        <article class="summary-card">
+
+            <span class="summary-label">
+                Departamentos
+            </span>
+
+            <strong class="summary-value">
+                {{ departamentos|length if departamentos else 0 }}
+            </strong>
+
+            <span class="summary-caption">
+                Áreas cadastradas
+            </span>
+
+        </article>
+
+
+        <article class="summary-card summary-card-soft">
+
+            <span class="summary-label">
+                Colaboradores vinculados
+            </span>
+
+            <strong class="summary-value">
+
+                {% set total_colaboradores = namespace(valor=0) %}
+
+                {% if departamentos %}
+
+                    {% for departamento in departamentos %}
+
+                        {% set total_colaboradores.valor =
+                            total_colaboradores.valor
+                            +
+                            (departamento.colaboradores|length)
+                        %}
+
+                    {% endfor %}
+
+                {% endif %}
+
+                {{ total_colaboradores.valor }}
+
+            </strong>
+
+            <span class="summary-caption">
+                Pessoas distribuídas nas áreas
+            </span>
+
+        </article>
+
+    </section>
+
+
+    <!-- ======================================================
+         LISTAGEM
+         ====================================================== -->
+
+    <section class="management-section">
+
+        <div class="section-heading management-section-heading">
+
+            <div>
+
+                <span class="section-eyebrow">
+                    Estrutura atual
+                </span>
+
+                <h2>
+                    Departamentos cadastrados
+                </h2>
+
+                <p>
+                    Consulte e edite as áreas disponíveis no sistema.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if departamentos %}
+
+        <div class="table-card">
+
+            <div class="table-wrapper">
+
+                <table class="one-table management-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th class="column-id">
+                                ID
+                            </th>
+
+                            <th>
+                                Departamento
+                            </th>
+
+                            <th>
+                                Colaboradores
+                            </th>
+
+                            <th class="column-actions">
+                                Ações
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for departamento in departamentos %}
+
+                        <tr>
+
+                            <td>
+
+                                <span class="table-id">
+                                    #{{ departamento.id }}
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="department-cell">
+
+                                    <div class="department-symbol">
+
+                                        {{ departamento.nome[:1]|upper }}
+
+                                    </div>
+
+                                    <div>
+
+                                        <strong>
+                                            {{ departamento.nome }}
+                                        </strong>
+
+                                        <span>
+                                            Área organizacional
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="people-count">
+
+                                    <span class="people-count-number">
+                                        {{ departamento.colaboradores|length }}
+                                    </span>
+
+                                    <span class="people-count-label">
+
+                                        {% if departamento.colaboradores|length == 1 %}
+                                            colaborador
+                                        {% else %}
+                                            colaboradores
+                                        {% endif %}
+
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="table-actions">
+
+                                    <a
+                                        href="{{ url_for(
+                                            'departamentos.editar',
+                                            departamento_id=departamento.id
+                                        ) }}"
+                                        class="btn-table-action"
+                                    >
+                                        Editar
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        {% else %}
+
+
+        <div class="empty-state management-empty">
+
+            <div class="empty-state-icon">
+                +
+            </div>
+
+            <strong>
+                Nenhum departamento cadastrado
+            </strong>
+
+            <p>
+                Crie o primeiro departamento para começar
+                a estruturar os colaboradores da plataforma.
+            </p>
+
+            <a
+                href="{{ url_for('departamentos.novo') }}"
+                class="btn-one-primary"
+            >
+                Criar departamento
+            </a>
+
+        </div>
+
+
+        {% endif %}
+
+    </section>
+
+</section>
+
+{% endblock %}

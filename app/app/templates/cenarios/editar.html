@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Editar cenário
+{% endblock %}
+
+{% block content %}
+
+<section class="form-page">
+
+    <header class="form-page-header">
+
+        <div>
+
+            <span class="page-eyebrow">
+                Simulações
+            </span>
+
+            <h1>
+                Editar cenário
+            </h1>
+
+            <p>
+                Atualize as informações e o nível
+                de complexidade do cenário selecionado.
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for('cenarios.listar') }}"
+            class="btn-one-secondary"
+        >
+            Voltar
+        </a>
+
+    </header>
+
+
+    <div class="form-card scenario-form-card">
+
+        <div class="form-card-header">
+
+            <span class="section-eyebrow">
+                Configuração do cenário
+            </span>
+
+            <h2>
+                Informações principais
+            </h2>
+
+            <p>
+                Edite os dados abaixo e salve as alterações.
+            </p>
+
+        </div>
+
+
+        <form
+            method="POST"
+            class="one-form"
+        >
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
+
+
+            <div class="form-field">
+
+                <label for="nome">
+                    Nome do cenário *
+                </label>
+
+                <input
+                    id="nome"
+                    type="text"
+                    name="nome"
+                    value="{{ cenario.nome }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-field">
+
+                <label for="descricao">
+                    Descrição
+                </label>
+
+                <textarea
+                    id="descricao"
+                    name="descricao"
+                >{{ cenario.descricao or '' }}</textarea>
+
+            </div>
+
+
+            <div class="form-field">
+
+                <label for="nivel">
+                    Nível
+                </label>
+
+                <select
+                    id="nivel"
+                    name="nivel"
+                >
+
+                    <option
+                        value="basico"
+                        {% if cenario.nivel == "basico" %}
+                            selected
+                        {% endif %}
+                    >
+                        Básico
+                    </option>
+
+                    <option
+                        value="intermediario"
+                        {% if cenario.nivel == "intermediario" %}
+                            selected
+                        {% endif %}
+                    >
+                        Intermediário
+                    </option>
+
+                    <option
+                        value="avancado"
+                        {% if cenario.nivel == "avancado" %}
+                            selected
+                        {% endif %}
+                    >
+                        Avançado
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="scenario-current-level">
+
+                <span class="scenario-current-label">
+                    Classificação atual
+                </span>
+
+                {% if cenario.nivel == "basico" %}
+
+                    <span class="scenario-level-badge scenario-basic">
+                        Básico
+                    </span>
+
+                {% elif cenario.nivel == "intermediario" %}
+
+                    <span class="scenario-level-badge scenario-medium">
+                        Intermediário
+                    </span>
+
+                {% else %}
+
+                    <span class="scenario-level-badge scenario-advanced">
+                        Avançado
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('cenarios.listar') }}"
+                    class="btn-one-secondary"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn-one-primary"
+                >
+                    Salvar alterações
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

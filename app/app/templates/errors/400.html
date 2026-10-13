@@ -1,0 +1,141 @@
+<!doctype html>
+
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>
+        Solicitação inválida
+    </title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            color: #222;
+        }
+
+        .pagina {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+            box-sizing: border-box;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            padding: 40px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-sizing: border-box;
+        }
+
+        .codigo {
+            font-size: 55px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        p {
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .acoes {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .botao {
+            display: inline-block;
+            padding: 11px 18px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #222;
+            background: white;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="pagina">
+
+    <div class="card">
+
+        <div class="codigo">
+            400
+        </div>
+
+        <h1>
+            {{ titulo or "Solicitação inválida" }}
+        </h1>
+
+        <p>
+            {{
+                mensagem
+                or
+                "Não foi possível processar a solicitação."
+            }}
+        </p>
+
+        <div class="acoes">
+
+            <a
+                class="botao"
+                href="javascript:history.back()"
+            >
+                Voltar
+            </a>
+
+            {% if current_user.is_authenticated %}
+
+                <a
+                    class="botao"
+                    href="{{ url_for('dashboard.index') }}"
+                >
+                    Voltar para o sistema
+                </a>
+
+            {% else %}
+
+                <a
+                    class="botao"
+                    href="{{ url_for('auth.login') }}"
+                >
+                    Ir para o login
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

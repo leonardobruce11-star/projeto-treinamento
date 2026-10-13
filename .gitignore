@@ -1,0 +1,44 @@
+# Credenciais e configurações locais
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Ambientes e caches Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Dados e arquivos operacionais
+/backups/
+/logs/
+*.log
+*.db
+*.sqlite
+*.sqlite3
+*.dump
+uploads/
+
+# Documento operacional: revisar antes de incluir
+/RECUPERCAO.TXT
+
+# Copias antigas e residuos de edicao
+*.bak
+*.bak_*
+*.orig
+*.rej
+*.save
+*~
+
+# Copias antigas e residuos de edicao
+*.bak
+*.bak_*
+*.orig
+*.rej
+*.save
+*~

@@ -1,0 +1,366 @@
+{% extends "base.html" %}
+
+{% block title %}
+ONE | Landing Pages
+{% endblock %}
+
+{% block content %}
+<p>Sincronização avulsa indisponível. A preparação de simulações após aprovação
+   será definida na etapa 18.7C.</p>
+
+<section class="management-page">
+
+    <header class="management-header">
+
+        <div class="management-header-copy">
+
+            <span class="page-eyebrow">
+                Simulações
+            </span>
+
+            <h1>
+                Landing Pages
+            </h1>
+
+            <p>
+                Gerencie as páginas educativas utilizadas
+                nas ações internas de conscientização da plataforma.
+            </p>
+
+        </div>
+
+        <div class="management-header-actions">
+
+            <a
+                href="{{ url_for('landing_pages.nova') }}"
+                class="btn-one-primary"
+            >
+                <span class="btn-one-icon">+</span>
+
+                <span>
+                    Nova Landing Page
+                </span>
+            </a>
+
+        </div>
+
+    </header>
+
+
+    {% set sincronizadas = namespace(valor=0) %}
+
+    {% if paginas %}
+
+        {% for pagina in paginas %}
+
+            {% if pagina.gophish_page_id %}
+
+                {% set sincronizadas.valor =
+                    sincronizadas.valor + 1
+                %}
+
+            {% endif %}
+
+        {% endfor %}
+
+    {% endif %}
+
+
+    <section class="management-summary landing-summary">
+
+        <article class="summary-card">
+
+            <span class="summary-label">
+                Landing Pages
+            </span>
+
+            <strong class="summary-value">
+                {{ paginas|length if paginas else 0 }}
+            </strong>
+
+            <span class="summary-caption">
+                Páginas cadastradas
+            </span>
+
+        </article>
+
+
+        <article class="summary-card summary-card-soft">
+
+            <span class="summary-label">
+                Sincronizadas
+            </span>
+
+            <strong class="summary-value">
+                {{ sincronizadas.valor }}
+            </strong>
+
+            <span class="summary-caption">
+                Vinculadas à integração
+            </span>
+
+        </article>
+
+
+        <article class="summary-card summary-card-soft">
+
+            <span class="summary-label">
+                Somente locais
+            </span>
+
+            <strong class="summary-value">
+                {{
+                    (paginas|length if paginas else 0)
+                    -
+                    sincronizadas.valor
+                }}
+            </strong>
+
+            <span class="summary-caption">
+                Ainda não sincronizadas
+            </span>
+
+        </article>
+
+    </section>
+
+
+    <section class="management-section">
+
+        <div class="section-heading management-section-heading">
+
+            <div>
+
+                <span class="section-eyebrow">
+                    Conteúdo educativo
+                </span>
+
+                <h2>
+                    Páginas cadastradas
+                </h2>
+
+                <p>
+                    Consulte o título, estado de sincronização
+                    e ações disponíveis.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if paginas %}
+
+        <div class="table-card">
+
+            <div class="table-wrapper">
+
+                <table class="one-table landing-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Landing Page</th>
+                            <th>Título</th>
+                            <th>Integração</th>
+                            <th>Última sincronização</th>
+                            <th>Ações</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for pagina in paginas %}
+
+                        <tr>
+
+                            <td>
+
+                                <div class="landing-cell">
+
+                                    <div class="landing-symbol">
+                                        LP
+                                    </div>
+
+                                    <div>
+
+                                        <strong>
+                                            {{ pagina.nome }}
+                                        </strong>
+
+                                        <span>
+                                            Página educativa
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="landing-title">
+                                    {{ pagina.titulo }}
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                {% if pagina.gophish_page_id %}
+
+                                    <div class="integration-status">
+
+                                        <span class="integration-dot connected"></span>
+
+                                        <div>
+
+                                            <strong>
+                                                Sincronizada
+                                            </strong>
+
+                                            <small>
+                                                ID {{ pagina.gophish_page_id }}
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                {% else %}
+
+                                    <div class="integration-status">
+
+                                        <span class="integration-dot pending"></span>
+
+                                        <div>
+
+                                            <strong>
+                                                Local
+                                            </strong>
+
+                                            <small>
+                                                Não sincronizada
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if pagina.ultima_sincronizacao %}
+
+                                    <span class="sync-date">
+                                        {{ pagina.ultima_sincronizacao }}
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="muted-text">
+                                        Nunca
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="table-actions">
+
+                                    <a
+                                        href="{{ url_for(
+                                            'landing_pages.editar',
+                                            pagina_id=pagina.id
+                                        ) }}"
+                                        class="btn-table-action"
+                                    >
+                                        Editar
+                                    </a>
+
+
+                                    <form
+                                        method="POST"
+                                        action="{{ url_for(
+                                            'landing_pages.sincronizar',
+                                            pagina_id=pagina.id
+                                        ) }}"
+                                        class="inline-action-form"
+                                    >
+
+                                        <input
+                                            type="hidden"
+                                            name="csrf_token"
+                                            value="{{ csrf_token() }}"
+                                        >
+
+                                        <button
+                                            type="submit"
+                                            class="btn-table-action btn-sync" disabled
+                                        >
+                                            Sincronizar
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        {% else %}
+
+        <div class="empty-state management-empty">
+
+            <div class="empty-state-icon">
+                +
+            </div>
+
+            <strong>
+                Nenhuma Landing Page cadastrada
+            </strong>
+
+            <p>
+                Crie uma página educativa para começar
+                a estruturar as ações de conscientização.
+            </p>
+
+            <a
+                href="{{ url_for('landing_pages.nova') }}"
+                class="btn-one-primary"
+            >
+                Criar Landing Page
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+</section>
+
+{% endblock %}
