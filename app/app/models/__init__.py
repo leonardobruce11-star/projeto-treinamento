@@ -31,3 +31,5 @@ from .simulacao import (RevisaoSimulacao, ExecucaoSimulacao, AlvoSimulacao,
 from .simulacao_resultados import VinculoCampanhaSimulacao, EventoSimulacao, AssociacaoEducacionalSimulacao, PonteEducativaSimulacao, LeaseOperacaoSimulacao
 
 from .submissao_quiz import SubmissaoQuiz
+
+from .certificado_treinamento import CertificadoTreinamento
