@@ -607,6 +607,9 @@
                 </div>
 
 
+                {% if participacao.concluido_em and participacao.aprovado_em %}
+                <p><a href="{{ url_for('portal_treinamento.conclusao', token=acesso_token) }}">Consultar certificado</a></p>
+                {% endif %}
                 <section aria-label="Avaliação opcional do treinamento">
                     <h2>Avalie este treinamento</h2>
                     <p>A avaliação é opcional. Sua conclusão já está registrada.</p>

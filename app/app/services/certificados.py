@@ -182,3 +182,22 @@ def emitir_certificado(participacao_id):
     except SQLAlchemyError:
         # A transação é revertida pelo gerenciador de contexto.
         raise ErroCertificado("falha_banco") from None
+
+
+def consultar_certificado(participacao):
+    """Consulta autorizada pelo chamador, sem emissão ou alteração histórica.
+
+    Retorna o recibo existente ou None se a primeira emissão estiver disponível.
+    Compartilha a validação histórica com o serviço de emissão.
+    """
+    if participacao.concluido_em is None or participacao.aprovado_em is None:
+        raise ErroCertificado("nao_elegivel")
+    existente = db.session.execute(
+        select(CertificadoTreinamento).where(
+            CertificadoTreinamento.participacao_id == participacao.id
+        )
+    ).scalar_one_or_none()
+    if existente is not None:
+        return _recibo(existente)
+    _validar_elegibilidade(db.session, participacao)
+    return None

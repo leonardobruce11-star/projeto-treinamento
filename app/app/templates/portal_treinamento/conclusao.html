@@ -589,6 +589,20 @@
                 </section>
 
 
+                {% if certificado_disponivel %}
+                <section aria-label="Certificado de conclusão">
+                    <h2>Certificado disponível</h2>
+                    {% if certificado %}
+                    <a href="{{ url_for('portal_treinamento.certificado', token=acesso_token) }}">Baixar certificado PDF</a>
+                    {% else %}
+                    <form method="post" action="{{ url_for('portal_treinamento.certificado', token=acesso_token) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit">Emitir e baixar certificado PDF</button>
+                    </form>
+                    {% endif %}
+                </section>
+                {% endif %}
+
                 {% if tem_resultado_quiz %}
                 <p><a href="{{ url_for('portal_treinamento.quiz', token=acesso_token) }}">Consultar avaliação e histórico</a></p>
                 {% endif %}

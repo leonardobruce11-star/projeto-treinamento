@@ -1,5 +1,11 @@
 from app.utils.resultados_quiz import resultado_representativo
 from datetime import datetime, timezone
+from io import BytesIO
+
+from app.services.certificados import (
+    ErroCertificado, consultar_certificado, emitir_certificado,
+)
+from app.services.pdf_certificados import gerar_pdf_certificado
 
 from flask import (
     Blueprint,
@@ -8,6 +14,7 @@ from flask import (
     redirect,
     render_template,
     request,
+    send_file,
     url_for,
 )
 
@@ -524,12 +531,60 @@ def conclusao(token):
             "Conclusão histórica com progressão divergente: participação %s",
             participacao.id,
         )
+    certificado = None
+    certificado_disponivel = False
+    try:
+        certificado = consultar_certificado(participacao)
+        certificado_disponivel = True
+    except ErroCertificado:
+        pass
     return render_template(
         "portal_treinamento/conclusao.html",
+        certificado=certificado,
+        certificado_disponivel=certificado_disponivel,
         tem_resultado_quiz=db.session.execute(db.select(db.exists().where(
             ResultadoQuiz.participacao_id == participacao.id))).scalar_one(),
         treinamento=participacao.treinamento, participacao=participacao,
     )
+
+
+@portal_treinamento_bp.route("/t/<token>/certificado", methods=["GET", "POST"])
+def certificado(token):
+    try:
+        participacao = obter_participacao(token)
+        if not participacao_valida(participacao):
+            return render_template("portal_treinamento/indisponivel.html"), 404
+        recibo = consultar_certificado(participacao)
+        if request.method == "POST":
+            # Somente o ID resolvido pelo mecanismo de acesso do portal é aceito.
+            participacao_id = participacao.id
+            db.session.rollback()
+            emitir_certificado(participacao_id)
+            return redirect(url_for("portal_treinamento.certificado", token=token), code=303)
+        if recibo is None:
+            return render_template("portal_treinamento/indisponivel.html"), 404
+        conteudo = gerar_pdf_certificado(recibo)
+        resposta = send_file(
+            BytesIO(conteudo), mimetype="application/pdf", as_attachment=True,
+            download_name="certificado-one.pdf", conditional=False, etag=False,
+        )
+        resposta.headers["X-Content-Type-Options"] = "nosniff"
+        return resposta
+    except ErroCertificado as exc:
+        status = {
+            "falha_banco": 503,
+            "historico_inconsistente": 409,
+            "participacao_indisponivel": 404,
+            "participacao_invalida": 404,
+        }.get(exc.codigo, 403)
+        return render_template("portal_treinamento/indisponivel.html"), status
+    except SQLAlchemyError:
+        return render_template("portal_treinamento/indisponivel.html"), 503
+    except ValueError:
+        # Dados históricos incompletos não são corrigidos durante o download.
+        return render_template("portal_treinamento/indisponivel.html"), 409
+    finally:
+        db.session.rollback()
 
 
 # ==========================================================
