@@ -1,13 +1,15 @@
 """Consultas administrativas HTML e JSON de certificados persistidos."""
 
 from datetime import timezone
+from io import BytesIO
 
-from flask import Blueprint, abort, jsonify, render_template, request, url_for
+from flask import Blueprint, abort, jsonify, render_template, request, send_file, url_for
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.convites.routes import administrador
 from app.services.certificados import ErroCertificado
 from app.services.consulta_certificados import listar_certificados_emitidos, obter_certificado_emitido
+from app.services.pdf_certificados import gerar_pdf_certificado
 
 
 certificados_admin_bp = Blueprint(
@@ -87,6 +89,40 @@ def detalhes(certificado_id):
     return render_template(
         "certificados_admin/detalhes.html", certificado=recibo,
         voltar_url=_voltar_aos_certificados(), utc=timezone.utc,
+    )
+
+
+@certificados_admin_bp.get("/<int:certificado_id>/pdf")
+@administrador
+def baixar_pdf(certificado_id):
+    try:
+        recibo = obter_certificado_emitido(certificado_id)
+    except ErroCertificado:
+        return jsonify(erro="certificado_indisponivel"), 404
+    except SQLAlchemyError:
+        return jsonify(erro="consulta_indisponivel"), 503
+    if recibo is None:
+        return jsonify(erro="certificado_indisponivel"), 404
+
+    try:
+        conteudo = gerar_pdf_certificado(recibo)
+    except ValueError:
+        return jsonify(erro="dados_certificado_invalidos"), 409
+    except Exception:
+        # Erros do renderizador podem conter snapshots ou caminhos privados.
+        # A captura é limitada à geração, antes de construir a resposta PDF.
+        return jsonify(erro="geracao_indisponivel"), 503
+    if not (
+        isinstance(conteudo, bytes)
+        and conteudo.startswith(b"%PDF-")
+        and conteudo.rstrip().endswith(b"%%EOF")
+    ):
+        return jsonify(erro="geracao_indisponivel"), 503
+    # HEAD usa a mesma geração em memória para obter os cabeçalhos reais;
+    # Flask/Werkzeug suprime o corpo, sem emissão ou persistência de arquivos.
+    return send_file(
+        BytesIO(conteudo), mimetype="application/pdf", as_attachment=True,
+        download_name=f"certificado-{certificado_id}.pdf", conditional=False, etag=False,
     )
 
 

@@ -224,10 +224,11 @@ class ConsultaCertificadosAdminTest(unittest.TestCase):
         self.assertEqual({r.rule for r in regras}, {
             '/certificados/', '/certificados/<int:certificado_id>',
             '/certificados/<int:certificado_id>/detalhes',
+            '/certificados/<int:certificado_id>/pdf',
         })
         for regra in regras:
             self.assertEqual(regra.methods, {'GET', 'HEAD', 'OPTIONS'})
-        for url in (self.url+'/pdf', self.url+'/editar'):
+        for url in (self.url+'/revogar', self.url+'/editar'):
             self.assertEqual(self.client.get(url).status_code, 404)
 
 

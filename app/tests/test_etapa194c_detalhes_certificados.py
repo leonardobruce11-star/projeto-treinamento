@@ -39,7 +39,7 @@ class DetalhesCertificadosTest(unittest.TestCase):
         self.assertNotIn('TOKEN_PRIVADO', html)
         self.assertNotIn('/aprender/', html)
         self.assertNotIn('participacao_id', html)
-        self.assertNotIn('/pdf', html)
+        self.assertIn('href="/certificados/41/pdf"', html)
         self.assertRegex(html, r'href="/certificados/"\s+class="nav-item active"')
         r = self.client.get(self.url)
         self.assertEqual(r.mimetype, 'text/html')
@@ -232,14 +232,15 @@ class DetalhesCertificadosTest(unittest.TestCase):
         self.assertNotIn('JOIN', consultas[0])
         self.assertFalse(any('participacoes_treinamento' in sql for sql in self.statements))
 
-    def test_sem_rotas_ou_botoes_de_mutacao_ou_pdf(self):
+    def test_sem_rotas_ou_botoes_de_mutacao(self):
         html = self.pagina()
-        for rota in (self.url, '/certificados/41/pdf', '/certificados/41/editar', '/certificados/41/revogar'):
+        for rota in (self.url, '/certificados/41/editar', '/certificados/41/revogar'):
             if rota != self.url:
                 self.assertEqual(self.client.get(rota).status_code, 404)
         regra = next(r for r in self.app.url_map.iter_rules() if r.endpoint == 'certificados_admin.detalhes')
         self.assertEqual(regra.methods, {'GET', 'HEAD', 'OPTIONS'})
-        for texto in ('Baixar PDF', 'Emitir certificado', 'Revogar', 'Excluir certificado'):
+        self.assertIn('Baixar PDF', html)
+        for texto in ('Emitir certificado', 'Revogar', 'Excluir certificado'):
             self.assertNotIn(texto, html)
 
 

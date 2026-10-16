@@ -11,6 +11,9 @@
             {% endif %}
         </div>
         <div class="management-header-actions">
+            {% if certificado %}
+            <a href="{{ url_for('certificados_admin.baixar_pdf', certificado_id=certificado.certificado_id) }}" class="btn-one-primary">Baixar PDF</a>
+            {% endif %}
             <a href="{{ voltar_url }}" class="btn-one-secondary">Voltar aos certificados</a>
         </div>
     </header>
