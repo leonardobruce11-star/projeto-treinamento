@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}ONE | Certificados emitidos{% endblock %}
+{% block content %}
+<section class="management-page">
+    <header class="management-header">
+        <div class="management-header-copy">
+            <span class="page-eyebrow">Capacitação</span>
+            <h1>Certificados emitidos</h1>
+            <p>Consulte os dados registrados no momento da emissão do certificado.</p>
+        </div>
+        <div class="management-header-actions">
+            <a href="{{ url_for('dashboard.index') }}" class="btn-one-secondary">Voltar ao painel administrativo</a>
+        </div>
+    </header>
+    {% if resultado is none %}
+    <section class="management-section" role="alert">
+        <h2>Consulta indisponível</h2>
+        <p>Não foi possível consultar os certificados. Tente novamente em alguns instantes.</p>
+    </section>
+    {% else %}
+    <section class="management-section" aria-label="Pesquisa de certificados">
+        <form method="get" action="{{ url_for('certificados_admin.listar') }}" class="collaborator-edit-form">
+            <div class="collaborator-form-grid">
+                {% for chave, rotulo, limite in [('participante', 'Nome do participante', 150), ('treinamento', 'Título do treinamento', 200), ('codigo', 'Código de verificação', 64)] %}
+                <div class="collaborator-form-field">
+                    <label for="certificado-{{ chave }}">{{ rotulo }}</label>
+                    <input id="certificado-{{ chave }}" name="{{ chave }}" type="search" maxlength="{{ limite }}" value="{{ resultado.filtros[chave] }}">
+                </div>
+                {% endfor %}
+            </div>
+            <div class="management-header-actions">
+                <button type="submit" class="btn-one-primary">Pesquisar</button>
+                <a href="{{ url_for('certificados_admin.listar') }}" class="btn-one-secondary">Limpar filtros</a>
+            </div>
+        </form>
+    </section>
+    <section class="management-section" aria-label="Resultados da consulta">
+        {% if resultado.itens %}
+        <div class="table-card"><div class="table-wrapper">
+            <table class="one-table management-table">
+                <caption>Certificados emitidos · Mais recentes primeiro</caption>
+                <thead><tr>
+                    <th scope="col">Identificador</th>
+                    <th scope="col">Participante</th>
+                    <th scope="col">Treinamento</th>
+                    <th scope="col">Código de verificação</th>
+                    <th scope="col">Data de emissão (UTC)</th>
+                </tr></thead>
+                <tbody>
+                    {% for certificado in resultado.itens %}
+                    <tr>
+                        <th scope="row">{{ certificado.certificado_id }}</th>
+                        <td>{{ certificado.nome_participante }}</td>
+                        <td>{{ certificado.titulo_treinamento }}</td>
+                        <td>{{ certificado.codigo_verificacao }}</td>
+                        <td>{% if certificado.emitido_em %}{{ (certificado.emitido_em.astimezone(utc) if certificado.emitido_em.tzinfo else certificado.emitido_em).strftime('%d/%m/%Y %H:%M') }}{% else %}Sem registro{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div></div>
+        {% else %}
+        <div class="empty-state management-empty">
+            <strong>{{ 'Nenhum certificado encontrado para os filtros selecionados.' if parametros else 'Nenhum certificado emitido.' }}</strong>
+        </div>
+        {% endif %}
+        <nav class="management-header-actions" aria-label="Paginação dos certificados">
+            {% if resultado.pagina > 1 %}<a class="btn-one-secondary" rel="prev" href="{{ url_for('certificados_admin.listar', page=resultado.pagina-1, **parametros) }}">Anterior</a>{% endif %}
+            <span aria-current="page">Página {{ resultado.pagina }} de {{ resultado.paginas }} · {{ resultado.total }} certificados</span>
+            {% if resultado.pagina < resultado.paginas %}<a class="btn-one-secondary" rel="next" href="{{ url_for('certificados_admin.listar', page=resultado.pagina+1, **parametros) }}">Próxima</a>{% endif %}
+        </nav>
+    </section>
+    {% endif %}
+</section>
+{% endblock %}

@@ -54,7 +54,8 @@ class AdminConvitesTest(unittest.TestCase):
         for name in ['dashboard.index', 'campanhas.listar', 'departamentos.listar', 'colaboradores.listar',
                      'grupos.listar', 'auth.logout', 'auth.login', 'categorias_treinamento.listar',
                      'cenarios.listar', 'templates_email.listar', 'landing_pages.listar',
-                     'gophish.index', 'treinamentos.listar', 'treinamentos.feedback']:
+                     'gophish.index', 'treinamentos.listar', 'treinamentos.feedback',
+                     'certificados_admin.listar']:
             self.app.add_url_rule('/_layout/' + name, endpoint=name, view_func=lambda: 'layout')
         self.cfg = ConfiguracaoMail.do_ambiente(ENV)
         self.app.extensions['mail_convites_config'] = self.cfg

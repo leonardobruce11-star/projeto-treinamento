@@ -386,6 +386,14 @@
                     <span>Feedback dos treinamentos</span>
                 </a>
 
+                {% if current_user.ativo and current_user.perfil == 'administrador' %}
+                <a href="{{ url_for('certificados_admin.listar') }}"
+                   class="nav-item {% if endpoint.startswith('certificados_admin.') %}active{% endif %}">
+                    <span class="nav-dot"></span>
+                    <span>Certificados</span>
+                </a>
+                {% endif %}
+
                 <a
                     href="{{ url_for('convites.listar') }}"
                     class="nav-item {% if endpoint.startswith('convites.') %}active{% endif %}"
