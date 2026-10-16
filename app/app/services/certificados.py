@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from secrets import token_urlsafe
 
-from sqlalchemy import select
+from sqlalchemy import inspect, select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
@@ -60,6 +60,25 @@ def _recibo(certificado, criado=False):
         emitido_em=certificado.emitido_em,
         criado=criado,
     )
+
+
+def recibo_de_certificado(certificado):
+    """Copia somente os dados históricos de um certificado persistido.
+
+    Aceita instâncias persistentes ou desanexadas, nunca objetos novos ou
+    removidos. Não valida aprovação, não altera dados e não autoriza acesso:
+    o chamador deve aplicar a autorização antes de expor o recibo.
+    """
+    if not isinstance(certificado, CertificadoTreinamento):
+        raise ErroCertificado("certificado_invalido")
+    estado = inspect(certificado)
+    if (
+        not (estado.persistent or estado.detached)
+        or estado.was_deleted
+        or (estado.session is not None and certificado in estado.session.deleted)
+    ):
+        raise ErroCertificado("certificado_invalido")
+    return _recibo(certificado)
 
 
 def _validar_elegibilidade(session, participacao):

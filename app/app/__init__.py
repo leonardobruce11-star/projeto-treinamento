@@ -431,6 +431,9 @@ def create_app():
     from .convites.cli import registrar_cli
     app.register_blueprint(convites_bp)
 
+    from .certificados_admin.routes import certificados_admin_bp
+    app.register_blueprint(certificados_admin_bp)
+
     from .simulacoes.routes import simulacoes_bp
     app.register_blueprint(simulacoes_bp)
     from .simulacoes.publico import educacao_simulacao_bp
