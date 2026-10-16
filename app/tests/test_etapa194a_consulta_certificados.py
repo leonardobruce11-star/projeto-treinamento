@@ -221,7 +221,10 @@ class ConsultaCertificadosAdminTest(unittest.TestCase):
 
     def test_sem_rotas_antecipadas(self):
         regras = [r for r in self.app.url_map.iter_rules() if r.endpoint.startswith('certificados_admin.')]
-        self.assertEqual({r.rule for r in regras}, {'/certificados/', '/certificados/<int:certificado_id>'})
+        self.assertEqual({r.rule for r in regras}, {
+            '/certificados/', '/certificados/<int:certificado_id>',
+            '/certificados/<int:certificado_id>/detalhes',
+        })
         for regra in regras:
             self.assertEqual(regra.methods, {'GET', 'HEAD', 'OPTIONS'})
         for url in (self.url+'/pdf', self.url+'/editar'):

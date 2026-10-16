@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}ONE | Detalhes do certificado{% endblock %}
+{% block content %}
+<section class="management-page">
+    <header class="management-header">
+        <div class="management-header-copy">
+            <span class="page-eyebrow">Capacitação</span>
+            <h1>Detalhes do certificado</h1>
+            {% if certificado %}
+            <p>Certificado nº {{ certificado.certificado_id }} · Dados registrados no momento da emissão.</p>
+            {% endif %}
+        </div>
+        <div class="management-header-actions">
+            <a href="{{ voltar_url }}" class="btn-one-secondary">Voltar aos certificados</a>
+        </div>
+    </header>
+    {% if certificado is none %}
+    <section class="management-section" role="alert">
+        <h2>Consulta indisponível</h2>
+        <p>Não foi possível consultar o certificado. Tente novamente em alguns instantes.</p>
+    </section>
+    {% else %}
+    <section class="management-section" aria-label="Dados históricos do certificado">
+        <div class="collaborator-info-grid">
+            <article class="collaborator-info-item">
+                <span>Identificador do certificado</span>
+                <strong>{{ certificado.certificado_id }}</strong>
+            </article>
+            <article class="collaborator-info-item">
+                <span>Nome do participante na emissão</span>
+                <strong>{{ certificado.nome_participante }}</strong>
+            </article>
+            <article class="collaborator-info-item">
+                <span>Título do treinamento na emissão</span>
+                <strong>{{ certificado.titulo_treinamento }}</strong>
+            </article>
+            <article class="collaborator-info-item">
+                <span>Código de verificação</span>
+                <strong><code>{{ certificado.codigo_verificacao }}</code></strong>
+            </article>
+            <article class="collaborator-info-item">
+                <span>Data e horário de emissão (UTC)</span>
+                <strong>{% if certificado.emitido_em %}{{ (certificado.emitido_em.astimezone(utc) if certificado.emitido_em.tzinfo else certificado.emitido_em).strftime('%d/%m/%Y %H:%M:%S') }} UTC{% else %}Sem registro{% endif %}</strong>
+            </article>
+        </div>
+    </section>
+    {% endif %}
+</section>
+{% endblock %}

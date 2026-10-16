@@ -45,6 +45,7 @@
                     <th scope="col">Treinamento</th>
                     <th scope="col">Código de verificação</th>
                     <th scope="col">Data de emissão (UTC)</th>
+                    <th scope="col">Ações</th>
                 </tr></thead>
                 <tbody>
                     {% for certificado in resultado.itens %}
@@ -54,6 +55,7 @@
                         <td>{{ certificado.titulo_treinamento }}</td>
                         <td>{{ certificado.codigo_verificacao }}</td>
                         <td>{% if certificado.emitido_em %}{{ (certificado.emitido_em.astimezone(utc) if certificado.emitido_em.tzinfo else certificado.emitido_em).strftime('%d/%m/%Y %H:%M') }}{% else %}Sem registro{% endif %}</td>
+                        <td><a href="{{ url_for('certificados_admin.detalhes', certificado_id=certificado.certificado_id, page=resultado.pagina, **parametros) }}">Visualizar detalhes</a></td>
                     </tr>
                     {% endfor %}
                 </tbody>

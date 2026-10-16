@@ -66,7 +66,8 @@ class ListagemCertificadosTest(unittest.TestCase):
         self.assertEqual(r.headers['X-Content-Type-Options'], 'nosniff')
         self.assertNotIn('TOKEN_PRIVADO', html)
         self.assertNotIn('/aprender/', html)
-        self.assertNotIn('/certificados/41', html)
+        self.assertIn('/certificados/41/detalhes', html)
+        self.assertNotIn('href="/certificados/41"', html)
         self.assertNotIn('/pdf', html)
 
     def test_anonimo(self):

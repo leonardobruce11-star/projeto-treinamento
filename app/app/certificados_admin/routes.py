@@ -1,8 +1,8 @@
-"""Listagem administrativa e consulta mínima de certificados persistidos."""
+"""Consultas administrativas HTML e JSON de certificados persistidos."""
 
 from datetime import timezone
 
-from flask import Blueprint, abort, jsonify, render_template, request
+from flask import Blueprint, abort, jsonify, render_template, request, url_for
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.convites.routes import administrador
@@ -48,6 +48,45 @@ def listar():
     return render_template(
         "certificados_admin/listar.html", resultado=resultado,
         parametros=parametros, utc=timezone.utc,
+    )
+
+
+def _voltar_aos_certificados():
+    # Contexto de navegação opcional, nunca uma URL de retorno fornecida pelo
+    # cliente. Valores inválidos/repetidos são descartados sem afetar a consulta.
+    parametros = {}
+    for chave, limite in (("participante", 150), ("treinamento", 200), ("codigo", 64), ("page", 10)):
+        valores = request.args.getlist(chave)
+        if len(valores) != 1:
+            continue
+        valor = valores[0].strip()
+        if not valor or len(valores[0]) > limite or any(ord(c) < 32 or ord(c) == 127 for c in valores[0]):
+            continue
+        if chave == "page" and (
+            not valor.isascii() or not valor.isdigit() or not 1 <= int(valor) <= 2147483647
+        ):
+            continue
+        parametros[chave] = valor
+    return url_for("certificados_admin.listar", **parametros)
+
+
+@certificados_admin_bp.get("/<int:certificado_id>/detalhes")
+@administrador
+def detalhes(certificado_id):
+    try:
+        recibo = obter_certificado_emitido(certificado_id)
+    except ErroCertificado:
+        abort(404)
+    except SQLAlchemyError:
+        return render_template(
+            "certificados_admin/detalhes.html", certificado=None,
+            voltar_url=_voltar_aos_certificados(),
+        ), 503
+    if recibo is None:
+        abort(404)
+    return render_template(
+        "certificados_admin/detalhes.html", certificado=recibo,
+        voltar_url=_voltar_aos_certificados(), utc=timezone.utc,
     )
 
 
